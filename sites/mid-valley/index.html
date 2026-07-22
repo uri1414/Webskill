@@ -78,8 +78,8 @@
     .wordmark .llc{font-family:var(--font-body);font-size:.6rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--sage-deep);margin-top:.34rem;padding-top:.34rem;border-top:1.5px solid var(--sage);align-self:stretch}
     .nav-links{display:flex;gap:1.7rem;margin-left:auto;align-items:center}
     .nav-links a{color:var(--navy);font-weight:500;font-size:.98rem;position:relative;padding:.3rem 0}
-    .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--sage);transition:width .28s var(--ease)}
-    .nav-links a:hover::after{width:100%}
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:var(--sage);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease)}
+    .nav-links a:hover::after{transform:scaleX(1)}
     .nav-cta{display:flex;align-items:center;gap:1rem}
     .callnum{display:inline-flex;align-items:center;gap:.5rem;color:var(--navy);font-weight:700;font-size:1rem;font-family:var(--font-display);letter-spacing:-.01em}
     .callnum svg{width:17px;height:17px;color:var(--sage-deep)}
@@ -378,7 +378,7 @@
           <div class="cimg"><img src="assets/commercial.webp" alt="Clean modern office boardroom with conference table and city view" loading="lazy" /></div>
           <div class="cbody">
             <h3>Commercial &amp; Office</h3>
-            <p>Dependable janitorial service that keeps offices, retail, and professional spaces presentable — on a schedule that works around your business.</p>
+            <p>Dependable janitorial service that keeps offices, retail, and professional spaces presentable, on a schedule that works around your business.</p>
             <ul>
               <li>Offices</li><li>Retail</li><li>Medical &amp; dental</li><li>Nightly / weekly</li>
             </ul>
@@ -388,7 +388,7 @@
           <div class="cimg"><img src="assets/government.webp" alt="Multi-level government building interior with concrete and greenery" loading="lazy" /></div>
           <div class="cbody">
             <h3>Government &amp; Public Buildings</h3>
-            <p>Licensed, insured, background-checked crews that meet the standards public facilities require — built for city, county, and state contracts.</p>
+            <p>Licensed, insured, background-checked crews that meet the standards public facilities require. Built for city, county, and state contracts.</p>
             <ul>
               <li>City &amp; county</li><li>Common areas</li><li>Restrooms</li><li>Contract-ready</li>
             </ul>
@@ -404,15 +404,15 @@
       <div class="why-grid">
         <div class="reveal">
           <span class="eyebrow">Why Mid-Valley</span>
-          <h2 class="sec-head" style="font-size:clamp(2rem,4vw,2.9rem);margin-top:1rem">Credentials you can hand a procurement officer — and a crew you'd welcome into your home.</h2>
+          <h2 class="sec-head" style="font-size:clamp(2rem,4vw,2.9rem);margin-top:1rem">Credentials you can hand a procurement officer, and a crew you'd welcome into your home.</h2>
           <div class="why-list">
             <div class="why-item">
               <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
-              <div><h4>Licensed &amp; fully insured</h4><p>Coverage and paperwork ready for residential clients and public contracts alike — no surprises, no exposure.</p></div>
+              <div><h4>Licensed &amp; fully insured</h4><p>Coverage and paperwork ready for residential clients and public contracts alike. No surprises, no exposure.</p></div>
             </div>
             <div class="why-item">
               <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
-              <div><h4>Owned &amp; operated here</h4><p>We live and work in the Mid-Valley. You get local accountability and one point of contact — not a call center.</p></div>
+              <div><h4>Owned &amp; operated here</h4><p>We live and work in the Mid-Valley. You get local accountability and one point of contact, not a call center.</p></div>
             </div>
             <div class="why-item">
               <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg></div>
@@ -420,13 +420,13 @@
             </div>
             <div class="why-item">
               <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
-              <div><h4>Vetted, consistent crews</h4><p>Background-checked, uniformed team members — often the same faces each visit, so quality stays predictable.</p></div>
+              <div><h4>Vetted, consistent crews</h4><p>Background-checked, uniformed team members, often the same faces each visit, so quality stays predictable.</p></div>
             </div>
           </div>
         </div>
         <aside class="why-aside reveal">
           <h3>Built for homes &amp; contracts</h3>
-          <p>Most cleaners do one or the other. Mid-Valley is set up to meet the trust bar of a family home and the compliance bar of a public building — with the same crew standard behind both.</p>
+          <p>Most cleaners do one or the other. Mid-Valley is set up to meet the trust bar of a family home and the compliance bar of a public building, with the same crew standard behind both.</p>
           <div class="stat">
             <div class="row"><b>3 sectors</b><span>Residential · Commercial · Government</span></div>
             <div class="row"><b>Free walkthrough</b><span>Every quote starts on-site, at no cost</span></div>
@@ -447,7 +447,7 @@
       </div>
       <div class="steps">
         <div class="step reveal"><h4>Request a quote</h4><p>Call or send the form. Tell us the space, the frequency, and anything that matters to you.</p></div>
-        <div class="step reveal"><h4>Free walkthrough</h4><p>We visit on-site to see the space and scope the work — no cost, no obligation.</p></div>
+        <div class="step reveal"><h4>Free walkthrough</h4><p>We visit on-site to see the space and scope the work. No cost, no obligation.</p></div>
         <div class="step reveal"><h4>Custom plan</h4><p>You get a clear, written quote and a schedule that fits your home or facility.</p></div>
         <div class="step reveal"><h4>We handle it</h4><p>A vetted crew arrives on schedule and keeps your space consistently spotless.</p></div>
       </div>
@@ -523,7 +523,7 @@
                 <option>House / residential cleaning</option>
                 <option>Commercial / office cleaning</option>
                 <option>Government / public building</option>
-                <option>Not sure — help me decide</option>
+                <option>Not sure, help me decide</option>
               </select>
             </div>
             <div class="field"><label for="details">Anything else? <span style="font-weight:400;color:var(--muted)">(optional)</span></label><textarea id="details" name="details" placeholder="Size of the space, how often, timing, special requests…"></textarea></div>
@@ -532,7 +532,7 @@
           </form>
           <div class="form-success" id="formSuccess">
             <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-            <h3>Thanks — request received!</h3>
+            <h3>Thanks! Request received.</h3>
             <p>We'll reach out within one business day to schedule your free walkthrough.</p>
           </div>
         </div>
@@ -575,7 +575,7 @@
       </div>
       <div class="foot-bottom">
         <span>© <span id="year">2026</span> Mid-Valley Facility Services LLC. All rights reserved.</span>
-        <span class="ph">Placeholder contact details — replace before publishing.</span>
+        <span class="ph">Placeholder contact details, replace before publishing.</span>
       </div>
     </div>
   </footer>
