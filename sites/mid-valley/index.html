@@ -638,7 +638,9 @@
         </div>
 
         <div class="form reveal">
-          <form id="quoteForm" novalidate>
+          <form id="quoteForm" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+            <input type="hidden" name="form-name" value="quote" />
+            <p hidden aria-hidden="true"><label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
             <h3>Request a free quote</h3>
             <p class="sub">No obligation. We'll be in touch within one business day.</p>
             <div class="row2">
@@ -736,14 +738,45 @@
       io.observe(el);
     });
 
-    // Form (front-end only — connect to your email/CRM handler)
+    // Quote form — submits to Netlify Forms via AJAX so the inline success
+    // state shows without a page navigation. Netlify captures every submission
+    // (view them under Forms in the Netlify dashboard; add an email notification
+    // there to get each request in your inbox). Works once deployed to Netlify;
+    // when opened as a local file it falls back to showing the success message.
     const form = document.getElementById('quoteForm');
-    form.addEventListener('submit', (e) => {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    let errorEl = null;
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      form.style.display = 'none';
-      document.getElementById('formSuccess').classList.add('show');
-      // TODO: POST form data to your backend, Formspree, or email service.
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      submitBtn.disabled = true;
+      const original = submitBtn.textContent;
+      submitBtn.textContent = 'Sending…';
+      const showSuccess = () => {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      };
+      try {
+        const body = new URLSearchParams(new FormData(form)).toString();
+        const res = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body
+        });
+        if (!res.ok) throw new Error('Network response was not ok');
+        showSuccess();
+      } catch (err) {
+        // Local preview (file://) or offline: still confirm to the visitor.
+        if (location.protocol === 'file:') { showSuccess(); return; }
+        submitBtn.disabled = false;
+        submitBtn.textContent = original;
+        errorEl = document.createElement('p');
+        errorEl.className = 'form-note';
+        errorEl.style.color = '#B4341F';
+        errorEl.textContent = 'Something went wrong sending your request. Please call (541) 555-0100 or try again.';
+        submitBtn.insertAdjacentElement('afterend', errorEl);
+      }
     });
 
     document.getElementById('year').textContent = new Date().getFullYear();
