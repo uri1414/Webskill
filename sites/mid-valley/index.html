@@ -1,0 +1,785 @@
+<!doctype html>
+<!--
+  DIRECTION CONTRACT — Mid-Valley Facility Services
+  THESIS: "The well-run building." A cleaning company that reads as a credentialed local
+    contractor a homeowner AND a city procurement officer both trust. Refuses the category
+    default: cyan + soap-bubble icons + "Sparkling!" swoosh + cartoon mascot.
+  OWN-WORLD: Deep navy authority + living sage green on warm stone-white. Archivo display,
+    Public Sans (the USWDS workhorse) body. Real photography of real work leads the services;
+    hairline rules; soft real shadows. Recognizable with all content removed.
+  STORY: Visitor sees a local, licensed, eco-minded crew that cleans homes, offices, and
+    government buildings; believes the credentials; requests a free quote or calls.
+  FIRST VIEWPORT: Left — headline "A spotless space, handled locally," credential chips,
+    two CTAs (Free Quote / click-to-call). Right — real residential-cleaning photo with a
+    floating "Licensed & Insured" card. Stone ground, navy ink.
+  FORM: Persuade landing page; residential-first, three-service facility brand.
+  NOTE: phone/email/address/license numbers/testimonials are PLACEHOLDERS — owner replaces.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mid-Valley Facility Services — House, Commercial &amp; Government Cleaning in Albany, OR</title>
+  <meta name="description" content="Mid-Valley Facility Services LLC is a licensed, insured, locally owned cleaning company in Albany, Oregon. House cleaning, commercial janitorial, and government building services across the Mid-Willamette Valley. Request a free quote." />
+  <meta name="theme-color" content="#1E2B4D" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="Mid-Valley Facility Services LLC" />
+  <!-- PLACEHOLDER domain — replace midvalleyfacility.com with the real domain everywhere below -->
+  <link rel="canonical" href="https://midvalleyfacility.com/" />
+
+  <!-- Local / geo signals (Albany, Oregon) -->
+  <meta name="geo.region" content="US-OR" />
+  <meta name="geo.placename" content="Albany, Oregon" />
+  <meta name="geo.position" content="44.63651;-123.10595" />
+  <meta name="ICBM" content="44.63651, -123.10595" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Mid-Valley Facility Services LLC" />
+  <meta property="og:title" content="Mid-Valley Facility Services — House, Commercial & Government Cleaning in Albany, OR" />
+  <meta property="og:description" content="Licensed, insured, locally owned cleaning company in Albany, Oregon. House cleaning, commercial janitorial, and government building services across the Mid-Willamette Valley." />
+  <meta property="og:url" content="https://midvalleyfacility.com/" />
+  <meta property="og:image" content="https://midvalleyfacility.com/assets/residential.webp" />
+  <meta property="og:image:alt" content="Mid-Valley cleaning team at work in a bright kitchen" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mid-Valley Facility Services — Cleaning in Albany, OR" />
+  <meta name="twitter:description" content="Licensed, insured, locally owned house, commercial &amp; government cleaning across the Mid-Willamette Valley." />
+  <meta name="twitter:image" content="https://midvalleyfacility.com/assets/residential.webp" />
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Structured data. PLACEHOLDERS: domain, telephone, and sameAs profile URLs — replace with real values. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "HomeAndConstructionBusiness",
+        "@id": "https://midvalleyfacility.com/#business",
+        "name": "Mid-Valley Facility Services LLC",
+        "alternateName": "Mid-Valley Facility Services",
+        "description": "Licensed, insured, locally owned cleaning and janitorial company in Albany, Oregon, serving homes, businesses, and government buildings across the Mid-Willamette Valley.",
+        "url": "https://midvalleyfacility.com/",
+        "telephone": "+1-541-555-0100",
+        "email": "hello@midvalleyfacility.com",
+        "image": "https://midvalleyfacility.com/assets/residential.webp",
+        "logo": "https://midvalleyfacility.com/assets/favicon.png",
+        "priceRange": "$$",
+        "currenciesAccepted": "USD",
+        "paymentAccepted": "Cash, Check, Credit Card",
+        "slogan": "A spotless space, handled locally.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Albany",
+          "addressRegion": "OR",
+          "addressCountry": "US"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 44.63651,
+          "longitude": -123.10595
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "08:00",
+            "closes": "17:00"
+          }
+        ],
+        "areaServed": [
+          { "@type": "City", "name": "Albany, Oregon" },
+          { "@type": "City", "name": "Corvallis, Oregon" },
+          { "@type": "City", "name": "Lebanon, Oregon" },
+          { "@type": "City", "name": "Tangent, Oregon" },
+          { "@type": "City", "name": "Millersburg, Oregon" },
+          { "@type": "City", "name": "Jefferson, Oregon" },
+          { "@type": "City", "name": "Sweet Home, Oregon" },
+          { "@type": "City", "name": "Philomath, Oregon" },
+          { "@type": "City", "name": "Salem, Oregon" },
+          { "@type": "City", "name": "Brownsville, Oregon" }
+        ],
+        "knowsAbout": ["House cleaning", "Commercial janitorial services", "Government building cleaning", "Eco-friendly cleaning"],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Cleaning Services",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "House Cleaning",
+                "serviceType": "Residential cleaning",
+                "description": "Recurring and one-time house cleaning: weekly and bi-weekly service, deep cleans, and move-in / move-out cleaning.",
+                "areaServed": { "@type": "AdministrativeArea", "name": "Mid-Willamette Valley, Oregon" }
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Commercial & Office Cleaning",
+                "serviceType": "Commercial janitorial",
+                "description": "Dependable janitorial service for offices, retail, and medical or professional spaces, on nightly or weekly schedules.",
+                "areaServed": { "@type": "AdministrativeArea", "name": "Mid-Willamette Valley, Oregon" }
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Government & Public Building Cleaning",
+                "serviceType": "Public facility cleaning",
+                "description": "Licensed, insured, background-checked crews for city, county, and state buildings, built for public contracts.",
+                "areaServed": { "@type": "AdministrativeArea", "name": "Mid-Willamette Valley, Oregon" }
+              }
+            }
+          ]
+        },
+        "sameAs": []
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://midvalleyfacility.com/#website",
+        "url": "https://midvalleyfacility.com/",
+        "name": "Mid-Valley Facility Services LLC",
+        "publisher": { "@id": "https://midvalleyfacility.com/#business" },
+        "inLanguage": "en-US"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root{
+      --navy:#1E2B4D; --navy-deep:#16213C; --navy-700:#26355C;
+      --sage:#6E7E5F; --sage-deep:#4E5B3C; --sage-soft:#EAEDE3;
+      --stone:#F5F4EF; --paper:#FFFFFF;
+      --ink:#1E2B4D; --body:#3C4353; --muted:#6B7180; --line:#E4E4DC;
+      --radius:16px; --radius-sm:11px; --radius-lg:24px;
+      --maxw:1180px;
+      --ease:cubic-bezier(.22,.61,.36,1);
+      --shadow-sm:0 1px 2px rgba(22,33,60,.06), 0 2px 6px -2px rgba(22,33,60,.08);
+      --shadow-md:0 12px 28px -14px rgba(22,33,60,.28), 0 4px 10px -6px rgba(22,33,60,.12);
+      --shadow-lg:0 40px 80px -32px rgba(22,33,60,.40), 0 12px 28px -16px rgba(22,33,60,.20);
+      --font-body:"Public Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      --font-display:"Archivo",ui-sans-serif,system-ui,-apple-system,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{
+      margin:0;font-family:var(--font-body);color:var(--body);background:var(--stone);
+      font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    }
+    h1,h2,h3,h4{font-family:var(--font-display);color:var(--ink);font-weight:800;line-height:1.06;letter-spacing:-.03em;margin:0}
+    p{margin:0}
+    a{color:var(--sage-deep);text-decoration:none}
+    img{display:block;max-width:100%}
+    ul{margin:0;padding:0;list-style:none}
+    ::selection{background:var(--sage-soft);color:var(--sage-deep)}
+    :focus-visible{outline:3px solid var(--sage);outline-offset:3px;border-radius:6px}
+
+    .wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:26px}
+    .eyebrow{font-family:var(--font-body);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage-deep);display:inline-flex;align-items:center;gap:.6rem}
+    .eyebrow::before{content:"";width:26px;height:2px;background:var(--sage);border-radius:2px}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;font-family:var(--font-body);font-weight:600;font-size:1rem;padding:.85rem 1.45rem;border-radius:var(--radius-sm);border:1.5px solid transparent;cursor:pointer;transition:transform .25s var(--ease),background .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease),color .25s var(--ease);white-space:nowrap}
+    .btn-primary{background:var(--navy);color:#fff;box-shadow:var(--shadow-sm)}
+    .btn-primary:hover{background:var(--navy-700);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+    .btn-sage{background:var(--sage);color:#fff}
+    .btn-sage:hover{background:var(--sage-deep);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+    .btn-ghost{background:transparent;color:var(--navy);border-color:var(--line)}
+    .btn-ghost:hover{border-color:var(--navy);background:#fff;transform:translateY(-2px)}
+    .btn-lg{padding:1.02rem 1.7rem;font-size:1.05rem}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(245,244,239,.82);backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid transparent;transition:border-color .3s var(--ease),box-shadow .3s var(--ease),background .3s var(--ease)}
+    header.scrolled{border-bottom-color:var(--line);box-shadow:0 6px 24px -20px rgba(22,33,60,.5)}
+    .nav{display:flex;align-items:center;gap:1.6rem;height:78px}
+    .brand{display:flex;align-items:center;flex-shrink:0}
+    .wordmark{font-family:var(--font-display);font-weight:800;color:var(--navy);font-size:1.55rem;letter-spacing:-.02em;line-height:.9;display:flex;flex-direction:column}
+    .wordmark .llc{font-family:var(--font-body);font-size:.6rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--sage-deep);margin-top:.34rem;padding-top:.34rem;border-top:1.5px solid var(--sage);align-self:stretch}
+    .nav-links{display:flex;gap:1.7rem;margin-left:auto;align-items:center}
+    .nav-links a{color:var(--navy);font-weight:500;font-size:.98rem;position:relative;padding:.3rem 0}
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:var(--sage);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease)}
+    .nav-links a:hover::after{transform:scaleX(1)}
+    .nav-cta{display:flex;align-items:center;gap:1rem}
+    .callnum{display:inline-flex;align-items:center;gap:.5rem;color:var(--navy);font-weight:700;font-size:1rem;font-family:var(--font-display);letter-spacing:-.01em}
+    .callnum svg{width:17px;height:17px;color:var(--sage-deep)}
+    .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:8px}
+    .burger span{width:24px;height:2.5px;background:var(--navy);border-radius:2px;transition:.3s var(--ease)}
+
+    /* Mobile menu */
+    .mobile-menu{display:none;position:fixed;inset:78px 0 0;background:var(--stone);z-index:49;padding:26px;flex-direction:column;gap:.5rem;transform:translateY(-8px);opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+    .mobile-menu.open{display:flex;opacity:1;transform:translateY(0)}
+    .mobile-menu a{color:var(--navy);font-family:var(--font-display);font-weight:700;font-size:1.5rem;padding:.7rem 0;border-bottom:1px solid var(--line)}
+    .mobile-menu .btn{margin-top:1rem}
+
+    /* Hero */
+    .hero{padding:clamp(2.4rem,6vw,4.6rem) 0 clamp(3rem,7vw,5rem)}
+    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+    .hero h1{font-size:clamp(2.5rem,5.4vw,4rem);letter-spacing:-.035em}
+    .hero h1 em{font-style:normal;color:var(--sage-deep)}
+    .hero .lead{font-size:1.19rem;color:var(--body);margin-top:1.4rem;max-width:34ch}
+    .chips{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.7rem}
+    .chip{display:inline-flex;align-items:center;gap:.5rem;background:var(--paper);border:1px solid var(--line);color:var(--navy);font-weight:600;font-size:.92rem;padding:.5rem .9rem;border-radius:100px;box-shadow:var(--shadow-sm)}
+    .chip svg{width:15px;height:15px;color:var(--sage-deep)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+    .hero-note{margin-top:1.1rem;font-size:.92rem;color:var(--muted)}
+    .hero-media{position:relative}
+    .hero-media .frame{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);aspect-ratio:4/4.4}
+    .hero-media img{width:100%;height:100%;object-fit:cover}
+    .float-card{position:absolute;left:-22px;bottom:26px;background:var(--paper);border-radius:var(--radius);padding:1.05rem 1.2rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.9rem;max-width:250px}
+    .float-card .ic{width:44px;height:44px;border-radius:12px;background:var(--sage-soft);display:grid;place-items:center;flex-shrink:0}
+    .float-card .ic svg{width:22px;height:22px;color:var(--sage-deep)}
+    .float-card strong{display:block;font-family:var(--font-display);color:var(--navy);font-size:1rem;letter-spacing:-.01em}
+    .float-card span{font-size:.84rem;color:var(--muted)}
+
+    /* Trust bar */
+    .trust{background:var(--navy);color:#fff}
+    .trust .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.4rem;padding-block:1.15rem}
+    .trust-item{display:flex;align-items:center;gap:.7rem;font-weight:500;font-size:.98rem;color:#E7EAF2}
+    .trust-item svg{width:20px;height:20px;color:#A9BE95;flex-shrink:0}
+    .trust-item strong{color:#fff;font-weight:700}
+
+    /* Sections */
+    section{padding:clamp(3.4rem,7vw,6rem) 0}
+    .sec-head{max-width:640px}
+    .sec-head h2{font-size:clamp(2rem,4vw,2.9rem);margin-top:1rem}
+    .sec-head p{margin-top:1rem;font-size:1.1rem;color:var(--body)}
+
+    /* Services */
+    .feature{display:grid;grid-template-columns:1.02fr 1fr;gap:clamp(1.6rem,4vw,3.2rem);align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);margin-top:2.6rem}
+    .feature .fimg{position:relative;min-height:340px}
+    .feature .fimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .tag{position:absolute;top:18px;left:18px;background:rgba(30,43,77,.92);color:#fff;font-weight:600;font-size:.8rem;letter-spacing:.04em;padding:.4rem .8rem;border-radius:100px;backdrop-filter:blur(4px)}
+    .feature .fbody{padding:clamp(1.6rem,3vw,2.6rem) clamp(1.6rem,3vw,2.6rem) clamp(1.6rem,3vw,2.6rem) 0}
+    .feature h3{font-size:1.85rem}
+    .feature p{margin-top:.9rem;color:var(--body)}
+    .inc{display:grid;grid-template-columns:1fr 1fr;gap:.55rem .9rem;margin-top:1.4rem}
+    .inc li{display:flex;align-items:flex-start;gap:.55rem;font-size:.96rem;color:var(--navy);font-weight:500}
+    .inc svg{width:17px;height:17px;color:var(--sage);flex-shrink:0;margin-top:3px}
+    .feature .flink{margin-top:1.6rem;display:inline-flex;align-items:center;gap:.5rem;color:var(--navy);font-weight:600}
+    .feature .flink svg{width:16px;height:16px;transition:transform .25s var(--ease)}
+    .feature .flink:hover svg{transform:translateX(4px)}
+
+    .svc-two{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:1.6rem}
+    .svc-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+    .svc-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+    .svc-card .cimg{position:relative;aspect-ratio:16/10;overflow:hidden}
+    .svc-card .cimg img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+    .svc-card:hover .cimg img{transform:scale(1.05)}
+    .svc-card .cbody{padding:1.5rem 1.6rem 1.7rem}
+    .svc-card h3{font-size:1.4rem}
+    .svc-card p{margin-top:.65rem;font-size:.98rem}
+    .svc-card ul{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.45rem}
+    .svc-card ul li{font-size:.85rem;font-weight:600;color:var(--sage-deep);background:var(--sage-soft);padding:.32rem .7rem;border-radius:100px}
+
+    /* Why */
+    .why{background:var(--paper);border-block:1px solid var(--line)}
+    .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:start}
+    .why-list{display:grid;gap:1.5rem;margin-top:.5rem}
+    .why-item{display:flex;gap:1.1rem}
+    .why-item .wic{width:50px;height:50px;flex-shrink:0;border-radius:13px;background:var(--sage-soft);display:grid;place-items:center}
+    .why-item .wic svg{width:24px;height:24px;color:var(--sage-deep)}
+    .why-item h4{font-size:1.16rem;margin-bottom:.3rem}
+    .why-item p{font-size:.98rem;color:var(--body)}
+    .why-aside{background:var(--navy);color:#fff;border-radius:var(--radius-lg);padding:clamp(1.8rem,3vw,2.6rem);position:sticky;top:100px}
+    .why-aside h3{color:#fff;font-size:1.65rem}
+    .why-aside p{color:#D5DBEA;margin-top:.9rem;font-size:1rem}
+    .why-aside .stat{margin-top:1.8rem;display:grid;gap:1.2rem}
+    .why-aside .stat .row{border-top:1px solid rgba(255,255,255,.15);padding-top:1.2rem}
+    .why-aside .stat .row:first-child{border-top:0;padding-top:0}
+    .why-aside .stat b{font-family:var(--font-display);font-size:1.6rem;color:#fff;letter-spacing:-.02em;display:block}
+    .why-aside .stat span{color:#AEB9D0;font-size:.92rem}
+
+    /* Process */
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:2.8rem;counter-reset:s}
+    .step{position:relative;padding-top:1.4rem}
+    .step::before{counter-increment:s;content:"0" counter(s);font-family:var(--font-display);font-weight:800;font-size:2.6rem;color:var(--sage);opacity:.9;letter-spacing:-.04em;line-height:1}
+    .step h4{font-size:1.16rem;margin-top:.8rem}
+    .step p{font-size:.95rem;margin-top:.5rem;color:var(--body)}
+    .step::after{content:"";position:absolute;top:1.85rem;left:3.4rem;right:-.7rem;height:2px;background:linear-gradient(90deg,var(--line),transparent);z-index:-1}
+    .step:last-child::after{display:none}
+
+    /* Areas */
+    .areas{background:var(--sage-soft)}
+    .areas-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+    .area-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem}
+    .area-pills span{background:var(--paper);border:1px solid #DCE0D2;color:var(--navy);font-weight:600;font-size:.95rem;padding:.55rem 1rem;border-radius:100px}
+    .area-pills span.home{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+    /* Quote / CTA */
+    .quote{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff}
+    .quote-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+    .quote h2{color:#fff;font-size:clamp(2rem,4vw,2.8rem)}
+    .quote .lead{color:#D5DBEA;margin-top:1.1rem;font-size:1.1rem;max-width:40ch}
+    .quote-contact{margin-top:2rem;display:grid;gap:1rem}
+    .quote-contact a,.quote-contact div{display:flex;align-items:center;gap:.85rem;color:#EBEEF6;font-weight:500}
+    .quote-contact .qic{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.09);display:grid;place-items:center;flex-shrink:0}
+    .quote-contact .qic svg{width:19px;height:19px;color:#A9BE95}
+    .quote-contact b{color:#fff;font-family:var(--font-display);font-size:1.05rem;letter-spacing:-.01em}
+    .form{background:var(--paper);border-radius:var(--radius-lg);padding:clamp(1.6rem,3vw,2.4rem);box-shadow:var(--shadow-lg)}
+    .form h3{color:var(--navy);font-size:1.35rem}
+    .form .sub{color:var(--muted);font-size:.95rem;margin-top:.35rem;margin-bottom:1.3rem}
+    .field{margin-bottom:1rem}
+    .field label{display:block;font-size:.86rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+    .field input,.field select,.field textarea{width:100%;font-family:var(--font-body);font-size:1rem;color:var(--ink);background:var(--stone);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:.8rem .9rem;transition:border-color .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease)}
+    .field input::placeholder,.field textarea::placeholder{color:#9BA0AC}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--sage);background:#fff;box-shadow:0 0 0 4px rgba(110,126,95,.14)}
+    .field textarea{resize:vertical;min-height:92px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .form .btn{width:100%;margin-top:.4rem}
+    .form-note{font-size:.8rem;color:var(--muted);margin-top:.9rem;text-align:center}
+    .form-success{display:none;text-align:center;padding:1.5rem .5rem}
+    .form-success.show{display:block}
+    .form-success .ok{width:58px;height:58px;border-radius:50%;background:var(--sage-soft);display:grid;place-items:center;margin:0 auto 1rem}
+    .form-success .ok svg{width:30px;height:30px;color:var(--sage-deep)}
+    .form-success h3{color:var(--navy)}
+    .form-success p{color:var(--body);margin-top:.6rem}
+
+    /* Footer */
+    footer{background:var(--navy-deep);color:#C6CDDE;padding:clamp(3rem,5vw,4.2rem) 0 2rem}
+    .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:2.4rem}
+    .fwordmark{font-family:var(--font-display);font-weight:800;color:#fff;font-size:1.5rem;letter-spacing:-.02em;line-height:1}
+    .fwordmark .llc{display:block;font-size:.72rem;letter-spacing:.22em;color:#A9BE95;font-weight:700;margin-top:.55rem}
+    .foot-grid p{font-size:.94rem;margin-top:1rem;color:#AAB4CB;max-width:32ch}
+    .foot-col h5{color:#fff;font-family:var(--font-display);font-size:.98rem;letter-spacing:.02em;margin:0 0 1rem}
+    .foot-col a,.foot-col li{color:#AAB4CB;font-size:.94rem;padding:.28rem 0;display:block}
+    .foot-col a:hover{color:#fff}
+    .foot-bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:2.8rem;padding-top:1.6rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;font-size:.85rem;color:#8B94AC}
+    .ph{color:#8B94AC;font-style:italic}
+
+    /* Reveal animation */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+    .reveal.in{opacity:1;transform:none}
+
+    /* Responsive */
+    @media(max-width:960px){
+      .hero-grid{grid-template-columns:1fr;gap:2.4rem}
+      .hero-media{max-width:460px}
+      .hero .lead{max-width:46ch}
+      .feature{grid-template-columns:1fr}
+      .feature .fimg{min-height:260px}
+      .feature .fbody{padding:1.7rem}
+      .why-grid,.quote-grid,.areas-grid{grid-template-columns:1fr}
+      .why-aside{position:static}
+      .steps{grid-template-columns:1fr 1fr;gap:2rem 1.4rem}
+      .step::after{display:none}
+      .foot-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:680px){
+      body{font-size:16px}
+      .nav-links,.callnum{display:none}
+      .nav-cta .btn-sage{display:none}
+      .burger{display:flex}
+      .svc-two{grid-template-columns:1fr}
+      .inc,.row2{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+      .foot-grid{grid-template-columns:1fr}
+      .float-card{left:12px;right:12px;max-width:none;bottom:12px}
+      .trust .wrap{justify-content:flex-start;gap:1rem 1.6rem}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important}
+      .reveal{opacity:1;transform:none;transition:none}
+      .btn,.svc-card,.svc-card .cimg img{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <header id="top">
+    <div class="wrap">
+      <nav class="nav">
+        <a class="brand" href="#top" aria-label="Mid-Valley Facility Services LLC — home">
+          <span class="wordmark">MID-VALLEY<span class="llc">Facility Services LLC</span></span>
+        </a>
+        <div class="nav-links">
+          <a href="#services">Services</a>
+          <a href="#why">Why Us</a>
+          <a href="#process">How It Works</a>
+          <a href="#areas">Service Area</a>
+        </div>
+        <div class="nav-cta">
+          <!-- PLACEHOLDER phone — replace (541) 555-0100 with the real number -->
+          <a class="callnum" href="tel:+15415550100">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            (541) 555-0100
+          </a>
+          <a class="btn btn-sage" href="#quote">Free Quote</a>
+          <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services">Services</a>
+    <a href="#why">Why Us</a>
+    <a href="#process">How It Works</a>
+    <a href="#areas">Service Area</a>
+    <a href="#quote">Contact</a>
+    <a class="btn btn-sage btn-lg" href="#quote">Request a Free Quote</a>
+    <a class="btn btn-ghost btn-lg" href="tel:+15415550100">Call (541) 555-0100</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Albany, Oregon · Mid-Willamette Valley</span>
+          <h1>A spotless space,<br><em>handled locally.</em></h1>
+          <p class="lead">Trusted house cleaning, commercial janitorial, and government facility care from one licensed, insured, locally owned crew.</p>
+          <div class="chips">
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/></svg>Licensed &amp; Insured</span>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>Locally Owned</span>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>Eco-Friendly</span>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#quote">Request a Free Quote</a>
+            <a class="btn btn-ghost btn-lg" href="#services">Explore Services</a>
+          </div>
+          <p class="hero-note">Free on-site walkthrough · No-obligation estimate · Same-week scheduling</p>
+        </div>
+        <div class="hero-media reveal">
+          <div class="frame">
+            <img src="assets/residential.webp" alt="Mid-Valley cleaning team wiping counters and mopping a bright kitchen" width="1400" height="1400" fetchpriority="high" />
+          </div>
+          <div class="float-card">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <div><strong>Fully vetted crews</strong><span>Licensed, insured &amp; background-checked</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust">
+    <div class="wrap">
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span><strong>Licensed &amp; insured</strong> for home &amp; contract work</span></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/></svg><span><strong>Locally owned</strong> in the Mid-Valley</span></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/></svg><span><strong>Eco-friendly</strong> products &amp; methods</span></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><strong>Flexible scheduling</strong>, one point of contact</span></div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">What we clean</span>
+        <h2>One crew for every space you're responsible for.</h2>
+        <p>From a family kitchen to a county office building, Mid-Valley brings the same standard, credentials, and dependable schedule to every job.</p>
+      </div>
+
+      <!-- Residential feature -->
+      <div class="feature reveal">
+        <div class="fimg">
+          <span class="tag">Residential</span>
+          <img src="assets/residential.webp" alt="Two uniformed cleaners tidying and mopping a residential kitchen" loading="lazy" />
+        </div>
+        <div class="fbody">
+          <h3>House cleaning that gives you your weekend back</h3>
+          <p>Recurring or one-time cleans, tailored to your home and handled by a consistent, background-checked crew you'll come to know. We treat your space and your time with care.</p>
+          <ul class="inc">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Weekly &amp; bi-weekly</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Deep &amp; spring cleans</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Move-in / move-out</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Kitchens &amp; baths</li>
+          </ul>
+          <a class="flink" href="#quote">Get a home quote <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+
+      <!-- Commercial + Government -->
+      <div class="svc-two">
+        <article class="svc-card reveal">
+          <div class="cimg"><img src="assets/commercial.webp" alt="Clean modern office boardroom with conference table and city view" loading="lazy" /></div>
+          <div class="cbody">
+            <h3>Commercial &amp; Office</h3>
+            <p>Dependable janitorial service that keeps offices, retail, and professional spaces presentable, on a schedule that works around your business.</p>
+            <ul>
+              <li>Offices</li><li>Retail</li><li>Medical &amp; dental</li><li>Nightly / weekly</li>
+            </ul>
+          </div>
+        </article>
+        <article class="svc-card reveal">
+          <div class="cimg"><img src="assets/government.webp" alt="Multi-level government building interior with concrete and greenery" loading="lazy" /></div>
+          <div class="cbody">
+            <h3>Government &amp; Public Buildings</h3>
+            <p>Licensed, insured, background-checked crews that meet the standards public facilities require. Built for city, county, and state contracts.</p>
+            <ul>
+              <li>City &amp; county</li><li>Common areas</li><li>Restrooms</li><li>Contract-ready</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section id="why" class="why">
+    <div class="wrap">
+      <div class="why-grid">
+        <div class="reveal">
+          <span class="eyebrow">Why Mid-Valley</span>
+          <h2 class="sec-head" style="font-size:clamp(2rem,4vw,2.9rem);margin-top:1rem">Credentials you can hand a procurement officer, and a crew you'd welcome into your home.</h2>
+          <div class="why-list">
+            <div class="why-item">
+              <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+              <div><h4>Licensed &amp; fully insured</h4><p>Coverage and paperwork ready for residential clients and public contracts alike. No surprises, no exposure.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+              <div><h4>Owned &amp; operated here</h4><p>We live and work in the Mid-Valley. You get local accountability and one point of contact, not a call center.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg></div>
+              <div><h4>Eco-friendly by default</h4><p>Effective, people- and pet-safe products and low-waste methods that are gentler on your space and the valley.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="wic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+              <div><h4>Vetted, consistent crews</h4><p>Background-checked, uniformed team members, often the same faces each visit, so quality stays predictable.</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="why-aside reveal">
+          <h3>Built for homes &amp; contracts</h3>
+          <p>Most cleaners do one or the other. Mid-Valley is set up to meet the trust bar of a family home and the compliance bar of a public building, with the same crew standard behind both.</p>
+          <div class="stat">
+            <div class="row"><b>3 sectors</b><span>Residential · Commercial · Government</span></div>
+            <div class="row"><b>Free walkthrough</b><span>Every quote starts on-site, at no cost</span></div>
+            <div class="row"><b>Mid-Valley wide</b><span>Albany and surrounding communities</span></div>
+          </div>
+          <a class="btn btn-sage btn-lg" href="#quote" style="width:100%;margin-top:1.9rem">Request a Free Quote</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">How it works</span>
+        <h2>Four simple steps to a cleaner space.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><h4>Request a quote</h4><p>Call or send the form. Tell us the space, the frequency, and anything that matters to you.</p></div>
+        <div class="step reveal"><h4>Free walkthrough</h4><p>We visit on-site to see the space and scope the work. No cost, no obligation.</p></div>
+        <div class="step reveal"><h4>Custom plan</h4><p>You get a clear, written quote and a schedule that fits your home or facility.</p></div>
+        <div class="step reveal"><h4>We handle it</h4><p>A vetted crew arrives on schedule and keeps your space consistently spotless.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AREAS -->
+  <section id="areas" class="areas">
+    <div class="wrap">
+      <div class="areas-grid">
+        <div class="reveal">
+          <span class="eyebrow">Where we work</span>
+          <h2 class="sec-head" style="font-size:clamp(2rem,4vw,2.7rem);margin-top:1rem">Proudly serving Albany &amp; the Mid-Willamette Valley.</h2>
+          <p style="margin-top:1rem;color:var(--body)">Based in Albany, Oregon and covering the surrounding communities. Not sure if you're in range? Just ask.</p>
+        </div>
+        <div class="reveal">
+          <div class="area-pills">
+            <span class="home">Albany</span>
+            <span>Corvallis</span>
+            <span>Lebanon</span>
+            <span>Tangent</span>
+            <span>Millersburg</span>
+            <span>Jefferson</span>
+            <span>Sweet Home</span>
+            <span>Philomath</span>
+            <span>Salem area</span>
+            <span>Brownsville</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE / CONTACT -->
+  <section id="quote" class="quote">
+    <div class="wrap">
+      <div class="quote-grid">
+        <div class="reveal">
+          <span class="eyebrow" style="color:#A9BE95">Free, no-obligation estimate</span>
+          <h2>Tell us about your space.</h2>
+          <p class="lead">Send a few details and we'll follow up within one business day to set up your free walkthrough.</p>
+          <div class="quote-contact">
+            <!-- PLACEHOLDER phone -->
+            <a href="tel:+15415550100">
+              <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+              <span>Call or text<br><b>(541) 555-0100</b></span>
+            </a>
+            <!-- PLACEHOLDER email -->
+            <a href="mailto:hello@midvalleyfacility.com">
+              <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>
+              <span>Email us<br><b>hello@midvalleyfacility.com</b></span>
+            </a>
+            <div>
+              <span class="qic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <span>Office hours<br><b>Mon–Fri, 8am–5pm PT</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form reveal">
+          <form id="quoteForm" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+            <input type="hidden" name="form-name" value="quote" />
+            <p hidden aria-hidden="true"><label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+            <h3>Request a free quote</h3>
+            <p class="sub">No obligation. We'll be in touch within one business day.</p>
+            <div class="row2">
+              <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Your name" required /></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="(541) 555-0000" required /></div>
+            </div>
+            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@email.com" /></div>
+            <div class="field">
+              <label for="service">What do you need cleaned?</label>
+              <select id="service" name="service" required>
+                <option value="" disabled selected>Select a service…</option>
+                <option>House / residential cleaning</option>
+                <option>Commercial / office cleaning</option>
+                <option>Government / public building</option>
+                <option>Not sure, help me decide</option>
+              </select>
+            </div>
+            <div class="field"><label for="details">Anything else? <span style="font-weight:400;color:var(--muted)">(optional)</span></label><textarea id="details" name="details" placeholder="Size of the space, how often, timing, special requests…"></textarea></div>
+            <button class="btn btn-primary btn-lg" type="submit">Send my request</button>
+            <p class="form-note">By submitting you agree to be contacted about your quote.</p>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h3>Thanks! Request received.</h3>
+            <p>We'll reach out within one business day to schedule your free walkthrough.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="fwordmark">MID-VALLEY<span class="llc">— FACILITY SERVICES LLC —</span></div>
+          <p>Licensed, insured, locally owned cleaning &amp; janitorial services for homes, businesses, and public buildings across the Mid-Willamette Valley.</p>
+        </div>
+        <div class="foot-col">
+          <h5>Services</h5>
+          <a href="#services">House Cleaning</a>
+          <a href="#services">Commercial &amp; Office</a>
+          <a href="#services">Government Buildings</a>
+          <a href="#process">How It Works</a>
+        </div>
+        <div class="foot-col">
+          <h5>Service Area</h5>
+          <ul>
+            <li>Albany, OR</li>
+            <li>Corvallis · Lebanon</li>
+            <li>Tangent · Millersburg</li>
+            <li>Jefferson · Salem area</li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <!-- PLACEHOLDER contact details -->
+          <a href="tel:+15415550100">(541) 555-0100</a>
+          <a href="mailto:hello@midvalleyfacility.com">hello@midvalleyfacility.com</a>
+          <span class="ph">Mon–Fri, 8am–5pm PT</span>
+          <a class="btn btn-sage" href="#quote" style="margin-top:1rem">Free Quote</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year">2026</span> Mid-Valley Facility Services LLC. All rights reserved.</span>
+        <span class="ph">Placeholder contact details, replace before publishing.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Header shadow on scroll
+    const header = document.querySelector('header');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+    onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+    // Mobile menu
+    const burger = document.getElementById('burger');
+    const menu = document.getElementById('mobileMenu');
+    const toggle = (open) => {
+      menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    burger.addEventListener('click', () => toggle(!menu.classList.contains('open')));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:0.14, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach((el,i) => {
+      el.style.transitionDelay = (i % 4 * 70) + 'ms';
+      io.observe(el);
+    });
+
+    // Quote form — submits to Netlify Forms via AJAX so the inline success
+    // state shows without a page navigation. Netlify captures every submission
+    // (view them under Forms in the Netlify dashboard; add an email notification
+    // there to get each request in your inbox). Works once deployed to Netlify;
+    // when opened as a local file it falls back to showing the success message.
+    const form = document.getElementById('quoteForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    let errorEl = null;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      submitBtn.disabled = true;
+      const original = submitBtn.textContent;
+      submitBtn.textContent = 'Sending…';
+      const showSuccess = () => {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      };
+      try {
+        const body = new URLSearchParams(new FormData(form)).toString();
+        const res = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body
+        });
+        if (!res.ok) throw new Error('Network response was not ok');
+        showSuccess();
+      } catch (err) {
+        // Local preview (file://) or offline: still confirm to the visitor.
+        if (location.protocol === 'file:') { showSuccess(); return; }
+        submitBtn.disabled = false;
+        submitBtn.textContent = original;
+        errorEl = document.createElement('p');
+        errorEl.className = 'form-note';
+        errorEl.style.color = '#B4341F';
+        errorEl.textContent = 'Something went wrong sending your request. Please call (541) 555-0100 or try again.';
+        submitBtn.insertAdjacentElement('afterend', errorEl);
+      }
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

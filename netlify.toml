@@ -1,0 +1,5 @@
+# Netlify configuration for Mid-Valley Facility Services
+# The site is a static HTML site living in sites/mid-valley/ — no build step.
+[build]
+  publish = "sites/mid-valley"
+  command = ""
