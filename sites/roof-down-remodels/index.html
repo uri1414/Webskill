@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roof Down Remodels LLC — Roofing, Exterior Painting &amp; Flooring</title>
+  <meta name="description" content="Roof Down Remodels LLC — remodeling from the roof down. Roof installation, exterior painting, and flooring for Oregon homeowners. Licensed CCB# 224983. Call or text (503) 507-6976 for a free estimate." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #3B82E6;        /* bright cornflower — main logo blue */
+      --blue-600: #2A63C4;    /* hover / darker */
+      --royal: #2350A8;       /* deep roof blue */
+      --blue-light: #BFD8F7;  /* light roof accent */
+      --blue-wash: #EAF2FD;   /* soft blue section wash */
+      --navy: #132744;        /* deep sections (blue-biased near-black) */
+      --navy-700: #1C3760;
+      --steel: #7C8896;       /* window gray */
+      --ink: #16202B;         /* near-black text, slight blue */
+      --paper: #F5F8FD;       /* blue-tinted off-white */
+      --white: #FFFFFF;
+
+      --text: #34414F;        /* body on light */
+      --muted: #647485;
+      --line: #DEE7F1;
+
+      --radius: 16px;
+      --radius-sm: 11px;
+      --radius-pill: 999px;
+      --shadow-sm: 0 1px 2px rgba(19,39,68,.06), 0 2px 8px rgba(19,39,68,.07);
+      --shadow-md: 0 16px 36px -18px rgba(19,39,68,.34), 0 3px 8px -3px rgba(19,39,68,.14);
+      --shadow-lg: 0 44px 84px -32px rgba(19,39,68,.46);
+
+      --maxw: 1180px;
+      --ease: cubic-bezier(.22,.61,.36,1);
+
+      --font-body: "Barlow", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-display: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--paper);
+      font-size: 17px;
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4 { color: var(--ink); font-family: var(--font-display); font-weight: 700; line-height: 1.02; letter-spacing: .005em; margin: 0; text-wrap: balance; }
+    h2 { text-transform: uppercase; }
+    p { margin: 0; }
+    a { color: var(--blue-600); text-decoration: none; }
+    img, svg { display: block; max-width: 100%; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    ::selection { background: var(--blue-light); color: var(--navy); }
+
+    .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 24px; }
+    .eyebrow {
+      font-family: var(--font-display);
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: 15px; font-weight: 600; color: var(--blue-600);
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: .5em;
+      font-family: var(--font-display); font-weight: 600; font-size: 17px;
+      text-transform: uppercase; letter-spacing: .04em;
+      padding: 13px 26px; border-radius: var(--radius-sm);
+      border: 2px solid transparent; cursor: pointer;
+      transition: transform .22s var(--ease), background .22s var(--ease), box-shadow .22s var(--ease), color .22s var(--ease), border-color .22s var(--ease);
+      line-height: 1; white-space: nowrap;
+    }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary { background: var(--blue); color: #fff; box-shadow: var(--shadow-sm); }
+    .btn-primary:hover { background: var(--blue-600); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-navy { background: var(--navy); color: #fff; }
+    .btn-navy:hover { background: var(--navy-700); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-outline { background: transparent; color: var(--navy); border-color: rgba(19,39,68,.22); }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue-600); transform: translateY(-2px); }
+    .btn-white { background: #fff; color: var(--navy); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-lg { padding: 16px 32px; font-size: 19px; }
+
+    /* ---------- Logo mark ---------- */
+    .mark { width: 52px; height: auto; flex: none; }
+    .brandline { display: inline-flex; align-items: center; gap: 13px; }
+    .brandline .name {
+      font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+      letter-spacing: .02em; font-size: 19px; line-height: .96; color: var(--ink); white-space: nowrap;
+    }
+    .brandline .name small { display: block; font-family: var(--font-body); font-weight: 500;
+      text-transform: none; letter-spacing: .01em; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+    /* ---------- Header ---------- */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--paper) 90%, transparent);
+      backdrop-filter: saturate(150%) blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 78px; }
+    .nav-links { display: flex; align-items: center; gap: 22px; }
+    .nav-links a { color: var(--navy); font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 15px; position: relative; white-space: nowrap; }
+    .nav-links a::after { content: ""; position: absolute; left: 0; bottom: -7px; height: 2px; width: 100%; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform .26s var(--ease); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-cta { display: flex; align-items: center; gap: 16px; }
+    .nav-phone { color: var(--navy); font-family: var(--font-display); font-weight: 700; font-size: 17px; display: inline-flex; align-items: center; gap: 7px; letter-spacing: .02em; white-space: nowrap; }
+    .nav-phone svg { width: 17px; height: 17px; color: var(--blue); }
+
+    /* ---------- Roofline divider ---------- */
+    .roofline { display: block; width: 100%; height: 26px; }
+    .roofline path { fill: currentColor; }
+
+    /* ---------- Hero ---------- */
+    .hero { position: relative; background: var(--navy); color: #fff; overflow: hidden; }
+    .hero-scene { position: absolute; inset: 0; z-index: 0; opacity: .96; }
+    .hero::after { content: ""; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(96deg, rgba(19,39,68,.94) 0%, rgba(19,39,68,.78) 44%, rgba(19,39,68,.32) 78%, rgba(19,39,68,.12) 100%); }
+    .hero-inner { position: relative; z-index: 2; padding: clamp(56px, 8vw, 104px) 0 clamp(64px, 8vw, 108px); max-width: 680px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 9px; margin-bottom: 24px;
+      background: rgba(59,130,230,.2); border: 1px solid rgba(191,216,247,.42);
+      color: #DCEAFE; padding: 8px 16px; border-radius: var(--radius-pill);
+      font-family: var(--font-display); font-size: 14.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    }
+    .hero h1 { color: #fff; font-size: clamp(46px, 7.4vw, 92px); line-height: .93; letter-spacing: .004em; text-transform: uppercase; }
+    .hero h1 span { color: var(--blue-light); }
+    .hero .sub { color: rgba(233,240,250,.86); font-size: 19px; margin-top: 22px; max-width: 540px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 34px; }
+    .hero-meta .m { display: inline-flex; align-items: center; gap: 9px; color: rgba(233,240,250,.9); font-weight: 500; font-size: 15px; }
+    .hero-meta .m svg { width: 19px; height: 19px; color: var(--blue-light); flex: none; }
+    .stars { display: inline-flex; gap: 2px; color: #F6B44C; }
+    .stars svg { width: 17px; height: 17px; }
+
+    /* ---------- Trust strip ---------- */
+    .trust { background: var(--white); border-bottom: 1px solid var(--line); }
+    .trust .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 40px; padding-block: 22px; }
+    .trust .item { display: inline-flex; align-items: center; gap: 12px; color: var(--navy); font-weight: 600; font-size: 15px; }
+    .trust .item svg { width: 24px; height: 24px; color: var(--blue); flex: none; }
+    .trust .item b { font-family: var(--font-display); font-size: 20px; letter-spacing: .01em; }
+    .trust .item small { display: block; font-weight: 500; font-size: 12.5px; color: var(--muted); }
+
+    /* ---------- Section scaffolding ---------- */
+    section { position: relative; }
+    .pad { padding-block: clamp(72px, 9vw, 116px); }
+    .head-block { max-width: 660px; }
+    .head-block h2 { font-size: clamp(34px, 5vw, 58px); margin-top: 12px; }
+    .head-block p { color: var(--muted); font-size: 18px; margin-top: 14px; }
+    .center { margin-inline: auto; text-align: center; }
+
+    /* ---------- Services ---------- */
+    .services { background: var(--paper); }
+    .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
+    .svc {
+      background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 30px 28px 32px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+    }
+    .svc::before { content: ""; position: absolute; left: 0; top: 0; height: 5px; width: 100%; background: linear-gradient(90deg, var(--blue), var(--royal)); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease); }
+    .svc:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--blue-light); }
+    .svc:hover::before { transform: scaleX(1); }
+    .svc .ic { width: 62px; height: 62px; border-radius: 14px; background: var(--blue-wash); color: var(--royal); display: grid; place-items: center; margin-bottom: 20px; }
+    .svc .ic svg { width: 32px; height: 32px; }
+    .svc h3 { font-size: 28px; text-transform: uppercase; letter-spacing: .01em; }
+    .svc p { color: var(--muted); font-size: 15.5px; margin-top: 10px; }
+    .svc .list { display: grid; gap: 9px; margin-top: 18px; }
+    .svc .list li { display: flex; gap: 10px; align-items: flex-start; color: var(--text); font-size: 14.5px; }
+    .svc .list svg { width: 17px; height: 17px; color: var(--blue); flex: none; margin-top: 3px; }
+
+    /* ---------- Roof-down band ---------- */
+    .band { background: var(--navy); color: #fff; position: relative; overflow: hidden; }
+    .band-top { color: var(--paper); }
+    .band-bottom { color: var(--paper); transform: rotate(180deg); }
+    .band-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+    .band h2 { color: #fff; font-size: clamp(32px, 4.6vw, 54px); }
+    .band h2 span { color: var(--blue-light); }
+    .band p { color: rgba(233,240,250,.82); font-size: 17.5px; margin-top: 18px; }
+    .band-steps { display: grid; gap: 14px; }
+    .band-step { display: flex; gap: 18px; align-items: flex-start; background: rgba(255,255,255,.05); border: 1px solid rgba(191,216,247,.18); border-radius: var(--radius-sm); padding: 20px 22px; }
+    .band-step .n { font-family: var(--font-display); font-weight: 700; font-size: 30px; color: var(--blue-light); line-height: 1; flex: none; width: 40px; }
+    .band-step h4 { color: #fff; font-size: 21px; text-transform: uppercase; letter-spacing: .02em; font-weight: 600; }
+    .band-step p { color: rgba(233,240,250,.72); font-size: 14.5px; margin-top: 4px; }
+
+    /* ---------- Reviews ---------- */
+    .reviews { background: var(--blue-wash); }
+    .rev-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .google-score { display: inline-flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 10px 20px; box-shadow: var(--shadow-sm); }
+    .google-score .g { font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--navy); }
+    .google-score small { color: var(--muted); font-size: 13px; display: block; line-height: 1.2; }
+    .rev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
+    .rev { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .rev .stars { margin-bottom: 14px; }
+    .rev blockquote { margin: 0; color: var(--ink); font-size: 16.5px; line-height: 1.55; flex: 1; }
+    .rev .who { display: flex; align-items: center; gap: 12px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .rev .av { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 19px; flex: none; }
+    .rev .who b { color: var(--navy); font-weight: 600; font-size: 15.5px; display: block; }
+    .rev .who span { color: var(--muted); font-size: 13px; }
+
+    /* ---------- Gallery ---------- */
+    .gallery { background: var(--paper); }
+    .gal-note { display: inline-flex; align-items: center; gap: 9px; background: var(--blue-wash); color: var(--royal); border: 1px dashed var(--blue-light); border-radius: var(--radius-pill); padding: 8px 16px; font-size: 13.5px; font-weight: 600; margin-top: 18px; }
+    .gal-note svg { width: 16px; height: 16px; }
+    .gal-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 155px; gap: 16px; margin-top: 40px; }
+    .gal { border-radius: var(--radius-sm); overflow: hidden; position: relative; box-shadow: var(--shadow-sm); background: var(--navy); }
+    .gal svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .gal .tag { position: absolute; left: 12px; bottom: 12px; z-index: 2; background: rgba(19,39,68,.82); color: #fff; font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 12px; padding: 5px 11px; border-radius: 7px; }
+    .gal.wide { grid-column: span 2; }
+    .gal.tall { grid-row: span 2; }
+
+    /* ---------- CTA ---------- */
+    .cta { background: var(--paper); }
+    .cta-card { background: linear-gradient(135deg, var(--royal) 0%, var(--blue) 100%); border-radius: 22px; padding: clamp(40px, 5vw, 68px); position: relative; overflow: hidden; box-shadow: var(--shadow-lg); display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 5vw, 60px); align-items: center; }
+    .cta-card::before { content: ""; position: absolute; right: -60px; bottom: -60px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%); }
+    .cta-l { position: relative; z-index: 2; }
+    .cta-l h2 { color: #fff; font-size: clamp(34px, 4.6vw, 54px); }
+    .cta-l p { color: rgba(255,255,255,.9); font-size: 18px; margin-top: 14px; max-width: 420px; }
+    .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+    .cta-r { position: relative; z-index: 2; display: grid; gap: 13px; }
+    .cta-fact { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); border-radius: var(--radius-sm); padding: 16px 18px; }
+    .cta-fact .ic { width: 44px; height: 44px; border-radius: 11px; background: rgba(255,255,255,.16); color: #fff; display: grid; place-items: center; flex: none; }
+    .cta-fact .ic svg { width: 21px; height: 21px; }
+    .cta-fact .t { color: #fff; font-weight: 600; font-size: 16.5px; }
+    .cta-fact .t small { display: block; color: rgba(255,255,255,.72); font-weight: 500; font-size: 13px; }
+
+    /* ---------- Footer ---------- */
+    footer { background: var(--navy); color: rgba(233,240,250,.68); padding-block: 56px 30px; }
+    .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1.2fr; gap: 40px; }
+    .foot-brand .brandline .name { color: #fff; }
+    .foot-brand p { margin-top: 18px; font-size: 15px; color: rgba(233,240,250,.6); max-width: 300px; }
+    .foot-col h4 { color: #fff; font-family: var(--font-display); font-weight: 600; text-transform: uppercase; font-size: 15px; letter-spacing: .08em; margin-bottom: 16px; }
+    .foot-col a { display: block; color: rgba(233,240,250,.66); font-size: 15px; margin-bottom: 10px; }
+    .foot-col a:hover { color: var(--blue-light); }
+    .foot-contact .row { display: flex; gap: 11px; align-items: flex-start; margin-bottom: 14px; }
+    .foot-contact .row svg { width: 18px; height: 18px; color: var(--blue-light); flex: none; margin-top: 3px; }
+    .foot-contact .row b { color: #fff; font-weight: 600; display: block; font-size: 15.5px; }
+    .foot-contact .row span { font-size: 13.5px; color: rgba(233,240,250,.58); }
+    .foot-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(191,216,247,.16); font-size: 13.5px; color: rgba(233,240,250,.5); }
+
+    /* ---------- Reveal ---------- */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1080px) {
+      .nav-links, .nav-phone { display: none; }
+    }
+    @media (max-width: 940px) {
+      .svc-grid, .rev-grid { grid-template-columns: 1fr; }
+      .band-grid, .cta-card { grid-template-columns: 1fr; }
+      .gal-grid { grid-template-columns: repeat(2, 1fr); }
+      .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .gal-grid { grid-template-columns: 1fr; grid-auto-rows: 180px; }
+      .foot-grid { grid-template-columns: 1fr; }
+      .trust .wrap { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header>
+    <div class="wrap nav">
+      <a class="brandline" href="#top" aria-label="Roof Down Remodels home">
+        <svg class="mark" viewBox="0 0 176 118" aria-hidden="true">
+          <path d="M64 70 L112 26 L160 70" fill="none" stroke="#BFD8F7" stroke-width="13"/>
+          <path d="M96 100 L128 68 L160 100" fill="none" stroke="#2350A8" stroke-width="14"/>
+          <path d="M8 96 L66 32 L124 96" fill="none" stroke="#3B82E6" stroke-width="18"/>
+          <g>
+            <rect x="46" y="60" width="40" height="40" fill="#7C8896"/>
+            <rect x="46" y="60" width="18" height="18" fill="#7C8896"/>
+            <line x1="66" y1="60" x2="66" y2="100" stroke="#F5F8FD" stroke-width="4"/>
+            <line x1="46" y1="80" x2="86" y2="80" stroke="#F5F8FD" stroke-width="4"/>
+          </g>
+        </svg>
+        <span class="name">Roof Down Remodels<small>Remodeling from the roof down</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#services">Services</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#work">Our Work</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="nav-phone" href="tel:15035076976" aria-label="Call or text 503 507 6976">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3.06a2 2 0 0 1-.45 2.11L8.09 10.2a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.34 2.01.57 3.06.7A2 2 0 0 1 22 16.92Z"/></svg>
+          (503) 507-6976
+        </a>
+        <a class="btn btn-primary" href="#contact">Free Estimate</a>
+      </div>
+    </div>
+  </header>
+
+  <span id="top"></span>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-scene" aria-hidden="true">
+      <svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A5AA0"/><stop offset="1" stop-color="#1B3B6B"/></linearGradient>
+          <linearGradient id="roofA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E8FEE"/><stop offset="1" stop-color="#3B82E6"/></linearGradient>
+          <linearGradient id="roofB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E63C2"/><stop offset="1" stop-color="#2350A8"/></linearGradient>
+        </defs>
+        <rect width="1200" height="640" fill="url(#sky)"/>
+        <!-- distant houses -->
+        <g opacity=".5">
+          <path d="M760 340 L880 250 L1000 340 Z" fill="#3E6FB8"/>
+          <rect x="792" y="336" width="176" height="150" fill="#31589A"/>
+        </g>
+        <!-- main house -->
+        <rect x="640" y="330" width="470" height="310" fill="#26477E"/>
+        <path d="M600 340 L860 150 L1120 340 Z" fill="url(#roofA)"/>
+        <path d="M860 150 L1120 340 L1120 300 L900 150 Z" fill="url(#roofB)" opacity=".9"/>
+        <!-- windows -->
+        <g fill="#BFD8F7" opacity=".9"><rect x="700" y="400" width="70" height="90" rx="3"/><rect x="980" y="400" width="70" height="90" rx="3"/></g>
+        <g stroke="#26477E" stroke-width="5"><line x1="735" y1="400" x2="735" y2="490"/><line x1="700" y1="445" x2="770" y2="445"/><line x1="1015" y1="400" x2="1015" y2="490"/><line x1="980" y1="445" x2="1050" y2="445"/></g>
+        <rect x="828" y="470" width="66" height="170" rx="3" fill="#173257"/>
+        <!-- shingle texture lines on roof -->
+        <g stroke="#2E63C2" stroke-width="3" opacity=".45"><path d="M640 322 L820 190"/><path d="M700 340 L860 222"/><path d="M900 205 L1080 336"/><path d="M950 230 L1090 336"/></g>
+        <!-- ground -->
+        <rect x="0" y="600" width="1200" height="40" fill="#14294A"/>
+      </svg>
+    </div>
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="hero-badge">Licensed &amp; Insured · CCB# 224983</span>
+        <h1>Remodeling<br>from the <span>roof down.</span></h1>
+        <p class="sub">A trusted Oregon contractor for roof installation, exterior painting, and flooring. Quality work, fair prices, and a crew that shows up on time.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="#contact">Get a Free Estimate</a>
+          <a class="btn btn-white btn-lg" href="tel:15035076976">Call (503) 507-6976</a>
+        </div>
+        <div class="hero-meta">
+          <span class="m"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg></span> 5.0 on Google</span>
+          <span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/></svg> Licensed, bonded &amp; insured</span>
+          <span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Free, no-pressure quotes</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST STRIP ============ -->
+  <div class="trust">
+    <div class="wrap">
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg><span><b>CCB# 224983</b><small>Registered Oregon contractor</small></span></div>
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21Z"/></svg><span><b>5.0 Star Rated</b><small>Loved by local homeowners</small></span></div>
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="10"/></svg><span><b>3 Core Trades</b><small>Roofing · Painting · Flooring</small></span></div>
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg><span><b>Owner-Operated</b><small>Kind, professional service</small></span></div>
+    </div>
+  </div>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="services pad" id="services">
+    <div class="wrap">
+      <div class="head-block reveal">
+        <span class="eyebrow">What we do</span>
+        <h2>Our Services</h2>
+        <p>Three trades, one dependable crew. Whether it starts at the roof or ends at the floor, Roof Down Remodels handles it with care from start to finish.</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="7" rx="1.5"/><path d="M17 6h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-8"/><path d="M12 11v4"/><rect x="9" y="15" width="6" height="6" rx="1"/></svg></div>
+          <h3>Exterior Painting</h3>
+          <p>Fresh, weather-ready color that protects your siding and lifts your whole home's curb appeal.</p>
+          <ul class="list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Full prep, priming &amp; caulking</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Siding, trim &amp; fascia</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Durable, quality coatings</li>
+          </ul>
+        </article>
+
+        <article class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 4l9 8"/><path d="M5 11v8h14v-8"/><path d="M9 19v-5h6v5"/></svg></div>
+          <h3>Roof Installation</h3>
+          <p>New roofs and full replacements built to shed Oregon weather and stand up for the long haul.</p>
+          <ul class="list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Tear-off &amp; new installation</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Shingles, underlayment &amp; flashing</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Clean, code-compliant work</li>
+          </ul>
+        </article>
+
+        <article class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18M3 15h18"/><path d="M3 5h18v14H3z"/><path d="M8 5v4M14 9v6M18 15v4M8 15v4"/></svg></div>
+          <h3>Flooring</h3>
+          <p>Clean, level installs that finish a room right, from tear-out to the final board.</p>
+          <ul class="list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Laminate, vinyl plank &amp; more</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Subfloor prep &amp; leveling</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Tidy, precise finish work</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROOF-DOWN BAND ============ -->
+  <div class="band-top"><svg class="roofline" viewBox="0 0 1200 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 26 L120 0 L240 26 L360 0 L480 26 L600 0 L720 26 L840 0 L960 26 L1080 0 L1200 26 Z"/></svg></div>
+  <section class="band pad">
+    <div class="wrap">
+      <div class="band-grid">
+        <div class="reveal">
+          <span class="eyebrow" style="color:var(--blue-light)">Our approach</span>
+          <h2>Remodeling from the <span>roof down.</span></h2>
+          <p>It's more than our name. We look at the whole home, top to bottom, so the work holds up and looks right. A sound roof protects everything beneath it, and every job after that gets the same standard of care.</p>
+          <a class="btn btn-white" href="#contact" style="margin-top:26px">Start Your Project</a>
+        </div>
+        <div class="band-steps reveal">
+          <div class="band-step"><span class="n">01</span><div><h4>Free Estimate</h4><p>Call or text and we'll come look, talk through options, and give you a clear, honest quote.</p></div></div>
+          <div class="band-step"><span class="n">02</span><div><h4>Quality Build</h4><p>Our crew shows up on time and does superior work, respecting your home and your schedule.</p></div></div>
+          <div class="band-step"><span class="n">03</span><div><h4>Clean Finish</h4><p>We finish tidy, walk the job with you, and stand behind the results.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="band-bottom"><svg class="roofline" viewBox="0 0 1200 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 26 L120 0 L240 26 L360 0 L480 26 L600 0 L720 26 L840 0 L960 26 L1080 0 L1200 26 Z"/></svg></div>
+
+  <!-- ============ REVIEWS ============ -->
+  <section class="reviews pad" id="reviews">
+    <div class="wrap">
+      <div class="rev-head">
+        <div class="head-block reveal">
+          <span class="eyebrow">What homeowners say</span>
+          <h2>5-Star Rated</h2>
+        </div>
+        <div class="google-score reveal">
+          <span class="g">5.0</span>
+          <div><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg></span><small>Verified Google reviews</small></div>
+        </div>
+      </div>
+      <div class="rev-grid">
+        <article class="rev reveal">
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg></span>
+          <blockquote>"I gave Roof Down Remodels 5 stars because they are very professional, on time, knowledgeable, and polite. They respond quickly and do superior quality work for a fair price. I love my new roof and siding that they did for me. I would highly recommend them."</blockquote>
+          <div class="who"><span class="av" style="background:#E8623C">F</span><div><b>Farrah Myhre</b><span>Google review · roof &amp; siding</span></div></div>
+        </article>
+        <article class="rev reveal">
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg></span>
+          <blockquote>"The owner is very kind and professional. Great communication and service."</blockquote>
+          <div class="who"><span class="av" style="background:#7C6F63">K</span><div><b>Kaitlin Chandler</b><span>Google review</span></div></div>
+        </article>
+        <article class="rev reveal">
+          <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 17l-6.2 3.6 1.6-6.7L2.2 8.9l6.9-.6z"/></svg></span>
+          <blockquote>"Great team of people. Super friendly. Competitive prices. Punctual. Superior work."</blockquote>
+          <div class="who"><span class="av" style="background:#2F7D5B">R</span><div><b>Reilly Jones</b><span>Local Guide · Google review</span></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery pad" id="work">
+    <div class="wrap">
+      <div class="head-block reveal">
+        <span class="eyebrow">Recent projects</span>
+        <h2>Our Work</h2>
+        <p>A look at the roofs, exteriors, and floors we've built and refreshed for Oregon homeowners.</p>
+        <span class="gal-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>Photo slots ready — drop in real project photos anytime</span>
+      </div>
+      <div class="gal-grid">
+        <div class="gal wide tall reveal"><svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice"><rect width="400" height="320" fill="#1B3B6B"/><path d="M40 190 L200 70 L360 190 Z" fill="#3B82E6"/><path d="M200 70 L360 190 L360 160 L230 70 Z" fill="#2350A8"/><rect x="80" y="186" width="240" height="134" fill="#26477E"/><g fill="#BFD8F7"><rect x="110" y="220" width="46" height="64" rx="3"/><rect x="244" y="220" width="46" height="64" rx="3"/></g><g stroke="#2E63C2" stroke-width="3" opacity=".5"><path d="M60 180 L190 82"/><path d="M110 190 L200 122"/><path d="M212 82 L340 190"/></g></svg><span class="tag">Roof Installation</span></div>
+        <div class="gal reveal"><svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice"><rect width="200" height="160" fill="#EAF2FD"/><rect x="0" y="0" width="200" height="160" fill="#3B82E6"/><g fill="#4E8FEE"><rect x="0" y="0" width="66" height="160"/><rect x="132" y="0" width="68" height="160"/></g><rect x="80" y="40" width="40" height="80" rx="3" fill="#BFD8F7"/><line x1="100" y1="40" x2="100" y2="120" stroke="#3B82E6" stroke-width="4"/><line x1="80" y1="80" x2="120" y2="80" stroke="#3B82E6" stroke-width="4"/></svg><span class="tag">Exterior Paint</span></div>
+        <div class="gal reveal"><svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice"><rect width="200" height="160" fill="#8A9AAE"/><g fill="#9FB0C4" stroke="#75879C" stroke-width="2"><rect x="-4" y="6" width="64" height="20"/><rect x="66" y="6" width="64" height="20"/><rect x="136" y="6" width="64" height="20"/><rect x="30" y="32" width="64" height="20"/><rect x="100" y="32" width="64" height="20"/><rect x="-4" y="58" width="64" height="20"/><rect x="66" y="58" width="64" height="20"/><rect x="136" y="58" width="64" height="20"/><rect x="30" y="84" width="64" height="20"/><rect x="100" y="84" width="64" height="20"/><rect x="-4" y="110" width="64" height="20"/><rect x="66" y="110" width="64" height="20"/><rect x="136" y="110" width="64" height="20"/><rect x="30" y="136" width="64" height="20"/><rect x="100" y="136" width="64" height="20"/></g></svg><span class="tag">Flooring</span></div>
+        <div class="gal wide reveal"><svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice"><rect width="400" height="160" fill="#1B3B6B"/><path d="M0 120 L110 46 L220 120 Z" fill="#3B82E6"/><path d="M180 130 L280 66 L380 130 Z" fill="#2350A8"/><rect x="0" y="118" width="400" height="42" fill="#26477E"/><g stroke="#2E63C2" stroke-width="3" opacity=".5"><path d="M14 116 L104 56"/><path d="M120 56 L210 116"/></g></svg><span class="tag">Full Exterior</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA / CONTACT ============ -->
+  <section class="cta pad" id="contact">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <div class="cta-l">
+          <span class="eyebrow" style="color:#fff">Free estimate</span>
+          <h2>Let's Get Started</h2>
+          <p>Call or text for a free, no-obligation quote on your roof, exterior paint, or flooring project. We'll get right back to you.</p>
+          <div class="cta-actions">
+            <a class="btn btn-white btn-lg" href="tel:15035076976">Call / Text (503) 507-6976</a>
+            <a class="btn btn-navy btn-lg" href="mailto:roofdownremodelsllc@gmail.com">Email Us</a>
+          </div>
+        </div>
+        <div class="cta-r">
+          <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3.06a2 2 0 0 1-.45 2.11L8.09 10.2a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.34 2.01.57 3.06.7A2 2 0 0 1 22 16.92Z"/></svg></span><div class="t">(503) 507-6976<small>Call or text anytime</small></div></div>
+          <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span><div class="t">roofdownremodelsllc@gmail.com<small>We reply quickly</small></div></div>
+          <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div class="t">CCB# 224983<small>Licensed, bonded &amp; insured</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <div class="brandline">
+            <svg class="mark" viewBox="0 0 176 118" aria-hidden="true">
+              <path d="M64 70 L112 26 L160 70" fill="none" stroke="#BFD8F7" stroke-width="13"/>
+              <path d="M96 100 L128 68 L160 100" fill="none" stroke="#2350A8" stroke-width="14"/>
+              <path d="M8 96 L66 32 L124 96" fill="none" stroke="#3B82E6" stroke-width="18"/>
+              <g><rect x="46" y="60" width="40" height="40" fill="#7C8896"/><line x1="66" y1="60" x2="66" y2="100" stroke="#132744" stroke-width="4"/><line x1="46" y1="80" x2="86" y2="80" stroke="#132744" stroke-width="4"/></g>
+            </svg>
+            <span class="name">Roof Down Remodels</span>
+          </div>
+          <p>Remodeling from the roof down. Roof installation, exterior painting, and flooring for Oregon homeowners. Licensed, bonded &amp; insured.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Services</h4>
+          <a href="#services">Exterior Painting</a>
+          <a href="#services">Roof Installation</a>
+          <a href="#services">Flooring</a>
+          <a href="#work">Our Work</a>
+          <a href="#reviews">Reviews</a>
+        </div>
+        <div class="foot-col foot-contact">
+          <h4>Get in touch</h4>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3.06a2 2 0 0 1-.45 2.11L8.09 10.2a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.34 2.01.57 3.06.7A2 2 0 0 1 22 16.92Z"/></svg><span><b>(503) 507-6976</b>Call or text</span></div>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><span><b>roofdownremodelsllc@gmail.com</b>Email us anytime</span></div>
+          <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/></svg><span><b>CCB# 224983</b>Serving Oregon homeowners</span></div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Roof Down Remodels LLC. All rights reserved.</span>
+        <span>Licensed, bonded &amp; insured · CCB# 224983 · Proudly serving Oregon</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.14, rootMargin: '0px 0px -60px 0px' });
+      els.forEach(function (e, i) { e.style.transitionDelay = (Math.min(i % 3, 2) * 80) + 'ms'; io.observe(e); });
+    })();
+  </script>
+</body>
+</html>
