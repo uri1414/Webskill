@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Roof Down Remodels LLC — Roofing, Exterior Painting &amp; Flooring</title>
   <meta name="description" content="Roof Down Remodels LLC — remodeling from the roof down. Roof installation, exterior painting, and flooring for Oregon homeowners. Licensed CCB# 224983. Call or text (503) 507-6976 for a free estimate." />
+  <meta name="keywords" content="roofing, roof installation, exterior painting, flooring, remodeling, contractor, Oregon, CCB 224983, Roof Down Remodels" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Roof Down Remodels LLC" />
+  <meta property="og:title" content="Roof Down Remodels LLC — Roofing, Exterior Painting &amp; Flooring" />
+  <meta property="og:description" content="Remodeling from the roof down. Roof installation, exterior painting, and flooring for Oregon homeowners. 5.0-star rated. Free estimates — (503) 507-6976." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Roof Down Remodels LLC — Roofing, Exterior Painting &amp; Flooring" />
+  <meta name="twitter:description" content="Remodeling from the roof down. 5.0-star rated Oregon contractor. Free estimates — (503) 507-6976." />
+  <!-- When you have a domain, set og:url and og:image to your live URL + a project photo for rich link previews. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -228,6 +238,38 @@
     .cta-fact .t { color: #fff; font-weight: 600; font-size: 16.5px; }
     .cta-fact .t small { display: block; color: rgba(255,255,255,.72); font-weight: 500; font-size: 13px; }
 
+    /* ---------- Estimate form ---------- */
+    .est-form { background: #fff; border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow-md); }
+    .est-form .fh { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 22px; color: var(--navy); margin-bottom: 4px; }
+    .est-form .fsub { color: var(--muted); font-size: 14.5px; margin-bottom: 18px; }
+    .field { margin-bottom: 13px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .est-form label { display: block; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .04em; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .est-form input, .est-form select, .est-form textarea {
+      width: 100%; font-family: var(--font-body); font-size: 16px; color: var(--ink);
+      padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper);
+      transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+    }
+    .est-form input:focus, .est-form select:focus, .est-form textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,230,.18); }
+    .est-form textarea { resize: vertical; min-height: 92px; }
+    .est-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .est-form .submit { width: 100%; justify-content: center; margin-top: 8px; }
+    .est-note { text-align: center; font-size: 13.5px; color: var(--muted); margin-top: 12px; }
+    .est-note a { font-weight: 600; }
+    .form-ok { display: none; background: #E7F6EC; border: 1px solid #ADE0BE; color: #1C6B37; border-radius: 12px; padding: 18px 20px; font-weight: 600; font-size: 15.5px; text-align: center; }
+    .form-ok.show { display: block; }
+    .est-form.sent .field, .est-form.sent .row2, .est-form.sent .submit, .est-form.sent .est-note, .est-form.sent .fh, .est-form.sent .fsub { display: none; }
+
+    /* ---------- Review CTA buttons ---------- */
+    .rev-cta { display: flex; flex-wrap: wrap; gap: 13px; justify-content: center; margin-top: 40px; }
+    .btn-google { background: #fff; color: var(--navy); border-color: var(--line); }
+    .btn-google:hover { border-color: var(--blue); color: var(--blue-600); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-google svg { width: 18px; height: 18px; }
+
+    /* ---------- Sticky mobile call bar ---------- */
+    .callbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: none; gap: 10px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: var(--navy); border-top: 1px solid rgba(191,216,247,.22); box-shadow: 0 -8px 24px rgba(19,39,68,.28); }
+    .callbar a { flex: 1; justify-content: center; }
+
     /* ---------- Footer ---------- */
     footer { background: var(--navy); color: rgba(233,240,250,.68); padding-block: 56px 30px; }
     .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1.2fr; gap: 40px; }
@@ -257,6 +299,11 @@
       .gal-grid { grid-template-columns: repeat(2, 1fr); }
       .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
     }
+    @media (max-width: 760px) {
+      .callbar { display: flex; }
+      body { padding-bottom: 76px; }
+      .row2 { grid-template-columns: 1fr; }
+    }
     @media (max-width: 560px) {
       body { font-size: 16px; }
       .gal-grid { grid-template-columns: 1fr; }
@@ -264,6 +311,33 @@
       .trust .wrap { justify-content: flex-start; }
     }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    "name": "Roof Down Remodels LLC",
+    "description": "Remodeling from the roof down. Roof installation, exterior painting, and flooring for Oregon homeowners. Licensed, bonded and insured — CCB# 224983.",
+    "slogan": "Remodeling from the Roof Down",
+    "telephone": "+1-503-507-6976",
+    "email": "roofdownremodelsllc@gmail.com",
+    "priceRange": "$$",
+    "identifier": { "@type": "PropertyValue", "name": "CCB", "value": "224983" },
+    "address": { "@type": "PostalAddress", "addressRegion": "OR", "addressCountry": "US" },
+    "areaServed": { "@type": "State", "name": "Oregon" },
+    "knowsAbout": ["Roof Installation", "Exterior Painting", "Flooring"],
+    "makesOffer": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Roof Installation" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Exterior Painting" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Flooring" } }
+    ],
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5.0", "reviewCount": "3", "bestRating": "5" },
+    "review": [
+      { "@type": "Review", "author": { "@type": "Person", "name": "Farrah Myhre" }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Very professional, on time, knowledgeable, and polite. They respond quickly and do superior quality work for a fair price. I love my new roof and siding. Highly recommend them." },
+      { "@type": "Review", "author": { "@type": "Person", "name": "Kaitlin Chandler" }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "The owner is very kind and professional. Great communication and service." },
+      { "@type": "Review", "author": { "@type": "Person", "name": "Reilly Jones" }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Great team of people. Super friendly. Competitive prices. Punctual. Superior work." }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -455,6 +529,13 @@
           <div class="who"><span class="av" style="background:#2F7D5B">R</span><div><b>Reilly Jones</b><span>Local Guide · Google review</span></div></div>
         </article>
       </div>
+      <div class="rev-cta reveal">
+        <a class="btn btn-google" href="https://www.google.com/search?q=Roof+Down+Remodels+LLC" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09Z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.98.66-2.24 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84Z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z"/></svg>
+          See all reviews on Google
+        </a>
+        <a class="btn btn-outline" href="https://www.google.com/search?q=Roof+Down+Remodels+LLC" target="_blank" rel="noopener">Leave us a review</a>
+      </div>
     </div>
   </section>
 
@@ -482,17 +563,38 @@
         <div class="cta-l">
           <span class="eyebrow" style="color:#fff">Free estimate</span>
           <h2>Let's Get Started</h2>
-          <p>Call or text for a free, no-obligation quote on your roof, exterior paint, or flooring project. We'll get right back to you.</p>
+          <p>Tell us about your project and we'll get right back to you with a free, no-obligation quote. Prefer to talk now? Call or text anytime.</p>
           <div class="cta-actions">
             <a class="btn btn-white btn-lg" href="tel:15035076976">Call / Text (503) 507-6976</a>
-            <a class="btn btn-navy btn-lg" href="mailto:roofdownremodelsllc@gmail.com">Email Us</a>
+          </div>
+          <div class="cta-r" style="margin-top:26px">
+            <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3.06a2 2 0 0 1-.45 2.11L8.09 10.2a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.34 2.01.57 3.06.7A2 2 0 0 1 22 16.92Z"/></svg></span><div class="t">(503) 507-6976<small>Call or text anytime</small></div></div>
+            <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span><div class="t">roofdownremodelsllc@gmail.com<small>We reply quickly</small></div></div>
+            <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div class="t">CCB# 224983<small>Licensed, bonded &amp; insured</small></div></div>
           </div>
         </div>
-        <div class="cta-r">
-          <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3.06a2 2 0 0 1-.45 2.11L8.09 10.2a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.34 2.01.57 3.06.7A2 2 0 0 1 22 16.92Z"/></svg></span><div class="t">(503) 507-6976<small>Call or text anytime</small></div></div>
-          <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span><div class="t">roofdownremodelsllc@gmail.com<small>We reply quickly</small></div></div>
-          <div class="cta-fact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div class="t">CCB# 224983<small>Licensed, bonded &amp; insured</small></div></div>
-        </div>
+        <form class="est-form" id="estimateForm" novalidate>
+          <div class="fh">Request a Free Estimate</div>
+          <div class="fsub">We'll reply by phone or email, usually the same day.</div>
+          <div class="row2">
+            <div class="field"><label for="ef-name">Name</label><input id="ef-name" name="name" type="text" autocomplete="name" required placeholder="Your name" /></div>
+            <div class="field"><label for="ef-phone">Phone</label><input id="ef-phone" name="phone" type="tel" autocomplete="tel" required placeholder="(503) 000-0000" /></div>
+          </div>
+          <div class="field"><label for="ef-email">Email</label><input id="ef-email" name="email" type="email" autocomplete="email" placeholder="you@email.com" /></div>
+          <div class="field"><label for="ef-service">Project type</label>
+            <select id="ef-service" name="service">
+              <option value="Roof Installation">Roof Installation</option>
+              <option value="Exterior Painting">Exterior Painting</option>
+              <option value="Flooring">Flooring</option>
+              <option value="Multiple / Not sure">Multiple / Not sure</option>
+            </select>
+          </div>
+          <div class="field"><label for="ef-msg">Project details</label><textarea id="ef-msg" name="message" placeholder="Tell us a bit about what you need…"></textarea></div>
+          <div class="hp" aria-hidden="true"><label for="ef-company">Company (leave blank)</label><input id="ef-company" name="company" type="text" tabindex="-1" autocomplete="off" /></div>
+          <button type="submit" class="btn btn-primary btn-lg submit">Send My Request</button>
+          <p class="est-note">Or call / text <a href="tel:15035076976">(503) 507-6976</a></p>
+          <div class="form-ok" id="formOk">Thanks! Your email is ready to send — just hit send in your mail app and we'll be in touch shortly. If nothing opened, call or text us at (503) 507-6976.</div>
+        </form>
       </div>
     </div>
   </section>
@@ -535,16 +637,57 @@
     </div>
   </footer>
 
+  <!-- ============ STICKY MOBILE CALL BAR ============ -->
+  <div class="callbar" aria-label="Quick contact">
+    <a class="btn btn-primary" href="tel:15035076976"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3.06a2 2 0 0 1-.45 2.11L8.09 10.2a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.34 2.01.57 3.06.7A2 2 0 0 1 22 16.92Z"/></svg>Call</a>
+    <a class="btn btn-white" href="sms:15035076976"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>Text</a>
+  </div>
+
   <script>
     (function () {
       var els = document.querySelectorAll('.reveal');
-      if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+          });
+        }, { threshold: 0.14, rootMargin: '0px 0px -60px 0px' });
+        els.forEach(function (e, i) { e.style.transitionDelay = (Math.min(i % 3, 2) * 80) + 'ms'; io.observe(e); });
+      } else {
+        els.forEach(function (e) { e.classList.add('in'); });
+      }
+
+      // Estimate form -> composes an email to the business (no backend needed)
+      var form = document.getElementById('estimateForm');
+      if (form) {
+        form.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          if (form.company && form.company.value) { return; } // honeypot: silently drop bots
+          var name = (form.name.value || '').trim();
+          var phone = (form.phone.value || '').trim();
+          if (!name || !phone) {
+            (!name ? form.name : form.phone).focus();
+            return;
+          }
+          var email = (form.email.value || '').trim();
+          var service = form.service.value;
+          var message = (form.message.value || '').trim();
+          var subject = 'Free Estimate Request — ' + name + ' (' + service + ')';
+          var body =
+            'New estimate request from the website:\n\n' +
+            'Name: ' + name + '\n' +
+            'Phone: ' + phone + '\n' +
+            'Email: ' + (email || '—') + '\n' +
+            'Project type: ' + service + '\n\n' +
+            'Details:\n' + (message || '—') + '\n';
+          var href = 'mailto:roofdownremodelsllc@gmail.com'
+            + '?subject=' + encodeURIComponent(subject)
+            + '&body=' + encodeURIComponent(body);
+          window.location.href = href;
+          form.classList.add('sent');
+          document.getElementById('formOk').classList.add('show');
         });
-      }, { threshold: 0.14, rootMargin: '0px 0px -60px 0px' });
-      els.forEach(function (e, i) { e.style.transitionDelay = (Math.min(i % 3, 2) * 80) + 'ms'; io.observe(e); });
+      }
     })();
   </script>
 </body>
