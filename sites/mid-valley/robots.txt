@@ -1,5 +1,5 @@
 # robots.txt — Mid-Valley Facility Services LLC
-# PLACEHOLDER domain: replace midvalleyfacilityservices.com with your real domain.
+# Live site: https://midvalleyfacilityservices.com
 
 User-agent: *
 Allow: /
