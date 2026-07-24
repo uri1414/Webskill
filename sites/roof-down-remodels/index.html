@@ -206,14 +206,12 @@
 
     /* ---------- Gallery ---------- */
     .gallery { background: var(--paper); }
-    .gal-note { display: inline-flex; align-items: center; gap: 9px; background: var(--blue-wash); color: var(--royal); border: 1px dashed var(--blue-light); border-radius: var(--radius-pill); padding: 8px 16px; font-size: 13.5px; font-weight: 600; margin-top: 18px; }
-    .gal-note svg { width: 16px; height: 16px; }
-    .gal-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 155px; gap: 16px; margin-top: 40px; }
-    .gal { border-radius: var(--radius-sm); overflow: hidden; position: relative; box-shadow: var(--shadow-sm); background: var(--navy); }
-    .gal svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .gal .tag { position: absolute; left: 12px; bottom: 12px; z-index: 2; background: rgba(19,39,68,.82); color: #fff; font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 12px; padding: 5px 11px; border-radius: 7px; }
-    .gal.wide { grid-column: span 2; }
-    .gal.tall { grid-row: span 2; }
+    .gal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 42px; }
+    .gal { border-radius: var(--radius-sm); overflow: hidden; position: relative; box-shadow: var(--shadow-sm); background: var(--navy); aspect-ratio: 7 / 5; }
+    .gal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+    .gal:hover img { transform: scale(1.06); }
+    .gal::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(19,39,68,.55), transparent 46%); }
+    .gal .tag { position: absolute; left: 12px; bottom: 12px; z-index: 2; background: rgba(19,39,68,.86); color: #fff; font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 12.5px; padding: 5px 11px; border-radius: 7px; }
 
     /* ---------- CTA ---------- */
     .cta { background: var(--paper); }
@@ -261,7 +259,7 @@
     }
     @media (max-width: 560px) {
       body { font-size: 16px; }
-      .gal-grid { grid-template-columns: 1fr; grid-auto-rows: 180px; }
+      .gal-grid { grid-template-columns: 1fr; }
       .foot-grid { grid-template-columns: 1fr; }
       .trust .wrap { justify-content: flex-start; }
     }
@@ -466,14 +464,13 @@
       <div class="head-block reveal">
         <span class="eyebrow">Recent projects</span>
         <h2>Our Work</h2>
-        <p>A look at the roofs, exteriors, and floors we've built and refreshed for Oregon homeowners.</p>
-        <span class="gal-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>Photo slots ready — drop in real project photos anytime</span>
+        <p>A look at the homes we've remodeled for Oregon homeowners, from siding and decks to kitchens, floors, and full interiors.</p>
       </div>
       <div class="gal-grid">
-        <div class="gal wide tall reveal"><svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice"><rect width="400" height="320" fill="#1B3B6B"/><path d="M40 190 L200 70 L360 190 Z" fill="#3B82E6"/><path d="M200 70 L360 190 L360 160 L230 70 Z" fill="#2350A8"/><rect x="80" y="186" width="240" height="134" fill="#26477E"/><g fill="#BFD8F7"><rect x="110" y="220" width="46" height="64" rx="3"/><rect x="244" y="220" width="46" height="64" rx="3"/></g><g stroke="#2E63C2" stroke-width="3" opacity=".5"><path d="M60 180 L190 82"/><path d="M110 190 L200 122"/><path d="M212 82 L340 190"/></g></svg><span class="tag">Roof Installation</span></div>
-        <div class="gal reveal"><svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice"><rect width="200" height="160" fill="#EAF2FD"/><rect x="0" y="0" width="200" height="160" fill="#3B82E6"/><g fill="#4E8FEE"><rect x="0" y="0" width="66" height="160"/><rect x="132" y="0" width="68" height="160"/></g><rect x="80" y="40" width="40" height="80" rx="3" fill="#BFD8F7"/><line x1="100" y1="40" x2="100" y2="120" stroke="#3B82E6" stroke-width="4"/><line x1="80" y1="80" x2="120" y2="80" stroke="#3B82E6" stroke-width="4"/></svg><span class="tag">Exterior Paint</span></div>
-        <div class="gal reveal"><svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice"><rect width="200" height="160" fill="#8A9AAE"/><g fill="#9FB0C4" stroke="#75879C" stroke-width="2"><rect x="-4" y="6" width="64" height="20"/><rect x="66" y="6" width="64" height="20"/><rect x="136" y="6" width="64" height="20"/><rect x="30" y="32" width="64" height="20"/><rect x="100" y="32" width="64" height="20"/><rect x="-4" y="58" width="64" height="20"/><rect x="66" y="58" width="64" height="20"/><rect x="136" y="58" width="64" height="20"/><rect x="30" y="84" width="64" height="20"/><rect x="100" y="84" width="64" height="20"/><rect x="-4" y="110" width="64" height="20"/><rect x="66" y="110" width="64" height="20"/><rect x="136" y="110" width="64" height="20"/><rect x="30" y="136" width="64" height="20"/><rect x="100" y="136" width="64" height="20"/></g></svg><span class="tag">Flooring</span></div>
-        <div class="gal wide reveal"><svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice"><rect width="400" height="160" fill="#1B3B6B"/><path d="M0 120 L110 46 L220 120 Z" fill="#3B82E6"/><path d="M180 130 L280 66 L380 130 Z" fill="#2350A8"/><rect x="0" y="118" width="400" height="42" fill="#26477E"/><g stroke="#2E63C2" stroke-width="3" opacity=".5"><path d="M14 116 L104 56"/><path d="M120 56 L210 116"/></g></svg><span class="tag">Full Exterior</span></div>
+        <div class="gal reveal"><img src="images/exterior-deck.jpg" alt="Exterior siding and back deck with staircase on a remodeled home" loading="lazy" width="203" height="145" /><span class="tag">Exterior &amp; Deck</span></div>
+        <div class="gal reveal"><img src="images/kitchen.jpg" alt="Remodeled kitchen with white cabinets, tile backsplash, and new flooring" loading="lazy" width="203" height="145" /><span class="tag">Kitchen Remodel</span></div>
+        <div class="gal reveal"><img src="images/living-room.jpg" alt="Remodeled living room with fireplace and refinished hardwood floors" loading="lazy" width="203" height="145" /><span class="tag">Interior Remodel</span></div>
+        <div class="gal reveal"><img src="images/dining-room.jpg" alt="Dining room with hardwood flooring and trim work" loading="lazy" width="203" height="145" /><span class="tag">Flooring &amp; Trim</span></div>
       </div>
     </div>
   </section>
