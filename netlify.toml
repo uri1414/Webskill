@@ -5,11 +5,11 @@
 [build]
   publish = "."
 
-# Send visitors from the bare domain to the studio homepage.
+# Serve the studio homepage at the root with a clean URL (rewrite, not redirect).
 [[redirects]]
   from = "/"
   to = "/sites/baseline-studio/index.html"
-  status = 302
+  status = 200
 
 # Security + caching headers
 [[headers]]
