@@ -1172,7 +1172,7 @@
       }
       // Submit to Netlify Forms (works once deployed on Netlify; degrades gracefully elsewhere).
       const body = new URLSearchParams(new FormData(form)).toString();
-      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body })
+      fetch('/sites/baseline-studio/index.html', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body })
         .catch(() => {})
         .finally(() => { form.style.display = 'none'; success.classList.add('show'); });
     });
