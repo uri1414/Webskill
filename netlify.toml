@@ -5,17 +5,15 @@
 [build]
   publish = "."
 
-# Serve the studio homepage at the root with a clean URL (rewrite, not redirect).
+# Serve the studio homepage directly at the root. force = true overrides the
+# physical /index.html stub so the studio content loads at "/" with no
+# redirect flash. (Duplicate-content on the raw file path is handled by the
+# canonical tag on the studio page; a 301 here would loop with the stub's
+# meta-refresh, so it is intentionally omitted.)
 [[redirects]]
   from = "/"
   to = "/sites/baseline-studio/index.html"
   status = 200
-
-# Consolidate the raw file path to the canonical root URL (avoids duplicate content).
-[[redirects]]
-  from = "/sites/baseline-studio/index.html"
-  to = "/"
-  status = 301
   force = true
 
 # Security + caching headers
