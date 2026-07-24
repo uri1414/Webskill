@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;450;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Cpath d='M8 21h16M11 21V11m5 10V14m5 7v-4' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563EB'/%3E%3Cpath d='M8 21h16M11 21V11m5 10V14m5 7v-4' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
   <style>
     :root {
       --ink: #0E1015;          /* near-black */
@@ -26,10 +26,10 @@
       --border: #E6E8EF;
       --border-strong: #D6D9E4;
 
-      --brand: #4F46E5;        /* indigo */
-      --brand-600: #4338CA;
-      --brand-400: #7C74F0;
-      --brand-soft: #EEF0FE;
+      --brand: #2563EB;        /* indigo */
+      --brand-600: #1D4ED8;
+      --brand-400: #60A5FA;
+      --brand-soft: #E7EFFE;
       --accent: #D4FF4F;       /* electric lime, used sparingly */
       --accent-ink: #4A5A00;   /* lime text on light (AA) */
       --star: #E0A31E;
@@ -41,7 +41,7 @@
       --shadow-sm: 0 1px 2px rgba(14,16,21,.06), 0 1px 3px rgba(14,16,21,.05);
       --shadow-md: 0 12px 28px -14px rgba(14,16,21,.22), 0 2px 8px -3px rgba(14,16,21,.08);
       --shadow-lg: 0 40px 80px -30px rgba(14,16,21,.40);
-      --shadow-brand: 0 20px 44px -18px rgba(79,70,229,.55);
+      --shadow-brand: 0 20px 44px -18px rgba(37,99,235,.55);
 
       --maxw: 1180px;
       --ease: cubic-bezier(.22,.61,.36,1);
@@ -92,7 +92,7 @@
     }
     .btn svg { transition: transform .3s var(--ease); }
     .btn-primary { background: var(--brand); color: #fff; box-shadow: var(--shadow-brand); }
-    .btn-primary:hover { background: var(--brand-600); transform: translateY(-2px); box-shadow: 0 26px 52px -18px rgba(79,70,229,.68); }
+    .btn-primary:hover { background: var(--brand-600); transform: translateY(-2px); box-shadow: 0 26px 52px -18px rgba(37,99,235,.68); }
     .btn-primary:hover svg { transform: translateX(4px); }
     .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
     .btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); background: var(--bg-soft); }
@@ -153,7 +153,7 @@
       content: ""; position: absolute; top: -280px; left: 50%; transform: translateX(-50%);
       width: 1100px; height: 720px; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(closest-side, rgba(79,70,229,.16), transparent 70%) 30% 40% / 60% 70% no-repeat,
+        radial-gradient(closest-side, rgba(37,99,235,.16), transparent 70%) 30% 40% / 60% 70% no-repeat,
         radial-gradient(closest-side, rgba(212,255,79,.20), transparent 70%) 78% 30% / 44% 55% no-repeat;
       filter: blur(6px);
     }
@@ -376,7 +376,7 @@
 
     /* ============ CONTACT ============ */
     .contact { background: var(--ink); color: #fff; position: relative; overflow: hidden; }
-    .contact::before { content: ""; position: absolute; top: -200px; right: -100px; width: 620px; height: 620px; border-radius: 50%; background: radial-gradient(closest-side, rgba(79,70,229,.4), transparent 70%); pointer-events: none; }
+    .contact::before { content: ""; position: absolute; top: -200px; right: -100px; width: 620px; height: 620px; border-radius: 50%; background: radial-gradient(closest-side, rgba(37,99,235,.4), transparent 70%); pointer-events: none; }
     .contact::after { content: ""; position: absolute; bottom: -260px; left: -120px; width: 560px; height: 560px; border-radius: 50%; background: radial-gradient(closest-side, rgba(212,255,79,.14), transparent 70%); pointer-events: none; }
     .contact-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
     .contact h2 { color: #fff; font-size: clamp(32px, 4.6vw, 50px); }
@@ -479,7 +479,7 @@
           <span class="hero-badge">
             <span class="pips" aria-hidden="true">
               <span class="pip" style="background:linear-gradient(135deg,#F0A868,#C2410C)"></span>
-              <span class="pip" style="background:linear-gradient(135deg,#7C74F0,#4338CA)"></span>
+              <span class="pip" style="background:linear-gradient(135deg,#60A5FA,#1D4ED8)"></span>
               <span class="pip" style="background:linear-gradient(135deg,#28C840,#15803D)"></span>
             </span>
             Trusted by 40+ growing businesses
