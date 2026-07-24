@@ -123,6 +123,10 @@
     }
     .nav-links a.link:hover { color: var(--ink); background: var(--bg-soft); }
     .nav-cta { display: flex; align-items: center; gap: 10px; }
+    .lang-toggle { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--ink); background: transparent; border: 1px solid var(--border-strong); border-radius: 999px; padding: 9px 12px; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+    .lang-toggle:hover { border-color: var(--ink); background: var(--bg-soft); transform: translateY(-1px); }
+    .lang-toggle svg { width: 15px; height: 15px; opacity: .8; }
+    body.lang-es .plan.pop::after { content: "Más elegido"; }
     .nav-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 10px; width: 44px; height: 44px; cursor: pointer; align-items: center; justify-content: center; }
     .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after { content: ""; display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: transform .3s var(--ease), opacity .2s; }
     .nav-toggle span { position: relative; }
@@ -453,6 +457,10 @@
         <a class="link" href="#faq">FAQ</a>
       </nav>
       <div class="nav-cta">
+        <button class="lang-toggle" id="langToggle" type="button" aria-label="Cambiar idioma / Switch language">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 12h19M12 2.5c2.6 2.7 4 6 4 9.5s-1.4 6.8-4 9.5c-2.6-2.7-4-6-4-9.5s1.4-6.8 4-9.5z" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span id="langLabel">ES</span>
+        </button>
         <a class="btn btn-ghost" href="#work">See our work</a>
         <a class="btn btn-primary" href="#contact">Start a project
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1038,6 +1046,182 @@
     ['name','email','message'].forEach(id => {
       form[id].addEventListener('input', () => { form[id].style.borderColor = ''; });
     });
+
+    // ---- Bilingual EN/ES ----
+    const I18N = {
+      // Nav
+      "Services": "Servicios", "Process": "Proceso", "Work": "Proyectos", "Pricing": "Precios",
+      "FAQ": "Preguntas", "See our work": "Ver proyectos", "Start a project": "Iniciar proyecto",
+      // Hero
+      "Trusted by 40+ growing businesses": "La confianza de más de 40 negocios en crecimiento",
+      "Websites that": "Sitios web que", "earn their keep.": "rinden de verdad.",
+      "Baseline is a web design studio that turns quiet websites into your hardest-working salesperson. Strategy, design, and development, all under one roof.": "Baseline es un estudio de diseño web que convierte sitios olvidados en tu mejor vendedor. Estrategia, diseño y desarrollo, todo bajo un mismo techo.",
+      "Book a free discovery call": "Agenda una llamada gratis", "View case studies": "Ver casos de éxito",
+      "2–4 wk": "2–4 sem", "Typical launch": "Lanzamiento típico", "Avg. PageSpeed": "PageSpeed prom.",
+      "Client retention": "Retención de clientes",
+      "Built by Baseline": "Hecho por Baseline", "Grow faster with a site that sells.": "Crece más rápido con un sitio que vende.",
+      "Get started": "Empezar", "See pricing": "Ver precios", "Load time": "Tiempo de carga", "More leads": "Más clientes",
+      // Logos
+      "Design partners to teams across industries": "Socios de diseño para equipos de todos los sectores",
+      // Services
+      "What we do": "Qué hacemos",
+      "Everything your website needs, none of the runaround.": "Todo lo que tu sitio necesita, sin complicaciones.",
+      "One team for strategy, design, and build, so nothing gets lost in the handoff between agencies and freelancers.": "Un solo equipo para estrategia, diseño y desarrollo, para que nada se pierda entre agencias y freelancers.",
+      "Website design & build": "Diseño y desarrollo web",
+      "Custom, conversion-focused websites designed around your customers and built to load in under a second.": "Sitios web a medida, centrados en la conversión, diseñados para tus clientes y hechos para cargar en menos de un segundo.",
+      "Bespoke design, no templates": "Diseño a medida, sin plantillas", "Mobile-first & accessible": "Adaptado a móvil y accesible", "Easy-to-edit CMS": "CMS fácil de editar",
+      "Redesigns & rescues": "Rediseños y rescates",
+      "An honest audit of your current site, then a rebuild that fixes what's costing you customers.": "Una auditoría honesta de tu sitio actual y luego una reconstrucción que arregla lo que te cuesta clientes.",
+      "UX & conversion audit": "Auditoría de UX y conversión", "Content & SEO migration": "Migración de contenido y SEO", "Zero-downtime launch": "Lanzamiento sin interrupciones",
+      "Brand & identity": "Marca e identidad",
+      "A cohesive look across logo, color, and type, so you show up sharp everywhere your customers meet you.": "Una imagen coherente en logo, color y tipografía, para que luzcas impecable en todos lados.",
+      "Logo & visual system": "Logo y sistema visual", "Brand guidelines": "Guía de marca", "Social & ad templates": "Plantillas para redes y anuncios",
+      "SEO & performance": "SEO y rendimiento",
+      "Technical SEO and speed work that helps the right people find you, and stay once they do.": "SEO técnico y optimización de velocidad para que las personas correctas te encuentren y se queden.",
+      "Core Web Vitals tuning": "Optimización de Core Web Vitals", "On-page & local SEO": "SEO on-page y local", "Analytics you'll actually read": "Analíticas que de verdad vas a leer",
+      "Landing pages": "Páginas de aterrizaje",
+      "Focused pages for campaigns and launches, engineered around a single, measurable action.": "Páginas enfocadas para campañas y lanzamientos, diseñadas en torno a una sola acción medible.",
+      "Message & offer strategy": "Estrategia de mensaje y oferta", "A/B-ready structure": "Estructura lista para A/B", "Fast turnaround": "Entrega rápida",
+      "Care & growth": "Soporte y crecimiento",
+      "Optional monthly support to keep your site fast, secure, and always improving after launch.": "Soporte mensual opcional para mantener tu sitio rápido, seguro y siempre mejorando después del lanzamiento.",
+      "Hosting & backups": "Hosting y respaldos", "Edits & new pages": "Ediciones y nuevas páginas", "Monthly reporting": "Reportes mensuales",
+      // Process
+      "How it works": "Cómo funciona",
+      "A calm, predictable process from kickoff to launch.": "Un proceso claro y predecible, del inicio al lanzamiento.",
+      "No mystery, no ghosting. You'll always know exactly what's happening and what's next.": "Sin misterios ni silencios. Siempre sabrás qué está pasando y qué sigue.",
+      "Discover": "Descubrimiento",
+      "We dig into your goals, customers, and competitors to define what success actually looks like.": "Analizamos tus metas, clientes y competencia para definir cómo se ve el éxito.",
+      "Design": "Diseño",
+      "You review real, clickable designs (not vague mockups) and shape them with us in a couple of rounds.": "Revisas diseños reales y navegables (no bocetos vagos) y los ajustamos juntos en un par de rondas.",
+      "Build": "Desarrollo",
+      "We develop a fast, accessible site and load in your content, testing across every device.": "Desarrollamos un sitio rápido y accesible, cargamos tu contenido y lo probamos en todos los dispositivos.",
+      "Launch": "Lanzamiento",
+      "We go live, train your team, and stick around to measure results and iterate.": "Lo ponemos en línea, capacitamos a tu equipo y nos quedamos para medir resultados e iterar.",
+      // Work
+      "Selected work": "Proyectos destacados", "Real projects, real results.": "Proyectos reales, resultados reales.",
+      "A look at how we help businesses turn their websites into a genuine growth engine.": "Un vistazo a cómo ayudamos a los negocios a convertir su sitio en un verdadero motor de crecimiento.",
+      "Start your project": "Comienza tu proyecto",
+      "Roofing · Home services": "Techado · Servicios para el hogar", "Trusted roof replacement & repair": "Reemplazo y reparación de techos de confianza",
+      "Licensed, insured, family-owned, with free estimates across the Salem area.": "Con licencia, asegurados y familiares, con presupuestos gratis en toda el área de Salem.",
+      "Get a free estimate": "Presupuesto gratis", "Web design": "Diseño web", "Local SEO": "SEO local", "Lead gen": "Generación de clientes",
+      "A warm, trustworthy site built to turn storm-season searches into booked estimates for a family roofing company.": "Un sitio cálido y confiable, hecho para convertir las búsquedas de temporada de tormentas en presupuestos agendados para una empresa familiar de techado.",
+      "Estimate requests": "Solicitudes de presupuesto", "PageSpeed score": "Puntaje de PageSpeed", "View live site": "Ver sitio en vivo",
+      "Agri-tech · SaaS": "Agrotecnología · SaaS", "Aerial thermal imagery for agriculture": "Imágenes térmicas aéreas para la agricultura",
+      "Spot crop stress weeks sooner with six-inch-resolution field scans.": "Detecta el estrés de los cultivos semanas antes con escaneos de campo de alta resolución.",
+      "Book a flyover": "Agenda un sobrevuelo", "Redesign": "Rediseño", "Conversion": "Conversión",
+      "A ground-up redesign that translated complex agri-tech into a clear, confident story that converts trials into customers.": "Un rediseño desde cero que convirtió una agrotecnología compleja en una historia clara y convincente que convierte pruebas en clientes.",
+      "Demo signups": "Registros de demo", "Bounce rate": "Tasa de rebote", "Accessibility": "Accesibilidad",
+      // Quote
+      "\"Baseline didn't just make us a prettier website. They built us a": "\"Baseline no solo nos hizo una página más bonita. Nos construyó una",
+      "machine that books jobs": "máquina que agenda trabajos",
+      ". We stopped chasing leads and started answering the phone.\"": ". Dejamos de perseguir clientes y empezamos a contestar el teléfono.\"",
+      "Owner, Salem Roofing": "Dueña, Salem Roofing",
+      // Pricing
+      "Simple, flat pricing you can plan around.": "Precios simples y fijos que puedes planear.",
+      "Every project is fixed-scope and fixed-price. Choose the tier that fits where you are, and we'll help you decide on the call.": "Cada proyecto tiene alcance y precio fijos. Elige el plan que va contigo y te ayudamos a decidir en la llamada.",
+      "A sharp, single-page site to get a new business online fast.": "Un sitio de una página, listo para poner tu negocio en línea rápido.",
+      "/ one-time": "/ pago único", "1-page custom design": "Diseño a medida de 1 página", "Copywriting guidance": "Asesoría de textos",
+      "Contact form & basic SEO": "Formulario de contacto y SEO básico", "Launch in ~2 weeks": "Lanzamiento en ~2 semanas",
+      "Growth": "Crecimiento",
+      "A full multi-page website built to attract and convert customers.": "Un sitio completo de varias páginas para atraer y convertir clientes.",
+      "Up to 8 custom pages": "Hasta 8 páginas a medida", "Editable CMS + blog": "CMS editable + blog", "SEO & analytics setup": "Configuración de SEO y analíticas",
+      "Conversion-focused build": "Desarrollo enfocado en conversión", "30 days post-launch support": "30 días de soporte post-lanzamiento",
+      "Scale": "Escala", "Custom design systems, integrations, and ongoing partnership.": "Sistemas de diseño a medida, integraciones y alianza continua.",
+      "Custom": "A medida", "Unlimited pages & templates": "Páginas y plantillas ilimitadas", "Custom integrations & tools": "Integraciones y herramientas a medida",
+      "Full brand & design system": "Marca y sistema de diseño completos", "Dedicated ongoing team": "Equipo dedicado permanente", "Talk to us": "Habla con nosotros",
+      // FAQ
+      "Good questions, straight answers.": "Buenas preguntas, respuestas claras.",
+      "Still wondering about something?": "¿Aún tienes dudas?", "Send us a note": "Escríbenos", "and we'll get right back to you.": "y te respondemos enseguida.",
+      "How long does a website take?": "¿Cuánto tarda un sitio web?",
+      "Most projects launch in two to four weeks, depending on scope and how quickly we get content and feedback. Landing pages can go live in about a week; larger sites take a little longer. We'll give you a firm timeline before we start.": "La mayoría de los proyectos se lanzan en dos a cuatro semanas, según el alcance y qué tan rápido recibamos contenido y comentarios. Las páginas de aterrizaje pueden salir en una semana; los sitios más grandes tardan un poco más. Te damos un plazo firme antes de empezar.",
+      "Will I be able to edit the site myself?": "¿Podré editar el sitio yo mismo?",
+      "Absolutely. We build on an easy-to-use CMS and record short walkthrough videos for your team, so updating text, images, and pages is simple, with no developer required. Prefer us to handle it? Our care plans have you covered.": "Claro que sí. Construimos sobre un CMS fácil de usar y grabamos videos breves para tu equipo, así actualizar textos, imágenes y páginas es sencillo, sin necesidad de un programador. ¿Prefieres que lo hagamos nosotros? Nuestros planes de soporte te cubren.",
+      "What do you need from me to start?": "¿Qué necesitas de mí para empezar?",
+      "Just a conversation to begin. From there we'll need your logo and any brand assets, access to your domain, and a sense of your goals. Don't have polished content or photos? Helping shape those is part of what we do.": "Solo una conversación para arrancar. De ahí necesitaremos tu logo y materiales de marca, acceso a tu dominio y una idea de tus metas. ¿No tienes contenido o fotos listas? Ayudarte a crearlos es parte de lo que hacemos.",
+      "Do you offer payment plans?": "¿Ofrecen planes de pago?",
+      "Yes. Projects are typically split into a deposit to begin and a balance at launch, and we're happy to arrange milestone-based payments for larger builds. We'll lay it all out clearly in the proposal, with no hidden fees.": "Sí. Los proyectos normalmente se dividen en un anticipo para empezar y un saldo al lanzar, y con gusto acordamos pagos por hitos en proyectos más grandes. Lo dejamos todo claro en la propuesta, sin costos ocultos.",
+      "What happens after launch?": "¿Qué pasa después del lanzamiento?",
+      "Every project includes post-launch support, and you own everything we build. Many clients stay on a monthly care plan for hosting, edits, and continuous improvements, but there's never any lock-in. You're free to take it and run.": "Cada proyecto incluye soporte post-lanzamiento, y tú eres dueño de todo lo que construimos. Muchos clientes se quedan en un plan mensual de soporte para hosting, ediciones y mejoras continuas, pero nunca hay permanencia obligatoria. Eres libre de llevártelo cuando quieras.",
+      // Contact
+      "Let's talk": "Hablemos", "Ready for a website that pulls its weight?": "¿Listo para un sitio que trabaje para ti?",
+      "Tell us a little about your business and what you're hoping to fix or grow. We'll reply within one business day with clear next steps, no pressure and no jargon.": "Cuéntanos un poco sobre tu negocio y qué quieres mejorar o hacer crecer. Te respondemos en un día hábil con pasos claros, sin presión y sin tecnicismos.",
+      "We answer every email personally.": "Respondemos cada correo en persona.",
+      "Book a free 20-min call": "Agenda una llamada gratis de 20 min", "A friendly chat to see if we're a fit.": "Una charla amistosa para ver si encajamos.",
+      "Remote-first, worldwide": "En remoto, en todo el mundo", "Working with clients wherever they are.": "Trabajamos con clientes donde sea que estén.",
+      "Fill this out and we'll be in touch within one business day.": "Llena esto y te contactamos en un día hábil.",
+      "Name": "Nombre", "Email": "Correo", "Business": "Negocio", "Budget": "Presupuesto",
+      "Select a range": "Elige un rango", "Under $3k": "Menos de $3k", "Not sure yet": "Aún no lo sé",
+      "What can we help with?": "¿En qué podemos ayudarte?", "Send project inquiry": "Enviar solicitud",
+      "We'll never share your details or send you spam.": "Nunca compartiremos tus datos ni te enviaremos spam.",
+      "Thanks, we've got it!": "¡Gracias, lo recibimos!",
+      "Your inquiry is on its way. We'll reply within one business day. Keep an eye on your inbox.": "Tu solicitud va en camino. Te respondemos en un día hábil. Revisa tu correo.",
+      // Footer
+      "A web design studio building fast, beautiful websites that earn their keep. Strategy, design, and development under one roof.": "Un estudio de diseño web que crea sitios rápidos y hermosos que rinden de verdad. Estrategia, diseño y desarrollo bajo un mismo techo.",
+      "Website design": "Diseño web", "Redesigns": "Rediseños", "Care plans": "Planes de soporte",
+      "Studio": "Estudio", "Our work": "Nuestros proyectos", "Contact": "Contacto",
+      "Book a call": "Agenda una llamada", "Request a quote": "Pide un presupuesto", "Email us": "Escríbenos por correo",
+      "Baseline Studio. All rights reserved.": "Baseline Studio. Todos los derechos reservados.",
+      "Privacy": "Privacidad", "Terms": "Términos"
+    };
+    const ATTR_I18N = {
+      "Jane Doe": "Juan Pérez", "jane@company.com": "juan@empresa.com", "Company name": "Nombre del negocio",
+      "A few sentences about your business and what you're hoping to achieve…": "Unas líneas sobre tu negocio y lo que quieres lograr…"
+    };
+    const TITLE = {
+      en: "Baseline Studio — Web Design for Growing Businesses",
+      es: "Baseline Studio — Diseño web para negocios en crecimiento"
+    };
+
+    const i18nNodes = (() => {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(n) {
+          if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const p = n.parentElement;
+          if (!p || p.closest('script, style, .brand')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const list = []; let n;
+      while ((n = walker.nextNode())) { n.__en = n.nodeValue; list.push(n); }
+      return list;
+    })();
+
+    const phEls = [...document.querySelectorAll('[placeholder]')];
+    phEls.forEach(el => { el.__enPh = el.getAttribute('placeholder'); });
+
+    const setLang = (lang) => {
+      const es = lang === 'es';
+      i18nNodes.forEach(n => {
+        const raw = n.__en, key = raw.trim(), tr = es ? I18N[key] : null;
+        if (es && tr) {
+          n.nodeValue = raw.slice(0, raw.length - raw.trimStart().length) + tr + raw.slice(raw.trimEnd().length);
+        } else {
+          n.nodeValue = raw;
+        }
+      });
+      phEls.forEach(el => {
+        const tr = es ? ATTR_I18N[el.__enPh] : null;
+        el.setAttribute('placeholder', (es && tr) ? tr : el.__enPh);
+      });
+      document.documentElement.lang = es ? 'es' : 'en';
+      document.title = es ? TITLE.es : TITLE.en;
+      document.body.classList.toggle('lang-es', es);
+      const label = document.getElementById('langLabel');
+      if (label) label.textContent = es ? 'EN' : 'ES';
+      try { localStorage.setItem('baseline-lang', lang); } catch (e) {}
+    };
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+      setLang(document.documentElement.lang === 'es' ? 'en' : 'es');
+    });
+
+    let initialLang = 'en';
+    try {
+      const saved = localStorage.getItem('baseline-lang');
+      if (saved) initialLang = saved;
+      else if ((navigator.language || '').toLowerCase().startsWith('es')) initialLang = 'es';
+    } catch (e) {}
+    if (initialLang === 'es') setLang('es');
   </script>
 </body>
 </html>
