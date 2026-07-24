@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Figtree:wght@400;450;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;450;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Cpath d='M8 21h16M11 21V11m5 10V14m5 7v-4' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
   <style>
     :root {
@@ -45,8 +45,8 @@
 
       --maxw: 1180px;
       --ease: cubic-bezier(.22,.61,.36,1);
-      --ease-spring: cubic-bezier(.34,1.56,.64,1);
-      --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      --ease-spring: cubic-bezier(.22,1,.36,1); /* smooth ease-out, no overshoot */
+      --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
       --font-body: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
@@ -369,8 +369,9 @@
     .qa .ico svg { width: 15px; height: 15px; color: var(--brand); transition: transform .35s var(--ease); }
     .qa.open .ico { background: var(--brand); }
     .qa.open .ico svg { color: #fff; transform: rotate(45deg); }
-    .qa .ans { max-height: 0; overflow: hidden; transition: max-height .4s var(--ease); }
-    .qa .ans p { padding: 0 24px 24px; font-size: 15.5px; color: var(--muted); }
+    .qa .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); }
+    .qa.open .ans { grid-template-rows: 1fr; }
+    .qa .ans p { overflow: hidden; min-height: 0; padding: 0 24px 24px; font-size: 15.5px; color: var(--muted); }
     @media (max-width: 900px) { .faq-grid { grid-template-columns: 1fr; gap: 36px; } }
 
     /* ============ CONTACT ============ */
@@ -484,7 +485,7 @@
             Trusted by 40+ growing businesses
           </span>
           <h1>Websites that <span class="grad">earn their keep.</span></h1>
-          <p class="lead">Baseline is a web design studio that turns quiet websites into your hardest-working salesperson — strategy, design, and development, all under one roof.</p>
+          <p class="lead">Baseline is a web design studio that turns quiet websites into your hardest-working salesperson. Strategy, design, and development, all under one roof.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#contact">Book a free discovery call
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -567,7 +568,7 @@
       <div class="section-head reveal">
         <span class="eyebrow">What we do</span>
         <h2>Everything your website needs, none of the runaround.</h2>
-        <p>One team for strategy, design, and build — so nothing gets lost in the handoff between agencies and freelancers.</p>
+        <p>One team for strategy, design, and build, so nothing gets lost in the handoff between agencies and freelancers.</p>
       </div>
       <div class="svc-grid">
         <div class="svc feature reveal">
@@ -593,7 +594,7 @@
         <div class="svc reveal">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20 12 4l8 16M8 14h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>Brand &amp; identity</h3>
-          <p>A cohesive look — logo, color, and type — so you show up sharp everywhere your customers meet you.</p>
+          <p>A cohesive look across logo, color, and type, so you show up sharp everywhere your customers meet you.</p>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Logo &amp; visual system</li>
             <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Brand guidelines</li>
@@ -603,7 +604,7 @@
         <div class="svc reveal">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>SEO &amp; performance</h3>
-          <p>Technical SEO and speed work that helps the right people find you — and stay once they do.</p>
+          <p>Technical SEO and speed work that helps the right people find you, and stay once they do.</p>
           <ul>
             <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Core Web Vitals tuning</li>
             <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>On-page &amp; local SEO</li>
@@ -651,7 +652,7 @@
         <div class="step reveal">
           <div class="bar"><i></i></div>
           <h3>Design</h3>
-          <p>You review real, clickable designs — not vague mockups — and shape them with us in a couple of rounds.</p>
+          <p>You review real, clickable designs (not vague mockups) and shape them with us in a couple of rounds.</p>
         </div>
         <div class="step reveal">
           <div class="bar"><i></i></div>
@@ -687,7 +688,7 @@
               <div class="canvas">
                 <span class="k">Roofing · Home services</span>
                 <h4>Trusted roof replacement &amp; repair</h4>
-                <p class="sub">Licensed, insured, family-owned — free estimates across the Salem area.</p>
+                <p class="sub">Licensed, insured, family-owned, with free estimates across the Salem area.</p>
                 <span class="cta">Get a free estimate</span>
               </div>
             </div>
@@ -749,7 +750,7 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
         </div>
-        <blockquote>"Baseline didn't just make us a prettier website — they built us a <span class="hl">machine that books jobs</span>. We stopped chasing leads and started answering the phone."</blockquote>
+        <blockquote>"Baseline didn't just make us a prettier website. They built us a <span class="hl">machine that books jobs</span>. We stopped chasing leads and started answering the phone."</blockquote>
         <div class="quote-author">
           <span class="av">DM</span>
           <div class="who">
@@ -767,7 +768,7 @@
       <div class="section-head reveal" style="max-width:700px;">
         <span class="eyebrow">Pricing</span>
         <h2>Simple, flat pricing. No surprise invoices.</h2>
-        <p>Every project is fixed-scope and fixed-price. Choose the tier that fits where you are — we'll help you decide on the call.</p>
+        <p>Every project is fixed-scope and fixed-price. Choose the tier that fits where you are, and we'll help you decide on the call.</p>
       </div>
       <div class="price-grid">
         <div class="plan reveal">
@@ -830,7 +831,7 @@
           </div>
           <div class="qa">
             <button aria-expanded="false">Will I be able to edit the site myself?<span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span></button>
-            <div class="ans"><p>Absolutely. We build on an easy-to-use CMS and record short walkthrough videos for your team, so updating text, images, and pages is simple — no developer required. Prefer us to handle it? Our care plans have you covered.</p></div>
+            <div class="ans"><p>Absolutely. We build on an easy-to-use CMS and record short walkthrough videos for your team, so updating text, images, and pages is simple, with no developer required. Prefer us to handle it? Our care plans have you covered.</p></div>
           </div>
           <div class="qa">
             <button aria-expanded="false">What do you need from me to start?<span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span></button>
@@ -838,11 +839,11 @@
           </div>
           <div class="qa">
             <button aria-expanded="false">Do you offer payment plans?<span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span></button>
-            <div class="ans"><p>Yes. Projects are typically split into a deposit to begin and a balance at launch, and we're happy to arrange milestone-based payments for larger builds. We'll lay it all out clearly in the proposal — no hidden fees.</p></div>
+            <div class="ans"><p>Yes. Projects are typically split into a deposit to begin and a balance at launch, and we're happy to arrange milestone-based payments for larger builds. We'll lay it all out clearly in the proposal, with no hidden fees.</p></div>
           </div>
           <div class="qa">
             <button aria-expanded="false">What happens after launch?<span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span></button>
-            <div class="ans"><p>Every project includes post-launch support, and you own everything we build. Many clients stay on a monthly care plan for hosting, edits, and continuous improvements — but there's never any lock-in. You're free to take it and run.</p></div>
+            <div class="ans"><p>Every project includes post-launch support, and you own everything we build. Many clients stay on a monthly care plan for hosting, edits, and continuous improvements, but there's never any lock-in. You're free to take it and run.</p></div>
           </div>
         </div>
       </div>
@@ -856,7 +857,7 @@
         <div class="reveal">
           <span class="eyebrow" style="color:var(--accent);">Let's talk</span>
           <h2>Ready for a website that pulls its weight?</h2>
-          <p class="lead">Tell us a little about your business and what you're hoping to fix or grow. We'll reply within one business day with next steps — no pressure, no jargon.</p>
+          <p class="lead">Tell us a little about your business and what you're hoping to fix or grow. We'll reply within one business day with next steps. No pressure, no jargon.</p>
           <ul class="contact-points">
             <li>
               <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -915,7 +916,7 @@
           </form>
           <div class="form-success" id="formSuccess">
             <div class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <h3>Thanks — we've got it!</h3>
+            <h3>Thanks, we've got it!</h3>
             <p>Your inquiry is on its way. We'll reply within one business day. Keep an eye on your inbox.</p>
           </div>
         </div>
@@ -932,7 +933,7 @@
             <span class="logo" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M8 21h16M11 21V11m5 10V14m5 7v-4" stroke="white" stroke-width="2.6" stroke-linecap="round"/></svg></span>
             Baseline
           </div>
-          <p class="foot-about">A web design studio building fast, beautiful websites that earn their keep — strategy, design, and development under one roof.</p>
+          <p class="foot-about">A web design studio building fast, beautiful websites that earn their keep. Strategy, design, and development under one roof.</p>
           <div class="foot-social">
             <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23 22h-6.9l-5.4-7-6.2 7H1.4l8.1-9.3L1 2h7l4.9 6.4L18.9 2zm-1.2 18h1.9L7.4 4H5.4l12.3 16z"/></svg></a>
             <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></a>
@@ -994,19 +995,13 @@
     menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
     // FAQ accordion
-    document.querySelectorAll('.qa').forEach(qa => {
+    const allQa = document.querySelectorAll('.qa');
+    allQa.forEach(qa => {
       const btn = qa.querySelector('button');
-      const ans = qa.querySelector('.ans');
-      const setOpen = (open) => {
-        qa.classList.toggle('open', open);
-        btn.setAttribute('aria-expanded', String(open));
-        ans.style.maxHeight = open ? ans.scrollHeight + 'px' : '0px';
-      };
-      if (qa.classList.contains('open')) ans.style.maxHeight = ans.scrollHeight + 'px';
       btn.addEventListener('click', () => {
         const willOpen = !qa.classList.contains('open');
-        document.querySelectorAll('.qa').forEach(o => { if (o !== qa) { o.classList.remove('open'); o.querySelector('button').setAttribute('aria-expanded','false'); o.querySelector('.ans').style.maxHeight = '0px'; } });
-        setOpen(willOpen);
+        allQa.forEach(o => { o.classList.remove('open'); o.querySelector('button').setAttribute('aria-expanded', 'false'); });
+        if (willOpen) { qa.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
       });
     });
 
