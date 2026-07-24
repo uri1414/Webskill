@@ -363,6 +363,17 @@
     .plan .btn { margin-top: 28px; width: 100%; }
     @media (max-width: 900px) { .price-grid { grid-template-columns: 1fr; max-width: 440px; margin-left: auto; margin-right: auto; } }
 
+    /* ============ GET STARTED / CTA ============ */
+    .cta-inner { max-width: 860px; margin: 0 auto; text-align: center; background: linear-gradient(165deg, var(--brand-soft) 0%, #FFFFFF 68%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 56px 44px; box-shadow: var(--shadow-md); }
+    .cta-inner .eyebrow { justify-content: center; }
+    .cta-inner h2 { font-size: clamp(28px, 4vw, 42px); margin: 16px 0 0; text-wrap: balance; }
+    .cta-inner p { margin: 16px auto 0; max-width: 580px; font-size: 18px; color: var(--muted); }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+    .cta-trust { list-style: none; padding: 0; margin: 30px 0 0; display: flex; gap: 14px 26px; justify-content: center; flex-wrap: wrap; }
+    .cta-trust li { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; font-family: var(--font-display); color: var(--ink); }
+    .cta-trust li svg { width: 16px; height: 16px; color: var(--brand); flex-shrink: 0; }
+    @media (max-width: 560px) { .cta-inner { padding: 40px 24px; } }
+
     /* ============ FAQ ============ */
     .faq { background: var(--bg-soft); }
     .faq-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 56px; align-items: start; }
@@ -453,7 +464,6 @@
         <a class="link" href="#services">Services</a>
         <a class="link" href="#process">Process</a>
         <a class="link" href="#work">Work</a>
-        <a class="link" href="#pricing">Pricing</a>
         <a class="link" href="#faq">FAQ</a>
       </nav>
       <div class="nav-cta">
@@ -473,7 +483,6 @@
     <a class="link" href="#services">Services</a>
     <a class="link" href="#process">Process</a>
     <a class="link" href="#work">Work</a>
-    <a class="link" href="#pricing">Pricing</a>
     <a class="link" href="#faq">FAQ</a>
     <a class="btn btn-primary" href="#contact">Start a project</a>
   </div>
@@ -525,7 +534,7 @@
                 <h3>Grow faster with a site that sells.</h3>
                 <div class="row">
                   <span class="pill f">Get started</span>
-                  <span class="pill o">See pricing</span>
+                  <span class="pill o">Learn more</span>
                 </div>
               </div>
               <div class="mock-cards">
@@ -771,55 +780,24 @@
     </div>
   </section>
 
-  <!-- PRICING -->
-  <section class="section" id="pricing">
+  <!-- GET STARTED / CTA -->
+  <section class="section cta-band" id="get-started">
     <div class="wrap">
-      <div class="section-head reveal" style="max-width:700px;">
-        <span class="eyebrow">Pricing</span>
-        <h2>Simple, flat pricing you can plan around.</h2>
-        <p>Every project is fixed-scope and fixed-price. Choose the tier that fits where you are, and we'll help you decide on the call.</p>
-      </div>
-      <div class="price-grid">
-        <div class="plan reveal">
-          <h3>Launch</h3>
-          <p class="desc">A sharp, single-page site to get a new business online fast.</p>
-          <div class="price"><span class="cur">$</span><span class="amt">2,400</span><span class="per">/ one-time</span></div>
-          <div class="divider"></div>
-          <ul>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>1-page custom design</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Copywriting guidance</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Contact form &amp; basic SEO</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Launch in ~2 weeks</li>
-          </ul>
-          <a class="btn btn-ghost" href="#contact">Get started</a>
+      <div class="cta-inner reveal">
+        <span class="eyebrow">Get started</span>
+        <h2>Every project is custom, and so is your quote.</h2>
+        <p>Tell us what you need and we'll put together a tailored proposal, usually within two business days. It's made just for you, with zero pressure or obligation.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="#contact">Get your free quote
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#work">See our work</a>
         </div>
-        <div class="plan pop reveal">
-          <h3>Growth</h3>
-          <p class="desc">A full multi-page website built to attract and convert customers.</p>
-          <div class="price"><span class="cur">$</span><span class="amt">5,900</span><span class="per">/ one-time</span></div>
-          <div class="divider"></div>
-          <ul>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 8 custom pages</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Editable CMS + blog</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>SEO &amp; analytics setup</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Conversion-focused build</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>30 days post-launch support</li>
-          </ul>
-          <a class="btn btn-lime" href="#contact">Start a project</a>
-        </div>
-        <div class="plan reveal">
-          <h3>Scale</h3>
-          <p class="desc">Custom design systems, integrations, and ongoing partnership.</p>
-          <div class="price"><span class="cur"></span><span class="amt">Custom</span><span class="per"></span></div>
-          <div class="divider"></div>
-          <ul>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited pages &amp; templates</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Custom integrations &amp; tools</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Full brand &amp; design system</li>
-            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated ongoing team</li>
-          </ul>
-          <a class="btn btn-ghost" href="#contact">Talk to us</a>
-        </div>
+        <ul class="cta-trust">
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Free consultation</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Custom proposal in ~48 hours</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>No obligation</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -962,7 +940,6 @@
           <h4>Studio</h4>
           <a href="#work">Our work</a>
           <a href="#process">Process</a>
-          <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
         </div>
@@ -1060,7 +1037,7 @@
       "2–4 wk": "2–4 sem", "Typical launch": "Lanzamiento típico", "Avg. PageSpeed": "PageSpeed prom.",
       "Client retention": "Retención de clientes",
       "Built by Baseline": "Hecho por Baseline", "Grow faster with a site that sells.": "Crece más rápido con un sitio que vende.",
-      "Get started": "Empezar", "See pricing": "Ver precios", "Load time": "Tiempo de carga", "More leads": "Más clientes",
+      "Get started": "Empezar", "Load time": "Tiempo de carga", "More leads": "Más clientes",
       // Logos
       "Design partners to teams across industries": "Socios de diseño para equipos de todos los sectores",
       // Services
@@ -1129,6 +1106,14 @@
       "Scale": "Escala", "Custom design systems, integrations, and ongoing partnership.": "Sistemas de diseño a medida, integraciones y alianza continua.",
       "Custom": "A medida", "Unlimited pages & templates": "Páginas y plantillas ilimitadas", "Custom integrations & tools": "Integraciones y herramientas a medida",
       "Full brand & design system": "Marca y sistema de diseño completos", "Dedicated ongoing team": "Equipo dedicado permanente", "Talk to us": "Habla con nosotros",
+      // Get started CTA
+      "Every project is custom, and so is your quote.": "Cada proyecto es a medida, y tu presupuesto también.",
+      "Tell us what you need and we'll put together a tailored proposal, usually within two business days. It's made just for you, with zero pressure or obligation.": "Cuéntanos qué necesitas y te armamos una propuesta a la medida, normalmente en dos días hábiles. Es solo para ti, sin ninguna presión ni compromiso.",
+      "Get your free quote": "Pide tu presupuesto gratis",
+      "Free consultation": "Consulta gratis",
+      "Custom proposal in ~48 hours": "Propuesta a medida en ~48 horas",
+      "No obligation": "Sin compromiso",
+      "Learn more": "Conocer más",
       // FAQ
       "Good questions, straight answers.": "Buenas preguntas, respuestas claras.",
       "Still wondering about something?": "¿Aún tienes dudas?", "Send us a note": "Escríbenos", "and we'll get right back to you.": "y te respondemos enseguida.",
