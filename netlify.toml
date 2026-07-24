@@ -1,0 +1,20 @@
+# Netlify configuration for Baseline Studio
+# Static site — no build step. Publishes the repo root so the studio site
+# and its case-study pages (Salem Roofing, AirScout) are all served.
+
+[build]
+  publish = "."
+
+# Send visitors from the bare domain to the studio homepage.
+[[redirects]]
+  from = "/"
+  to = "/sites/baseline-studio/index.html"
+  status = 302
+
+# Security + caching headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

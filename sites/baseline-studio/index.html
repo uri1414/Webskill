@@ -862,7 +862,9 @@
         </div>
 
         <div class="form-card reveal">
-          <form id="leadForm" novalidate>
+          <form id="leadForm" name="quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+            <input type="hidden" name="form-name" value="quote" />
+            <p hidden aria-hidden="true"><label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
             <h3>Start a project</h3>
             <p class="sub">Fill this out and we'll be in touch within one business day.</p>
             <div class="field-row">
@@ -1005,23 +1007,29 @@
     // Form (front-end demo handling)
     const form = document.getElementById('leadForm');
     const success = document.getElementById('formSuccess');
+    const fName = document.getElementById('name');
+    const fEmail = document.getElementById('email');
+    const fMessage = document.getElementById('message');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-      const message = form.message.value.trim();
-      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      if (!name || !emailOk || !message) {
-        [ ['name', !!name], ['email', emailOk], ['message', !!message] ].forEach(([id, ok]) => {
-          form[id].style.borderColor = ok ? '' : '#DC2626';
+      const nameV = fName.value.trim();
+      const emailV = fEmail.value.trim();
+      const messageV = fMessage.value.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailV);
+      if (!nameV || !emailOk || !messageV) {
+        [ [fName, !!nameV], [fEmail, emailOk], [fMessage, !!messageV] ].forEach(([el, ok]) => {
+          el.style.borderColor = ok ? '' : '#DC2626';
         });
         return;
       }
-      form.style.display = 'none';
-      success.classList.add('show');
+      // Submit to Netlify Forms (works once deployed on Netlify; degrades gracefully elsewhere).
+      const body = new URLSearchParams(new FormData(form)).toString();
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body })
+        .catch(() => {})
+        .finally(() => { form.style.display = 'none'; success.classList.add('show'); });
     });
-    ['name','email','message'].forEach(id => {
-      form[id].addEventListener('input', () => { form[id].style.borderColor = ''; });
+    [fName, fEmail, fMessage].forEach(el => {
+      el.addEventListener('input', () => { el.style.borderColor = ''; });
     });
 
     // ---- Bilingual EN/ES ----
