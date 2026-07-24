@@ -1,0 +1,5 @@
+# robots.txt for Baseline Studio
+User-agent: *
+Allow: /
+
+Sitemap: https://thebaselinestudio.com/sitemap.xml

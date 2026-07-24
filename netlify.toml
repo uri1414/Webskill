@@ -11,6 +11,13 @@
   to = "/sites/baseline-studio/index.html"
   status = 200
 
+# Consolidate the raw file path to the canonical root URL (avoids duplicate content).
+[[redirects]]
+  from = "/sites/baseline-studio/index.html"
+  to = "/"
+  status = 301
+  force = true
+
 # Security + caching headers
 [[headers]]
   for = "/*"
