@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found — Baseline Studio</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0E1015" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563EB'/%3E%3Cpath d='M8 21h16M11 21V11m5 10V14m5 7v-4' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <style>
+    @font-face { font-family: 'Bricolage Grotesque'; font-weight: 700; font-display: swap; src: url('/sites/baseline-studio/assets/fonts/bricolage-700-2.woff2') format('woff2'); }
+    @font-face { font-family: 'Figtree'; font-weight: 400; font-display: swap; src: url('/sites/baseline-studio/assets/fonts/figtree-400-0.woff2') format('woff2'); }
+    :root { --ink:#0E1015; --brand:#2563EB; --brand-400:#60A5FA; --accent:#D4FF4F; --muted:#9AA1B2; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: radial-gradient(120% 90% at 50% 0%, #1a2030 0%, var(--ink) 60%);
+      color: #fff; display: grid; place-items: center; text-align: center; padding: 24px;
+    }
+    .box { max-width: 520px; }
+    .logo { width: 52px; height: 52px; border-radius: 13px; background: var(--brand); display: grid; place-items: center; margin: 0 auto 30px; box-shadow: 0 20px 44px -18px rgba(0,0,0,.5); }
+    .logo svg { width: 30px; height: 30px; }
+    .code {
+      font-family: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif; font-weight: 700;
+      font-size: clamp(88px, 20vw, 150px); line-height: 1; letter-spacing: -.04em; margin: 0;
+      background: linear-gradient(100deg, var(--brand-400) 10%, var(--accent) 95%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    h1 { font-family: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-size: clamp(24px, 5vw, 32px); letter-spacing: -.02em; margin: 8px 0 0; }
+    p { color: var(--muted); font-size: 17px; line-height: 1.6; margin: 16px 0 0; }
+    .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn { display: inline-flex; align-items: center; gap: 9px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 15.5px; padding: 13px 24px; border-radius: 999px; cursor: pointer; text-decoration: none; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; border: 1px solid transparent; }
+    .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 18px 40px -18px rgba(0,0,0,.45); }
+    .btn-primary:hover { background: #1D4ED8; transform: translateY(-2px); }
+    .btn-ghost { color: #fff; border-color: rgba(255,255,255,.25); }
+    .btn-ghost:hover { border-color: #fff; transform: translateY(-2px); background: rgba(255,255,255,.06); }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
+  </style>
+</head>
+<body>
+  <main class="box">
+    <span class="logo" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M8 21h16M11 21V11m5 10V14m5 7v-4" stroke="white" stroke-width="2.6" stroke-linecap="round"/></svg>
+    </span>
+    <p class="code" aria-hidden="true">404</p>
+    <h1>This page took a wrong turn.</h1>
+    <p>The page you're looking for doesn't exist or may have moved. Let's get you back on track.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/">Back to home
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="/#contact">Get in touch</a>
+    </div>
+  </main>
+</body>
+</html>
