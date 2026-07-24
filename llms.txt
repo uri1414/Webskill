@@ -1,0 +1,42 @@
+# Baseline Studio
+
+> Baseline is a web design studio that designs and builds fast, beautiful, conversion-focused websites for growing businesses. Strategy, design, and development under one roof. Remote-first, working with clients worldwide. Available in English and Spanish.
+
+## About
+
+Baseline turns quiet websites into a business's hardest-working salesperson. One team handles strategy, design, and development, so nothing gets lost in the handoff between agencies and freelancers. Projects are fixed-scope and fixed-price, typically launching in two to four weeks. Every build is custom (no templates), mobile-first, accessible, and engineered to load in under a second.
+
+## Services
+
+- **Website design & build**: Custom, conversion-focused websites built to load in under a second.
+- **Redesigns & rescues**: A UX and conversion audit of your current site, then a rebuild with zero-downtime launch and SEO migration.
+- **Brand & identity**: Logo and visual system, brand guidelines, and social/ad templates.
+- **SEO & performance**: Technical SEO, Core Web Vitals tuning, on-page and local SEO, and analytics setup.
+- **Landing pages**: Focused, A/B-ready pages engineered around a single measurable action.
+- **Care & growth**: Optional monthly support for hosting, backups, edits, new pages, and reporting.
+
+## Pricing
+
+- **Launch**: A sharp, single-page site to get a new business online fast (launch in ~2 weeks).
+- **Growth**: A full multi-page website (up to 8 pages) with an editable CMS, blog, SEO/analytics setup, and 30 days of post-launch support.
+- **Scale**: Custom design systems, integrations, unlimited pages, and an ongoing dedicated team.
+
+Every project is fixed-scope and fixed-price; the exact quote is tailored on a discovery call.
+
+## Process
+
+1. **Discover** — Define goals, customers, and competitors, and what success looks like.
+2. **Design** — Review real, clickable designs and refine them together.
+3. **Build** — Develop a fast, accessible site and load in your content, tested across devices.
+4. **Launch** — Go live, train your team, then measure results and iterate.
+
+## Pages
+
+- [Home (English)](https://thebaselinestudio.com/): Services, process, work, pricing, FAQ, and contact.
+- [Inicio (Español)](https://thebaselinestudio.com/es/): The full site in Spanish.
+
+## Contact
+
+- Email: hello@thebaselinestudio.com
+- Book a free 20-minute discovery call via the contact form.
+- Remote-first; working with clients wherever they are.
