@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 132" role="img" aria-label="Albany Junk Removal">
+  <title>Albany Junk Removal</title>
+  <defs>
+    <linearGradient id="ajr-badge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1B8A50"/>
+      <stop offset="1" stop-color="#0F3D2E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon badge: hauling truck + responsible-disposal check -->
+  <g>
+    <rect x="4" y="10" width="112" height="112" rx="26" fill="url(#ajr-badge)"/>
+    <!-- truck body -->
+    <g fill="none" stroke="#F7F5EF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M28 78V44h40v34"/>
+      <path d="M68 56h16l10 12v10H68z"/>
+      <circle cx="46" cy="86" r="8" fill="#0F3D2E"/>
+      <circle cx="82" cy="86" r="8" fill="#0F3D2E"/>
+    </g>
+    <!-- amber load / check -->
+    <path d="M37 62l6 6 12-13" fill="none" stroke="#F6A623" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="'Sora','Segoe UI',sans-serif">
+    <text x="134" y="60" font-size="38" font-weight="800" letter-spacing="-1" fill="#0F3D2E">ALBANY</text>
+    <text x="298" y="60" font-size="38" font-weight="800" letter-spacing="-1" fill="#1B8A50">JUNK</text>
+    <text x="134" y="98" font-size="23" font-weight="700" letter-spacing="7.5" fill="#3B4A43">R E M O V A L</text>
+    <rect x="300" y="82" width="132" height="4" rx="2" fill="#F6A623"/>
+  </g>
+</svg>
