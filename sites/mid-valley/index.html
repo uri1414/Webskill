@@ -221,6 +221,27 @@
     .mobile-menu a{color:var(--navy);font-family:var(--font-display);font-weight:700;font-size:1.5rem;padding:.7rem 0;border-bottom:1px solid var(--line)}
     .mobile-menu .btn{margin-top:1rem}
 
+    /* Services dropdown (desktop) */
+    .nav-drop{position:relative;display:inline-flex;align-items:center}
+    .nav-drop>a{display:inline-flex;align-items:center;gap:.34rem}
+    .nav-drop>a svg.caret{width:13px;height:13px;transition:transform .28s var(--ease)}
+    .nav-drop:hover>a svg.caret,.nav-drop:focus-within>a svg.caret{transform:rotate(180deg)}
+    .nav-menu{position:absolute;top:calc(100% + 18px);left:50%;transform:translateX(-50%) translateY(6px);min-width:262px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:.5rem;opacity:0;visibility:hidden;transition:opacity .2s var(--ease),transform .2s var(--ease);z-index:60}
+    .nav-menu::before{content:"";position:absolute;top:-18px;left:0;right:0;height:18px}
+    .nav-drop:hover .nav-menu,.nav-drop:focus-within .nav-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+    .nav-menu a{display:block;padding:.6rem .8rem;border-radius:var(--radius-sm);font-size:.96rem;font-weight:500;color:var(--navy)}
+    .nav-menu a::after{display:none}
+    .nav-menu a:hover{background:var(--sage-soft);color:var(--sage-deep)}
+    .nav-menu a.all{border-top:1px solid var(--line);margin-top:.35rem;padding-top:.7rem;color:var(--sage-deep);font-weight:700}
+    /* Services accordion (mobile) */
+    .m-drop{border-bottom:1px solid var(--line)}
+    .m-drop>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;font-family:var(--font-display);font-weight:700;font-size:1.5rem;color:var(--navy)}
+    .m-drop>summary::-webkit-details-marker{display:none}
+    .m-drop>summary::after{content:"";width:11px;height:11px;border-right:2.5px solid var(--sage-deep);border-bottom:2.5px solid var(--sage-deep);transform:rotate(45deg);transition:transform .25s var(--ease);margin-right:.4rem}
+    .m-drop[open]>summary::after{transform:rotate(-135deg)}
+    .m-drop-links{padding:.2rem 0 .8rem .6rem;display:flex;flex-direction:column}
+    .m-drop-links a{font-family:var(--font-body);font-size:1.06rem;font-weight:500;padding:.55rem 0;border-bottom:none;color:var(--body)}
+
     /* Hero */
     .hero{padding:clamp(2.4rem,6vw,4.6rem) 0 clamp(3rem,7vw,5rem)}
     .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4rem);align-items:center}
@@ -401,7 +422,15 @@
           <span class="wordmark">MID-VALLEY<span class="llc">Facility Services LLC</span></span>
         </a>
         <div class="nav-links">
-          <a href="#services">Services</a>
+          <div class="nav-drop">
+            <a href="/services/">Services <svg class="caret" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <div class="nav-menu">
+              <a href="/services/house-cleaning/">House Cleaning</a>
+              <a href="/services/commercial-cleaning/">Commercial &amp; Office</a>
+              <a href="/services/government-cleaning/">Government Buildings</a>
+              <a class="all" href="/services/">All services</a>
+            </div>
+          </div>
           <a href="#why">Why Us</a>
           <a href="#process">How It Works</a>
           <a href="#areas">Service Area</a>
@@ -422,7 +451,15 @@
   </header>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#services">Services</a>
+    <details class="m-drop">
+      <summary>Services</summary>
+      <div class="m-drop-links">
+        <a href="/services/house-cleaning/">House Cleaning</a>
+        <a href="/services/commercial-cleaning/">Commercial &amp; Office</a>
+        <a href="/services/government-cleaning/">Government Buildings</a>
+        <a href="/services/">All services</a>
+      </div>
+    </details>
     <a href="#why">Why Us</a>
     <a href="#process">How It Works</a>
     <a href="#areas">Service Area</a>
@@ -497,7 +534,7 @@
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Move-in / move-out</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Kitchens &amp; baths</li>
           </ul>
-          <a class="flink" href="#quote">Get a home quote <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
+          <a class="flink" href="/services/house-cleaning/">Explore house cleaning <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
         </div>
       </div>
 
@@ -511,6 +548,7 @@
             <ul>
               <li>Offices</li><li>Retail</li><li>Medical &amp; dental</li><li>Nightly / weekly</li>
             </ul>
+            <a class="flink" href="/services/commercial-cleaning/" style="margin-top:1.2rem">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
           </div>
         </article>
         <article class="svc-card reveal">
@@ -521,6 +559,7 @@
             <ul>
               <li>City &amp; county</li><li>Common areas</li><li>Restrooms</li><li>Contract-ready</li>
             </ul>
+            <a class="flink" href="/services/government-cleaning/" style="margin-top:1.2rem">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
           </div>
         </article>
       </div>
@@ -681,10 +720,10 @@
         </div>
         <div class="foot-col">
           <h5>Services</h5>
-          <a href="#services">House Cleaning</a>
-          <a href="#services">Commercial &amp; Office</a>
-          <a href="#services">Government Buildings</a>
-          <a href="#process">How It Works</a>
+          <a href="/services/house-cleaning/">House Cleaning</a>
+          <a href="/services/commercial-cleaning/">Commercial &amp; Office</a>
+          <a href="/services/government-cleaning/">Government Buildings</a>
+          <a href="/services/">All Services</a>
         </div>
         <div class="foot-col">
           <h5>Service Area</h5>
