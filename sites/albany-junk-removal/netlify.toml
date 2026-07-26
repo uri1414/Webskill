@@ -1,0 +1,8 @@
+# Netlify configuration for Albany Junk Removal
+# Static HTML site — no build step. When creating the Netlify site, set the
+# site's "Base directory" to sites/albany-junk-removal so Netlify reads THIS
+# file (and not the repo-root netlify.toml, which publishes a different site).
+[build]
+  base = "sites/albany-junk-removal"
+  publish = "."
+  command = ""
