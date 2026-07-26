@@ -185,6 +185,25 @@
     }
     @media (min-width: 901px) { .mobile-menu { display: none; } }
 
+    /* ============ SERVICES DROPDOWN ============ */
+    .nav-drop { position: relative; display: inline-flex; }
+    .nav-drop > .link { display: inline-flex; align-items: center; gap: 5px; }
+    .nav-drop > .link svg { width: 13px; height: 13px; transition: transform .25s var(--ease); }
+    .nav-drop:hover > .link svg, .nav-drop:focus-within > .link svg { transform: rotate(180deg); }
+    .nav-menu { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(6px); min-width: 236px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 8px; opacity: 0; visibility: hidden; transition: opacity .2s var(--ease), transform .2s var(--ease); z-index: 70; }
+    .nav-menu::before { content: ""; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
+    .nav-drop:hover .nav-menu, .nav-drop:focus-within .nav-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    .nav-menu a { display: block; padding: 9px 12px; border-radius: 9px; font-size: 14.5px; font-weight: 500; color: var(--body); }
+    .nav-menu a:hover { background: var(--bg-soft); color: var(--ink); }
+    .nav-menu a.all { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 11px; color: var(--brand-600); font-weight: 600; }
+    .m-drop { border-bottom: 1px solid var(--border); }
+    .m-drop > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 14px 6px; font-size: 18px; font-weight: 500; color: var(--ink); font-family: var(--font-display); }
+    .m-drop > summary::-webkit-details-marker { display: none; }
+    .m-drop > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .25s var(--ease); margin-right: 8px; }
+    .m-drop[open] > summary::after { transform: rotate(-135deg); }
+    .m-drop-links { padding: 0 6px 12px 16px; display: flex; flex-direction: column; }
+    .m-drop-links a.link { border-bottom: none; font-size: 16px; padding: 10px 0; color: var(--body); }
+
     /* ============ HERO ============ */
     .hero { position: relative; padding: 78px 0 90px; overflow: hidden; }
     .hero::before {
@@ -589,7 +608,18 @@
         Baseline <span class="brand-sub">Studio</span>
       </a>
       <nav class="nav-links" aria-label="Primary">
-        <a class="link" href="#services">Servicios</a>
+        <div class="nav-drop">
+          <a class="link" href="/es/services/">Servicios <svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav-menu">
+            <a href="/es/services/website-design/">Diseño Web</a>
+            <a href="/es/services/website-redesign/">Rediseño y Rescate</a>
+            <a href="/es/services/branding/">Marca e Identidad</a>
+            <a href="/es/services/seo/">SEO y Rendimiento</a>
+            <a href="/es/services/landing-pages/">Landing Pages</a>
+            <a href="/es/services/website-care/">Mantenimiento</a>
+            <a class="all" href="/es/services/">Todos los servicios</a>
+          </div>
+        </div>
         <a class="link" href="#process">Proceso</a>
         <a class="link" href="#work">Proyectos</a>
         <a class="link" href="#faq">Preguntas</a>
@@ -608,7 +638,18 @@
     </div>
   </header>
   <div class="mobile-menu" id="mobileMenu">
-    <a class="link" href="#services">Servicios</a>
+    <details class="m-drop">
+      <summary class="link">Servicios</summary>
+      <div class="m-drop-links">
+        <a class="link" href="/es/services/website-design/">Diseño Web</a>
+        <a class="link" href="/es/services/website-redesign/">Rediseño y Rescate</a>
+        <a class="link" href="/es/services/branding/">Marca e Identidad</a>
+        <a class="link" href="/es/services/seo/">SEO y Rendimiento</a>
+        <a class="link" href="/es/services/landing-pages/">Landing Pages</a>
+        <a class="link" href="/es/services/website-care/">Mantenimiento</a>
+        <a class="link" href="/es/services/">Todos los servicios</a>
+      </div>
+    </details>
     <a class="link" href="#process">Proceso</a>
     <a class="link" href="#work">Proyectos</a>
     <a class="link" href="#faq">Preguntas</a>
