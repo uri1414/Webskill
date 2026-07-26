@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mid-Valley Facility Services LLC — Commercial, Residential &amp; Government Cleaning in Albany, OR</title>
+  <meta name="description" content="Mid-Valley Facility Services LLC provides commercial, house, and government facility cleaning across Albany, Corvallis, Salem, and the Mid-Willamette Valley. Licensed, insured, and locally owned. Free quotes." />
+  <meta name="theme-color" content="#17335B" />
+  <link rel="icon" href="assets/shield-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #17335B;          /* brand navy */
+      --navy-900: #10254A;
+      --navy-700: #274A79;
+      --ink: #33404F;           /* body text */
+      --muted: #5A6B7E;         /* secondary text */
+      --bg: #FFFFFF;
+      --bg-soft: #F4F7FB;
+      --bg-mint: #EFF5EC;       /* soft green wash */
+      --border: #E2E9F1;
+      --green: #3E7C3A;         /* brand leaf green */
+      --green-700: #2F6330;
+      --green-soft: #E7F1E3;
+      --sky: #6FA8D6;
+      --sun: #F2B23A;
+      --star: #E6A21C;
+
+      --radius: 16px;
+      --radius-sm: 11px;
+      --shadow-sm: 0 1px 2px rgba(16,37,74,.06), 0 1px 3px rgba(16,37,74,.05);
+      --shadow-md: 0 12px 28px -14px rgba(16,37,74,.24), 0 3px 8px -3px rgba(16,37,74,.08);
+      --shadow-lg: 0 34px 64px -28px rgba(16,37,74,.34);
+
+      --maxw: 1170px;
+      --ease: cubic-bezier(.22,.61,.36,1);
+      --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4 { color: var(--navy); font-family: var(--font-display); font-weight: 700; line-height: 1.12; letter-spacing: -.02em; margin: 0; }
+    p { margin: 0; }
+    a { color: var(--green-700); text-decoration: none; }
+    img, svg { display: block; max-width: 100%; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    ::selection { background: var(--green-soft); color: var(--green-700); }
+
+    .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 24px; }
+    .eyebrow {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: .76rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--green-700); margin: 0 0 15px;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .eyebrow::before { content:""; width: 24px; height: 2px; background: var(--green); border-radius: 2px; }
+    .section { padding: clamp(64px, 9vw, 118px) 0; }
+    .section-head { max-width: 640px; margin: 0 auto 56px; text-align: center; }
+    .section-head.left { margin-inline: 0; text-align: left; }
+    .section-head h2 { font-size: clamp(2rem, 4.4vw, 3.05rem); }
+    .section-head p { margin-top: 18px; font-size: 1.09rem; color: var(--muted); }
+    .lede { font-size: 1.18rem; color: var(--muted); }
+
+    /* Buttons */
+    .btn {
+      --btn-bg: var(--green); --btn-fg: #fff;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+      padding: 14px 26px; border-radius: 999px; border: 1px solid transparent;
+      background: var(--btn-bg); color: var(--btn-fg); cursor: pointer;
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+      box-shadow: 0 10px 20px -12px rgba(62,124,58,.7);
+      will-change: transform;
+    }
+    .btn:hover { transform: translateY(-2px); background: var(--green-700); box-shadow: 0 16px 28px -14px rgba(62,124,58,.75); }
+    .btn:active { transform: translateY(0); }
+    .btn--navy { --btn-bg: var(--navy); box-shadow: 0 10px 20px -12px rgba(16,37,74,.6); }
+    .btn--navy:hover { background: var(--navy-900); }
+    .btn--ghost { --btn-bg: transparent; --btn-fg: var(--navy); border-color: var(--border); box-shadow: none; }
+    .btn--ghost:hover { --btn-bg: var(--bg-soft); background: var(--bg-soft); border-color: #cfdae7; box-shadow: none; }
+    .btn--light { --btn-bg:#fff; --btn-fg: var(--navy); box-shadow: var(--shadow-sm); }
+    .btn--light:hover { background:#fff; }
+    .btn--lg { padding: 16px 32px; font-size: 1.05rem; }
+
+    :focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; border-radius: 6px; }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky; top: 0; z-index: 60;
+      background: rgba(255,255,255,.85); backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid transparent; transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .site-header.is-stuck { border-color: var(--border); box-shadow: var(--shadow-sm); }
+    .nav { display: flex; align-items: center; gap: 26px; height: 76px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; }
+    .brand .mark { width: 44px; height: 44px; flex: none; }
+    .brand .brand-text { display: flex; flex-direction: column; line-height: 1; }
+    .brand .b1 { font-family: var(--font-display); font-weight: 800; font-size: 1.16rem; color: var(--navy); letter-spacing: -.01em; }
+    .brand .b2 { font-family: var(--font-display); font-weight: 600; font-size: .64rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+    .nav-links { display: flex; gap: 28px; margin-left: 14px; }
+    .nav-links a { color: var(--navy-700); font-weight: 500; font-family: var(--font-body); font-size: .98rem; position: relative; padding: 6px 0; }
+    .nav-links a::after { content:""; position:absolute; left:0; right:100%; bottom: 0; height: 2px; background: var(--green); transition: right .25s var(--ease); }
+    .nav-links a:hover::after, .nav-links a:focus-visible::after { right: 0; }
+    .nav-cta { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+    .phone-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-family: var(--font-display); color: var(--navy); }
+    .phone-link:hover { color: var(--green-700); }
+    .phone-link svg { color: var(--green); }
+    .nav-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 10px; width: 44px; height: 42px; align-items: center; justify-content: center; cursor: pointer; color: var(--navy); }
+
+    /* Mobile menu */
+    .mobile-menu { display: none; }
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta .phone-link, .nav-cta .btn { display: none; }
+      .nav-toggle { display: inline-flex; }
+      .mobile-menu { display: block; position: fixed; inset: 76px 0 auto 0; z-index: 55;
+        background: #fff; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md);
+        transform: translateY(-12px); opacity: 0; pointer-events: none; transition: .24s var(--ease); }
+      .mobile-menu.open { transform: none; opacity: 1; pointer-events: auto; }
+      .mobile-menu .wrap { padding-block: 18px 26px; display: flex; flex-direction: column; gap: 4px; }
+      .mobile-menu a { padding: 13px 6px; font-weight: 600; color: var(--navy); border-bottom: 1px solid var(--border); font-family: var(--font-display); }
+      .mobile-menu .btn { margin-top: 14px; }
+    }
+
+    /* ---------- Hero ---------- */
+    .hero { position: relative; overflow: hidden; background: linear-gradient(180deg, #fff 0%, var(--bg-soft) 100%); }
+    .hero::after { content:""; position:absolute; inset:0; pointer-events:none;
+      background: radial-gradient(60% 55% at 88% -5%, rgba(111,168,214,.16), transparent 60%); }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.04fr .96fr; gap: 56px; align-items: center; padding: clamp(52px, 7vw, 92px) 0 clamp(60px, 8vw, 104px); }
+    .hero h1 { font-size: clamp(2.5rem, 5.6vw, 4rem); font-weight: 800; letter-spacing: -.03em; }
+    .hero h1 .u { color: var(--green-700); }
+    .hero p.lede { margin-top: 22px; max-width: 33ch; }
+    .hero-actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 14px; }
+    .hero-trust { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center; }
+    .trust-item { display: inline-flex; align-items: center; gap: 9px; font-weight: 600; color: var(--navy-700); font-size: .93rem; font-family: var(--font-display); }
+    .trust-item svg { color: var(--green); flex: none; }
+
+    .hero-media { position: relative; }
+    .hero-photo { position: relative; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 4/3.4; }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-photo::after { content:""; position:absolute; inset:0; box-shadow: inset 0 0 0 1px rgba(16,37,74,.08); border-radius: 22px; }
+    .hero-badge { position: absolute; left: -22px; bottom: 26px; background: #fff; border-radius: 16px; box-shadow: var(--shadow-md); padding: 16px 20px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--border); }
+    .hero-badge .ring { width: 46px; height: 46px; border-radius: 12px; background: var(--green-soft); display: grid; place-items: center; color: var(--green-700); flex: none; }
+    .hero-badge b { font-family: var(--font-display); color: var(--navy); font-size: 1.05rem; display: block; }
+    .hero-badge span { font-size: .84rem; color: var(--muted); }
+    .hero-float { position: absolute; right: -14px; top: 26px; background: var(--navy); color: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: var(--shadow-md); font-family: var(--font-display); }
+    .hero-float b { font-size: 1.35rem; display:block; }
+    .hero-float span { font-size: .76rem; opacity: .82; letter-spacing: .04em; text-transform: uppercase; }
+
+    /* ---------- Trust logos / stat strip ---------- */
+    .strip { background: var(--navy); color: #fff; }
+    .strip .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding-block: 40px; text-align: center; }
+    .strip .stat b { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, 3.4vw, 2.5rem); display: block; letter-spacing: -.02em; }
+    .strip .stat span { color: #B7C6DC; font-size: .9rem; font-weight: 500; }
+    .strip .stat b .plus { color: var(--sun); }
+
+    /* ---------- Services ---------- */
+    .services { background: var(--bg); }
+    .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .svc-card { position: relative; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease); }
+    .svc-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: #d3e0d0; }
+    .svc-photo { aspect-ratio: 16/10; overflow: hidden; }
+    .svc-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+    .svc-card:hover .svc-photo img { transform: scale(1.05); }
+    .svc-body { padding: 26px 26px 28px; display: flex; flex-direction: column; flex: 1; }
+    .svc-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--green-soft); color: var(--green-700); display: grid; place-items: center; margin: -50px 0 16px; position: relative; z-index: 2; box-shadow: 0 8px 16px -8px rgba(16,37,74,.4); border: 3px solid #fff; background: var(--navy); color: #fff; }
+    .svc-body h3 { font-size: 1.4rem; }
+    .svc-body p { margin-top: 10px; color: var(--muted); font-size: .99rem; }
+    .svc-list { margin-top: 18px; display: grid; gap: 9px; }
+    .svc-list li { display: flex; gap: 10px; align-items: flex-start; font-size: .95rem; color: var(--ink); }
+    .svc-list li svg { color: var(--green); flex: none; margin-top: 3px; }
+    .svc-more { margin-top: auto; padding-top: 22px; }
+    .svc-more a { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-weight: 700; font-size: .95rem; }
+    .svc-more a svg { transition: transform .2s var(--ease); }
+    .svc-more a:hover svg { transform: translateX(4px); }
+
+    /* ---------- Why us ---------- */
+    .why { background: var(--bg-soft); }
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .why-media { position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 4/3.2; }
+    .why-media img { width: 100%; height: 100%; object-fit: cover; }
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 26px; margin-top: 32px; }
+    .feature { }
+    .feature .fi { width: 44px; height: 44px; border-radius: 12px; background: #fff; border: 1px solid var(--border); color: var(--green-700); display: grid; place-items: center; box-shadow: var(--shadow-sm); }
+    .feature h4 { margin-top: 14px; font-size: 1.08rem; }
+    .feature p { margin-top: 6px; color: var(--muted); font-size: .94rem; }
+
+    /* ---------- Process ---------- */
+    .process { background: var(--bg); }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; counter-reset: step; }
+    .step { position: relative; padding: 30px 24px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow-sm); }
+    .step .num { font-family: var(--font-display); font-weight: 800; font-size: 2.1rem; color: var(--green-soft); line-height: 1; }
+    .step h4 { margin-top: 10px; font-size: 1.14rem; }
+    .step p { margin-top: 8px; color: var(--muted); font-size: .95rem; }
+
+    /* ---------- Areas ---------- */
+    .areas { background: var(--bg-mint); }
+    .areas-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 52px; align-items: center; }
+    .area-tags { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 28px; }
+    .area-tags span { background: #fff; border: 1px solid #d7e6d3; color: var(--navy); border-radius: 999px; padding: 9px 17px; font-weight: 600; font-family: var(--font-display); font-size: .92rem; box-shadow: var(--shadow-sm); }
+    .area-tags span.hq { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .area-tags span.hq::before { content:"★ "; color: var(--sun); }
+    .map-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-md); }
+    .map-card .m-head { display: flex; align-items: center; gap: 12px; }
+    .map-card .m-head svg { color: var(--green); }
+    .map-card h3 { font-size: 1.3rem; }
+    .map-card .m-row { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .map-card .m-row:last-of-type { border-bottom: 0; }
+    .map-card .m-row .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--green-soft); color: var(--green-700); display: grid; place-items: center; flex: none; }
+    .map-card .m-row b { font-family: var(--font-display); color: var(--navy); display: block; font-size: .98rem; }
+    .map-card .m-row span { color: var(--muted); font-size: .92rem; }
+
+    /* ---------- Testimonials ---------- */
+    .quotes { background: var(--bg); }
+    .quote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .quote-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .stars { display: flex; gap: 3px; color: var(--star); margin-bottom: 14px; }
+    .quote-card p { color: var(--ink); font-size: 1.02rem; }
+    .quote-card .who { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+    .quote-card .av { width: 42px; height: 42px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; flex: none; }
+    .quote-card .who b { font-family: var(--font-display); color: var(--navy); display: block; font-size: .96rem; }
+    .quote-card .who span { color: var(--muted); font-size: .86rem; }
+
+    /* ---------- CTA + Quote form ---------- */
+    .cta { background: linear-gradient(150deg, var(--navy-900), var(--navy) 55%, var(--navy-700)); color: #fff; position: relative; overflow: hidden; }
+    .cta::before { content:""; position:absolute; inset:0; background: radial-gradient(50% 60% at 90% 0%, rgba(111,168,214,.28), transparent 60%), radial-gradient(40% 50% at 0% 100%, rgba(62,124,58,.3), transparent 60%); }
+    .cta-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .cta h2 { color: #fff; font-size: clamp(2rem, 4vw, 2.9rem); }
+    .cta .lede { color: #C6D3E6; margin-top: 18px; }
+    .cta-checks { margin-top: 26px; display: grid; gap: 12px; }
+    .cta-checks li { display: flex; gap: 11px; align-items: center; color: #E4EBF5; font-weight: 500; }
+    .cta-checks li svg { color: #86D07E; flex: none; }
+    .cta-contact { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 14px 28px; }
+    .cta-contact a { color: #fff; font-family: var(--font-display); font-weight: 700; display: inline-flex; align-items: center; gap: 9px; }
+    .cta-contact a svg { color: var(--sun); }
+
+    .quote-form { background: #fff; border-radius: 20px; padding: 30px; box-shadow: var(--shadow-lg); }
+    .quote-form h3 { font-size: 1.5rem; }
+    .quote-form > p { color: var(--muted); margin-top: 6px; font-size: .96rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-family: var(--font-display); font-weight: 600; font-size: .85rem; color: var(--navy); }
+    .field input, .field select, .field textarea {
+      font-family: var(--font-body); font-size: .98rem; color: var(--ink);
+      padding: 12px 14px; border: 1px solid var(--border); border-radius: 11px; background: var(--bg-soft);
+      transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease); width: 100%;
+    }
+    .field textarea { resize: vertical; min-height: 92px; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--green); background: #fff; box-shadow: 0 0 0 4px rgba(62,124,58,.12); }
+    .quote-form .btn { width: 100%; margin-top: 20px; }
+    .form-note { margin-top: 14px; text-align: center; font-size: .84rem; color: var(--muted); }
+    .form-success { display: none; text-align: center; padding: 20px 0; }
+    .form-success.show { display: block; }
+    .form-success .ok { width: 62px; height: 62px; border-radius: 50%; background: var(--green-soft); color: var(--green-700); display: grid; place-items: center; margin: 4px auto 16px; }
+    .form-success h3 { color: var(--navy); }
+    .form-success p { color: var(--muted); margin-top: 8px; }
+
+    /* ---------- Footer ---------- */
+    .site-footer { background: var(--navy-900); color: #C6D3E6; padding-block: 60px 34px; }
+    .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.3fr; gap: 40px; }
+    .foot-brand .brand .b1 { color: #fff; }
+    .foot-brand .brand .b2 { color: #92A6C4; }
+    .foot-brand p { margin-top: 16px; font-size: .95rem; max-width: 30ch; color: #A9BAD4; }
+    .foot-social { display: flex; gap: 10px; margin-top: 18px; }
+    .foot-social a { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,.07); display: grid; place-items: center; color: #C6D3E6; transition: background .18s var(--ease), color .18s var(--ease); }
+    .foot-social a:hover { background: var(--green); color: #fff; }
+    .foot-col h4 { color: #fff; font-size: .95rem; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 16px; }
+    .foot-col a, .foot-col li { color: #A9BAD4; font-size: .95rem; padding: 5px 0; display: block; }
+    .foot-col a:hover { color: #fff; }
+    .foot-contact li { display: flex; gap: 11px; align-items: flex-start; color: #A9BAD4; padding: 7px 0; font-size: .95rem; }
+    .foot-contact svg { color: var(--green); flex: none; margin-top: 3px; }
+    .foot-bottom { border-top: 1px solid rgba(255,255,255,.1); margin-top: 44px; padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: .87rem; color: #8FA2C0; }
+    .foot-bottom a { color: #8FA2C0; }
+    .foot-bottom a:hover { color: #fff; }
+
+    /* Reveal animation */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      * { scroll-behavior: auto !important; }
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1000px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+      .hero p.lede { max-width: 52ch; }
+      .svc-grid, .quote-grid { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .why-grid, .areas-grid, .cta-grid { grid-template-columns: 1fr; gap: 40px; }
+      .why-media, .hero-media { max-width: 560px; }
+      .foot-grid { grid-template-columns: 1fr 1fr; gap: 34px; }
+    }
+    @media (max-width: 720px) {
+      .strip .wrap { grid-template-columns: 1fr 1fr; gap: 28px 16px; }
+      .svc-grid, .quote-grid, .steps, .feature-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .foot-grid { grid-template-columns: 1fr; }
+      .hero-badge { left: 12px; }
+      .section-head { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="top">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Mid-Valley Facility Services home">
+        <img class="mark" src="assets/shield-mark.png" alt="" />
+        <span class="brand-text">
+          <span class="b1">Mid-Valley</span>
+          <span class="b2">Facility Services LLC</span>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#services">Services</a>
+        <a href="#why">Why Us</a>
+        <a href="#process">How It Works</a>
+        <a href="#areas">Service Areas</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="phone-link" href="tel:+15415550137">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          (541) 555-0137
+        </a>
+        <a class="btn" href="#quote">Request a Quote</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="wrap">
+        <a href="#services">Services</a>
+        <a href="#why">Why Us</a>
+        <a href="#process">How It Works</a>
+        <a href="#areas">Service Areas</a>
+        <a href="tel:+15415550137">Call (541) 555-0137</a>
+        <a class="btn" href="#quote">Request a Quote</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Albany, Oregon · Serving the Mid-Willamette Valley</p>
+          <h1>A cleaner, healthier <span class="u">facility</span> — inside and out.</h1>
+          <p class="lede">Mid-Valley Facility Services delivers dependable commercial, residential, and government cleaning across Albany and the surrounding valley. Locally owned, fully insured, and detail-obsessed.</p>
+          <div class="hero-actions">
+            <a class="btn btn--lg" href="#quote">Get a Free Quote</a>
+            <a class="btn btn--ghost btn--lg" href="#services">Explore Services</a>
+          </div>
+          <div class="hero-trust">
+            <span class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Licensed &amp; Insured</span>
+            <span class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Bonded Teams</span>
+            <span class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg> Locally Owned</span>
+          </div>
+        </div>
+        <div class="hero-media">
+          <div class="hero-photo">
+            <img src="assets/team-cleaning.jpg" alt="Uniformed Mid-Valley cleaning technicians servicing a facility kitchen" width="1024" height="1024" />
+          </div>
+          <div class="hero-badge">
+            <span class="ring">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.5 3.8 8.5 8 10 4.2-1.5 8-4.5 8-10V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <div>
+              <b>100% Satisfaction</b>
+              <span>Guaranteed on every visit</span>
+            </div>
+          </div>
+          <div class="hero-float">
+            <b>10+ yrs</b>
+            <span>Valley experience</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STAT STRIP ============ -->
+    <section class="strip" aria-label="Company highlights">
+      <div class="wrap">
+        <div class="stat"><b>500<span class="plus">+</span></b><span>Cleans completed</span></div>
+        <div class="stat"><b>3</b><span>Core service lines</span></div>
+        <div class="stat"><b>24/7</b><span>Scheduling flexibility</span></div>
+        <div class="stat"><b>100%</b><span>Insured &amp; bonded</span></div>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="section services" id="services">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow" style="justify-content:center;">What We Do</p>
+          <h2>Three cleaning specialties, one trusted local team</h2>
+          <p>From storefronts to government facilities to family homes, we tailor a program to your space, schedule, and standards.</p>
+        </div>
+        <div class="svc-grid">
+
+          <article class="svc-card reveal">
+            <div class="svc-photo"><img src="assets/commercial-office.jpg" alt="Clean, modern commercial conference room" width="1600" height="1000" /></div>
+            <div class="svc-body">
+              <span class="svc-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7l6-4 6 4v14"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>
+              </span>
+              <h3>Commercial Cleaning</h3>
+              <p>Offices, retail, medical suites, and multi-tenant buildings kept spotless and presentable for staff and customers.</p>
+              <ul class="svc-list">
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Nightly &amp; recurring janitorial</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Restroom &amp; breakroom sanitation</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Floor care, carpets &amp; windows</li>
+              </ul>
+              <div class="svc-more"><a href="#quote">Request commercial quote <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+            </div>
+          </article>
+
+          <article class="svc-card reveal">
+            <div class="svc-photo"><img src="assets/team-cleaning.jpg" alt="Cleaning technicians tidying a residential kitchen" width="1024" height="1024" /></div>
+            <div class="svc-body">
+              <span class="svc-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg>
+              </span>
+              <h3>House Cleaning</h3>
+              <p>Recurring and one-time home cleaning that gives Mid-Valley families more time and a fresher place to live.</p>
+              <ul class="svc-list">
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Weekly, biweekly &amp; monthly</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Deep cleans &amp; move in/out</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Kitchen, bath &amp; living areas</li>
+              </ul>
+              <div class="svc-more"><a href="#quote">Request home quote <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+            </div>
+          </article>
+
+          <article class="svc-card reveal">
+            <div class="svc-photo"><img src="assets/government-building.jpg" alt="Public government facility interior" width="1600" height="1115" /></div>
+            <div class="svc-body">
+              <span class="svc-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/><path d="M4 10h16"/></svg>
+              </span>
+              <h3>Government Cleaning</h3>
+              <p>Compliance-minded janitorial for municipal, county, and public facilities — with the documentation and reliability agencies require.</p>
+              <ul class="svc-list">
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Public buildings &amp; offices</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Contract-ready &amp; insured crews</li>
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Detailed service reporting</li>
+              </ul>
+              <div class="svc-more"><a href="#quote">Request government quote <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHY US ============ -->
+    <section class="section why" id="why">
+      <div class="wrap why-grid">
+        <div class="why-media reveal">
+          <img src="assets/commercial-office.jpg" alt="Spotless, professionally cleaned office space" width="1600" height="1200" />
+        </div>
+        <div class="reveal">
+          <p class="eyebrow">Why Mid-Valley</p>
+          <h2>The dependable crew local businesses count on</h2>
+          <p class="lede" style="margin-top:18px;">We show up when we say we will, clean to a checklist, and stand behind the result. No churn, no surprises — just consistent, professional work.</p>
+          <div class="feature-grid">
+            <div class="feature">
+              <span class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.5 3.8 8.5 8 10 4.2-1.5 8-4.5 8-10V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></span>
+              <h4>Licensed, insured &amp; bonded</h4>
+              <p>Full coverage and background-checked staff for total peace of mind.</p>
+            </div>
+            <div class="feature">
+              <span class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg></span>
+              <h4>Flexible scheduling</h4>
+              <p>Nights, weekends, and after-hours to fit around your operation.</p>
+            </div>
+            <div class="feature">
+              <span class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7h6M9 11V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6m-6 0h6m0 0h4a2 2 0 0 1 2 2v7h-6m-6 0h6"/></svg></span>
+              <h4>Checklist-driven quality</h4>
+              <p>Every visit follows a documented scope so nothing gets missed.</p>
+            </div>
+            <div class="feature">
+              <span class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+              <h4>Eco-conscious products</h4>
+              <p>Safer, low-residue supplies that protect people and surfaces.</p>
+            </div>
+          </div>
+          <div style="margin-top:32px;"><a class="btn" href="#quote">Start with a free walkthrough</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROCESS ============ -->
+    <section class="section process" id="process">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow" style="justify-content:center;">How It Works</p>
+          <h2>Getting started is simple</h2>
+          <p>Four easy steps from first call to a consistently clean facility.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal"><div class="num">01</div><h4>Reach out</h4><p>Call or send the quote form with your space and needs.</p></div>
+          <div class="step reveal"><div class="num">02</div><h4>Walkthrough</h4><p>We assess the site and build a scope and schedule.</p></div>
+          <div class="step reveal"><div class="num">03</div><h4>Clear quote</h4><p>You get transparent pricing with no hidden fees.</p></div>
+          <div class="step reveal"><div class="num">04</div><h4>We clean</h4><p>Your dedicated crew delivers consistent, checklist-based results.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AREAS ============ -->
+    <section class="section areas" id="areas">
+      <div class="wrap areas-grid">
+        <div class="reveal">
+          <p class="eyebrow">Service Areas</p>
+          <h2>Proudly serving Albany &amp; the Mid-Willamette Valley</h2>
+          <p class="lede" style="margin-top:18px;">Based in Albany, we serve businesses, agencies, and homes throughout the surrounding communities.</p>
+          <div class="area-tags">
+            <span class="hq">Albany</span>
+            <span>Corvallis</span>
+            <span>Salem</span>
+            <span>Lebanon</span>
+            <span>Tangent</span>
+            <span>Millersburg</span>
+            <span>Jefferson</span>
+            <span>Sweet Home</span>
+            <span>Philomath</span>
+            <span>Independence</span>
+          </div>
+        </div>
+        <div class="map-card reveal">
+          <div class="m-head">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <h3>Mid-Valley HQ</h3>
+          </div>
+          <div class="m-row">
+            <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <div><b>Albany, Oregon</b><span>Central to the Mid-Willamette Valley</span></div>
+          </div>
+          <div class="m-row">
+            <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            <div><b>(541) 555-0137</b><span>Mon–Sat, 7am–7pm</span></div>
+          </div>
+          <div class="m-row">
+            <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg></span>
+            <div><b>hello@midvalleyfs.com</b><span>Quotes answered within 1 business day</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="section quotes">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow" style="justify-content:center;">What Clients Say</p>
+          <h2>Trusted across the valley</h2>
+        </div>
+        <div class="quote-grid">
+          <div class="quote-card reveal">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>"Reliable and thorough — our offices have never looked better, and their team is easy to work with month after month."</p>
+            <div class="who"><span class="av">RM</span><div><b>Rachel M.</b><span>Office Manager, Albany</span></div></div>
+          </div>
+          <div class="quote-card reveal">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>"They handle our public facility on a strict schedule with clear reporting. Professional, insured, and dependable."</p>
+            <div class="who"><span class="av">DT</span><div><b>David T.</b><span>Facilities Lead, Linn County</span></div></div>
+          </div>
+          <div class="quote-card reveal">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p>"Biweekly house cleaning that's actually consistent. My home feels fresh and I finally have my weekends back."</p>
+            <div class="who"><span class="av">SP</span><div><b>Sofia P.</b><span>Homeowner, Corvallis</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA + QUOTE ============ -->
+    <section class="section cta" id="quote">
+      <div class="wrap cta-grid">
+        <div class="reveal">
+          <p class="eyebrow" style="color:#86D07E;">Free, No-Obligation Quote</p>
+          <h2>Let's build your cleaning plan</h2>
+          <p class="lede">Tell us about your space and we'll follow up with a tailored scope and transparent pricing — usually within one business day.</p>
+          <ul class="cta-checks">
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Free on-site walkthrough</li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Flexible, no long-term lock-in</li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Fully insured &amp; bonded crews</li>
+          </ul>
+          <div class="cta-contact">
+            <a href="tel:+15415550137"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (541) 555-0137</a>
+            <a href="mailto:hello@midvalleyfs.com"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg> hello@midvalleyfs.com</a>
+          </div>
+        </div>
+
+        <div class="quote-form reveal">
+          <form id="quoteForm" novalidate>
+            <h3>Request your free quote</h3>
+            <p>We'll get back to you within one business day.</p>
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required />
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="(541) 555-0123" required />
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" placeholder="jane@email.com" required />
+              </div>
+              <div class="field">
+                <label for="service">Service needed</label>
+                <select id="service" name="service" required>
+                  <option value="" disabled selected>Select one</option>
+                  <option>Commercial cleaning</option>
+                  <option>House cleaning</option>
+                  <option>Government / public facility</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="details">Tell us about your space</label>
+                <textarea id="details" name="details" placeholder="Square footage, location, frequency, and anything else we should know…"></textarea>
+              </div>
+            </div>
+            <button class="btn btn--lg" type="submit">Send my request</button>
+            <p class="form-note">By submitting, you agree to be contacted about your quote. No spam, ever.</p>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <span class="ok"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <h3>Thanks — we've got it!</h3>
+            <p>A member of the Mid-Valley team will reach out within one business day.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="#top" aria-label="Mid-Valley Facility Services home">
+            <img class="mark" src="assets/shield-mark.png" alt="" style="width:46px;height:46px;" />
+            <span class="brand-text">
+              <span class="b1">Mid-Valley</span>
+              <span class="b2">Facility Services LLC</span>
+            </span>
+          </a>
+          <p>Commercial, residential, and government cleaning for Albany and the Mid-Willamette Valley.</p>
+          <div class="foot-social">
+            <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9z"/></svg></a>
+          </div>
+        </div>
+        <div class="foot-col">
+          <h4>Services</h4>
+          <a href="#services">Commercial cleaning</a>
+          <a href="#services">House cleaning</a>
+          <a href="#services">Government cleaning</a>
+          <a href="#quote">Request a quote</a>
+        </div>
+        <div class="foot-col">
+          <h4>Company</h4>
+          <a href="#why">Why us</a>
+          <a href="#process">How it works</a>
+          <a href="#areas">Service areas</a>
+          <a href="#quote">Contact</a>
+        </div>
+        <div class="foot-col">
+          <h4>Get in touch</h4>
+          <ul class="foot-contact">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Albany, Oregon</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (541) 555-0137</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/></svg> hello@midvalleyfs.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year">2026</span> Mid-Valley Facility Services LLC. All rights reserved.</span>
+        <span>Licensed · Insured · Bonded · Albany, OR</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sticky header shadow
+    const header = document.querySelector('.site-header');
+    const onScroll = () => header.classList.toggle('is-stuck', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Mobile menu
+    const toggle = document.getElementById('navToggle');
+    const menu = document.getElementById('mobileMenu');
+    toggle.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      menu.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
+      io.observe(el);
+    });
+
+    // Quote form (demo handler)
+    const form = document.getElementById('quoteForm');
+    const success = document.getElementById('formSuccess');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      form.style.display = 'none';
+      success.classList.add('show');
+    });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
