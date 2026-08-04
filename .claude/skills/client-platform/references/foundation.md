@@ -19,12 +19,15 @@ The bar every Baseline Practice OS platform must clear **before feature work beg
 ### 3. Routing / authz — one source of truth
 - `templates/lib/authz.ts` is the **single definition** of who-can-do-what: a capability matrix plus org/role resolution from memberships. RLS mirrors the same shape. Change the matrix, change RLS to agree — never maintain two hand-synced permission lists.
 - `resolveContext()` returns the caller's `{ userId, orgId, role, memberships }`; the **role router resolves the active org and role from memberships**, not from a `profiles.role` column (see `templates/dashboard-layout.tsx`).
-- Every mutation calls `assertCan(ctx, capability)` on the server before writing.
+- The matrix is enforced at **two app-layer boundaries**, both in `authz.ts`:
+  - **Per route** — a role-scoped layout calls `requireCapability(cap)` so the wrong role never renders the wrong subtree (`templates/dashboard/staff/layout.tsx` gates on `clients.read`; `templates/dashboard/client/layout.tsx` requires only context).
+  - **Per action** — a server action is wrapped in `guardedAction(cap, fn)`, which resolves context and asserts the capability before the body runs, returning a typed `{ error }` on refusal (`templates/dashboard/staff/actions.ts`). Bare mutations may still call `assertCan(ctx, cap)` directly.
 
 ### 4. Verification — isolation is proven, not assumed
 - `templates/supabase/tests/rls_isolation.test.sql` seeds two orgs, impersonates each org's user, and asserts **no cross-tenant row is ever visible** — then rolls back. Run it in the Supabase SQL editor after applying `001`–`003`.
 - `templates/supabase/tests/activity_notifications.test.sql` proves `activity_events` is **append-only** and org-scoped, and `notifications` are **recipient-scoped** (run after `001`–`006`).
 - `templates/supabase/tests/status_constraints.test.sql` proves the DB rejects invalid `appointments`/`engagements` states (run after `001`–`007`).
+- `templates/supabase/tests/authz_roles.test.sql` proves the role matrix holds at the DB: within one org a `client` reads their own appointment but is **denied** INSERT appointment, INSERT task, and UPDATE appointment, while `staff` may write (run after `001`–`003`). This is the RLS mirror of the `authz.ts` matrix and the guards above.
 - **`npm run verify`** runs lint + typecheck + every SQL test (`scripts/run-sql-tests.mjs`); CI (`.github/workflows/verify.yml`) runs it against a Supabase local stack. This is the **measurement** that gates the freeze — in Phase B it becomes a required check.
 - Green means the boundaries hold. Do not build features until they do.
 
@@ -36,10 +39,11 @@ A dedicated deployment for the first client is allowed, but it is a **topology**
 - [ ] `profiles` has no `org_id` / `role`; `memberships` carries org + role.
 - [ ] RLS enabled on every table; org-aware helpers in place.
 - [ ] `authz.ts` capability matrix defined; RLS matches it; router resolves role via memberships.
+- [ ] Route guards (`requireCapability`) on role-scoped layouts and action guards (`guardedAction`) on server actions.
 - [ ] `grants` applied (`authenticated` CRUD; `anon` nothing by default).
 - [ ] Private storage bucket with org/client path-scoped policies.
 - [ ] `activity_events` (append-only) and `notifications` (recipient-scoped) exist; delivery goes through the `lib/notifications.ts` seam.
 - [ ] status columns are `CHECK`-constrained; `services` and `payments` exist.
-- [ ] `npm run verify` runs green — lint + typecheck + every `*.test.sql` (`rls_isolation`, `activity_notifications`, `status_constraints`).
+- [ ] `npm run verify` runs green — lint + typecheck + every `*.test.sql` (`rls_isolation`, `activity_notifications`, `status_constraints`, `authz_roles`).
 
 Only when every box is checked does a feature slice (e.g. the appointment-request Request Engine) begin.

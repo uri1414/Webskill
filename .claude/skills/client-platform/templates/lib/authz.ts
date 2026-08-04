@@ -98,3 +98,34 @@ export function assertCan(ctx: Context, cap: Capability): void {
     throw new Error(`Forbidden: role "${ctx.role}" lacks capability "${cap}"`);
   }
 }
+
+// ---- Route & action guards (#16) -------------------------------------------
+
+// Route guard for a PROTECTED layout / page: resolves context, sends signed-out
+// or non-member users to /login, and bounces a member who lacks `capability`
+// back to their own dashboard home — so children never render for the wrong
+// role. Call it at the top of a role-scoped layout. RLS is the backstop; this
+// is the gate.
+export async function requireCapability(
+  capability: Capability,
+  activeOrgId?: string,
+): Promise<Context> {
+  const ctx = await requireContext(activeOrgId);
+  if (!can(ctx.role, capability)) redirect("/dashboard");
+  return ctx;
+}
+
+// Wrap a server action so it resolves context and asserts a capability BEFORE
+// running — the app-layer gate that pairs with RLS on every mutation. Returns a
+// typed error instead of throwing to the client on a permission failure.
+export function guardedAction<Args extends unknown[], Result>(
+  capability: Capability,
+  fn: (ctx: Context, ...args: Args) => Promise<Result>,
+): (...args: Args) => Promise<Result | { error: string }> {
+  return async (...args: Args) => {
+    const ctx = await resolveContext();
+    if (!ctx || ctx.memberships.length === 0) return { error: "Not signed in." };
+    if (!can(ctx.role, capability)) return { error: `Forbidden: ${ctx.role} lacks ${capability}.` };
+    return fn(ctx, ...args);
+  };
+}
