@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { resolveContext } from "@/lib/authz";
 import { PortalNav, PortalTitle, MobileNav, type NavItem } from "@/components/portalnav";
 
 // ---- Customize per client: roles + each role's sidebar sections ------------
@@ -51,10 +52,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const { data: profile } = await supabase.from("profiles").select("full_name, email, role").eq("id", user.id).single();
-  const role = profile?.role ?? "client";
+
+  // Role + active org come from MEMBERSHIPS (identity vs. membership), resolved
+  // through the single-source authz layer — never from a profiles.role column.
+  const ctx = await resolveContext();
+  if (!ctx || ctx.memberships.length === 0) redirect("/login"); // signed in but not a member of any org
+  const role = ctx.role;
+
+  const { data: profile } = await supabase.from("profiles").select("full_name, email").eq("id", user.id).single();
   const name = profile?.full_name || profile?.email || "there";
   const initials = (profile?.full_name || profile?.email || "U").split(/[\s@]+/).filter(Boolean).slice(0, 2).map((s: string) => s[0]?.toUpperCase()).join("");
+
   if (role === "staff" || role === "admin")
     return <Shell dark brandSub="Staff" nav={STAFF_NAV} name={name} initials={initials}>{children}</Shell>;
   return <Shell brandSub="Portal" nav={CLIENT_NAV} name={name} initials={initials}>{children}</Shell>;

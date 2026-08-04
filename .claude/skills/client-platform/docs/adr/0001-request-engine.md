@@ -1,10 +1,10 @@
 # ADR-0001 — Request Engine as a Core Engine
 
-- **Status:** Accepted (in principle). v1 scope decided; integration complexity explicitly deferred.
+- **Status:** Accepted. v1 scope decided; integration complexity explicitly deferred. Implementation is **gated** on the reusable minimum-safe-foundation templates — see "Foundation gate" below.
 - **Date:** 2026-08-04
 - **Deciders:** Lead Architect (Baseline Studio); multi-round architecture review.
 - **Related:** [`Architecture.md`](../Architecture.md), [`Workflow-Engine.md`](../Workflow-Engine.md), [`Permission-System.md`](../Permission-System.md), [`Data-Model.md`](../Data-Model.md)
-- **Process:** This ADR closes the **Review** phase (Discussion → Spec → Review → **ADR** → Implementation → Code Review → Merge). Implementation may begin, scoped strictly to the v1 slice below.
+- **Process:** This ADR closes the **Review** phase (Discussion → Spec → Review → **ADR** → Implementation → Code Review → Merge). Implementation of the v1 slice begins **only after** the Foundation gate (below) is cleared and tenant isolation is verified.
 
 ## Context
 
@@ -153,6 +153,17 @@ Assumptions 1, 2, and 5 are make-or-break and carry the two hard metrics above. 
 - Storing sensitive portal content creates retention/privacy responsibility → mitigated by setting a default retention policy before real data accumulates.
 - A dedicated deployment could drift into a per-client fork → mitigated by mandatory org scoping, one shared codebase, and a threshold-based pooled off-ramp.
 - Staff replying outside Baseline won't appear in the portal → stated plainly in training as a v1 limitation; controlled Gmail sync is a later phase.
+
+## Foundation gate (blocks implementation)
+
+Feature development is **paused** until the reusable platform templates reach the **minimum safe foundation**. The Request Engine builds on top of this; it must not be the thing that introduces it. Required before any Rosa Request Engine code:
+
+- **Schema** — `organizations` + `org_id` on every business table; **identity vs. membership** (`profiles` = the global person, `memberships` = org + role); a generic core spine (`clients`, `engagements`, `appointments`, `documents`, `tasks`).
+- **RLS** — org-scoped policies on every table, backed by org-aware `security definer` helpers (`is_member` / `is_staff` / `is_admin` / `my_client_id`).
+- **Routing / authz** — a single source of truth (`lib/authz.ts`): capability matrix + org/role resolution from memberships, mirrored by RLS. The role router resolves the active org and role from memberships, not from a `profiles.role` column.
+- **Verification** — a runnable tenant-isolation test (`templates/supabase/tests/rls_isolation.test.sql`) that proves one org cannot read another's rows. Isolation is *proven*, not assumed.
+
+See [`../../references/foundation.md`](../../references/foundation.md) for the standard and the checklist. Only once the foundation is in place and isolation verified does the appointment-request slice begin.
 
 ## Directive
 

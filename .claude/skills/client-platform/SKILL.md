@@ -135,10 +135,12 @@ When you copy the skeleton, edit these and (mostly) nothing else:
 ## Deploy + required config (do NOT skip)
 - **Netlify** site, `@netlify/plugin-nextjs`. Env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (secret — enables admin create/delete), `NEXT_PUBLIC_SITE_URL`.
 - **Supabase**: run the migrations. The three things people forget (all in gotchas): the **storage bucket + its policies**, the **table GRANTs to `authenticated`** (RLS ≠ grants), and using **temp passwords** instead of magic links when there's no SMTP.
+- **Foundation gate (do first).** The `templates/` are multi-tenant-safe by default — `organizations` + `org_id` + memberships + org-scoped RLS. Before building any feature: apply `supabase/001–004`, route all access through `lib/authz.ts`, and **prove isolation** by running `supabase/tests/rls_isolation.test.sql` (must be green). See [`references/foundation.md`](./references/foundation.md).
 
 ## What's in this skill
 - `docs/` — the **Baseline Practice OS architecture guide**: Architecture, Data-Model, Workflow-Engine, Permission-System, Portal-Patterns, UI-Guidelines, Automation-Patterns, Industry-Modules. Read these when *designing*; use `templates/` when *building*.
-- `templates/` — copyable foundation files (design tokens, components, supabase clients, shell layout, migrations, env example, deps).
+- `templates/` — copyable foundation files at the **minimum safe foundation**: org-scoped migrations (`supabase/001–004`, organizations + `org_id` + memberships + org-scoped RLS), the single-source authz/routing seam (`lib/authz.ts`), the role router (`dashboard-layout.tsx`), the tenant-isolation test (`supabase/tests/rls_isolation.test.sql`), design tokens, components, supabase clients, env example, deps.
+- `references/foundation.md` — the **minimum safe foundation** bar (schema / RLS / routing / verification) that must be cleared before any feature work.
 - `references/runbook.md` — "stand up a new client platform" step by step.
 - `references/patterns.md` — annotated reusable code + migration SQL templates.
 - `references/gotchas.md` — every trap we hit and the fix.
