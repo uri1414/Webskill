@@ -4,7 +4,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:test": "node scripts/run-sql-tests.mjs",
+    "verify": "npm run lint && npm run typecheck && npm run db:test"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -18,6 +22,8 @@
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.35",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "typescript": "^5.6.2"

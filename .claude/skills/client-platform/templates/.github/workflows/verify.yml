@@ -1,0 +1,53 @@
+# ============================================================================
+# verify.yml — the Foundation "measurement" gate (#19).
+#
+# Runs on every PR: lint + typecheck always; the SQL tests against a real
+# Supabase local stack (which provides the auth/storage schemas + `authenticated`
+# role the tests rely on — a plain Postgres service is NOT enough).
+#
+# This lives in the TEMPLATE so each generated client platform gets it. In
+# Phase B this workflow becomes a *required* status check with branch protection.
+# ============================================================================
+name: verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # SQL tests need Supabase's auth/storage/roles — start the local stack.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Start Supabase (local Postgres with auth + storage)
+        run: |
+          supabase init || true
+          supabase start
+
+      - name: DB tests (migrations + *.test.sql)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:54322/postgres
+        run: npm run db:test
+
+      - name: Stop Supabase
+        if: always()
+        run: supabase stop || true

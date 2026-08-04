@@ -7,8 +7,8 @@ The bar every Baseline Practice OS platform must clear **before feature work beg
 ### 1. Schema — org-scoped, identity split from membership
 - **`organizations`** is the tenant. **Every business table carries `org_id`** from day one. A single-tenant deployment simply has one `organizations` row — the scoping is inert but present, so going multi-tenant is a filter, not a rewrite.
 - **Identity vs. membership.** `profiles` is the **global person** (one row per auth user, *no* `org_id`). `memberships` says which org a person belongs to and their role there. A person may belong to more than one org. **Never** put `org_id` or a single `role` on `profiles` — that hardcodes one-org-per-person and is the expensive thing to unwind later.
-- A generic **core spine**: `clients`, `engagements`, `appointments`, `documents`, `tasks`, plus `activity_events` (append-only audit) and `notifications` (recipient-scoped) — all `org_id`-scoped. Customize these per client; do not remove the scoping.
-- Files: `templates/supabase/001_schema.sql`, `005_activity_events.sql`, `006_notifications.sql`.
+- A generic **core spine**: `clients`, `engagements`, `appointments`, `documents`, `tasks`, `services`, `payments`, plus `activity_events` (append-only audit) and `notifications` (recipient-scoped) — all `org_id`-scoped. Status columns carry `CHECK` constraints (the DB rejects invalid states). Customize these per client; do not remove the scoping. (No `staff_members` table — staff are `profiles` with a staff/admin `membership`.)
+- Files: `templates/supabase/001_schema.sql`, `005_activity_events.sql`, `006_notifications.sql`, `007_status_services_payments.sql`.
 
 ### 2. RLS — org-scoped policies on every table
 - RLS is **enabled on every table**; a table with no policy denies all (safe default).
@@ -24,6 +24,8 @@ The bar every Baseline Practice OS platform must clear **before feature work beg
 ### 4. Verification — isolation is proven, not assumed
 - `templates/supabase/tests/rls_isolation.test.sql` seeds two orgs, impersonates each org's user, and asserts **no cross-tenant row is ever visible** — then rolls back. Run it in the Supabase SQL editor after applying `001`–`003`.
 - `templates/supabase/tests/activity_notifications.test.sql` proves `activity_events` is **append-only** and org-scoped, and `notifications` are **recipient-scoped** (run after `001`–`006`).
+- `templates/supabase/tests/status_constraints.test.sql` proves the DB rejects invalid `appointments`/`engagements` states (run after `001`–`007`).
+- **`npm run verify`** runs lint + typecheck + every SQL test (`scripts/run-sql-tests.mjs`); CI (`.github/workflows/verify.yml`) runs it against a Supabase local stack. This is the **measurement** that gates the freeze — in Phase B it becomes a required check.
 - Green means the boundaries hold. Do not build features until they do.
 
 ## Deployment note (tenancy)
@@ -37,6 +39,7 @@ A dedicated deployment for the first client is allowed, but it is a **topology**
 - [ ] `grants` applied (`authenticated` CRUD; `anon` nothing by default).
 - [ ] Private storage bucket with org/client path-scoped policies.
 - [ ] `activity_events` (append-only) and `notifications` (recipient-scoped) exist; delivery goes through the `lib/notifications.ts` seam.
-- [ ] `rls_isolation.test.sql` **and** `activity_notifications.test.sql` run green.
+- [ ] status columns are `CHECK`-constrained; `services` and `payments` exist.
+- [ ] `npm run verify` runs green — lint + typecheck + every `*.test.sql` (`rls_isolation`, `activity_notifications`, `status_constraints`).
 
 Only when every box is checked does a feature slice (e.g. the appointment-request Request Engine) begin.

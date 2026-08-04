@@ -37,14 +37,16 @@ stateDiagram-v2
 | From | Trigger | Guard | To | Actions |
 |---|---|---|---|---|
 | — | client requests a time | — | `requested` | create appointment (link `engagement_id` if one exists); notify receptionist |
-| `requested` | staff schedules | slot free | `scheduled` | write event |
-| `scheduled` | client/staff confirms | deposit paid *or* no fee | `confirmed` | create payment if a fee applies; notify client; write event |
+| `requested` | staff schedules | slot free | `scheduled` | **create the payment obligation (`payments.status = 'pending'`) if the service carries a fee**; write event |
+| `scheduled` | client/staff confirms | **the obligation is `paid` *or* waived *or* there is no fee** | `confirmed` | notify client; write event |
 | `confirmed` | client arrives | — | `checked_in` | signal the engagement (see coupling); write event |
 | `checked_in` | appointment ends | — | `completed` | write event |
 | `requested`/`scheduled`/`confirmed` | cancel | — | `cancelled` | release slot; notify other party; apply refund policy; write event |
 | `confirmed` | start passes, no check-in (scheduled sweep) | — | `no_show` | notify receptionist; deposit policy; offer reschedule; write event |
 
 `completed` here means only *the meeting happened* — the professional work lives on the engagement machine.
+
+**Payment ordering.** The obligation is **created before** it is checked: a `pending` `payments` row is written when the fee-bearing appointment is *scheduled*, and the `scheduled → confirmed` guard only *reads* whether that obligation is `paid` (or waived). Never create the payment on the same transition whose guard depends on it. (The paid-consultation flow below follows the same rule — obligation, then payment, then schedule.)
 
 ## Machine 2 — engagement lifecycle (the professional work)
 An engagement is one professional job (a tax return). Its states manage *work*, and it outlives any single appointment.
