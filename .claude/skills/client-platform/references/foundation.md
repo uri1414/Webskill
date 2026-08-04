@@ -7,8 +7,8 @@ The bar every Baseline Practice OS platform must clear **before feature work beg
 ### 1. Schema — org-scoped, identity split from membership
 - **`organizations`** is the tenant. **Every business table carries `org_id`** from day one. A single-tenant deployment simply has one `organizations` row — the scoping is inert but present, so going multi-tenant is a filter, not a rewrite.
 - **Identity vs. membership.** `profiles` is the **global person** (one row per auth user, *no* `org_id`). `memberships` says which org a person belongs to and their role there. A person may belong to more than one org. **Never** put `org_id` or a single `role` on `profiles` — that hardcodes one-org-per-person and is the expensive thing to unwind later.
-- A generic **core spine**: `clients`, `engagements`, `appointments`, `documents`, `tasks` — all `org_id`-scoped. Customize these per client; do not remove the scoping.
-- File: `templates/supabase/001_schema.sql`.
+- A generic **core spine**: `clients`, `engagements`, `appointments`, `documents`, `tasks`, plus `activity_events` (append-only audit) and `notifications` (recipient-scoped) — all `org_id`-scoped. Customize these per client; do not remove the scoping.
+- Files: `templates/supabase/001_schema.sql`, `005_activity_events.sql`, `006_notifications.sql`.
 
 ### 2. RLS — org-scoped policies on every table
 - RLS is **enabled on every table**; a table with no policy denies all (safe default).
@@ -23,7 +23,8 @@ The bar every Baseline Practice OS platform must clear **before feature work beg
 
 ### 4. Verification — isolation is proven, not assumed
 - `templates/supabase/tests/rls_isolation.test.sql` seeds two orgs, impersonates each org's user, and asserts **no cross-tenant row is ever visible** — then rolls back. Run it in the Supabase SQL editor after applying `001`–`003`.
-- Green means isolation holds. Do not build features until it does.
+- `templates/supabase/tests/activity_notifications.test.sql` proves `activity_events` is **append-only** and org-scoped, and `notifications` are **recipient-scoped** (run after `001`–`006`).
+- Green means the boundaries hold. Do not build features until they do.
 
 ## Deployment note (tenancy)
 A dedicated deployment for the first client is allowed, but it is a **topology** choice, not a data-model one: `org_id`, memberships, and org-scoped RLS ship **from day one regardless**. One shared codebase; no client-specific fork; deployment differences are configuration. The move to pooled infrastructure is triggered by documented operational thresholds (maintenance/release/backup burden, cost per tenant, proven RLS confidence), not a customer count.
@@ -35,6 +36,7 @@ A dedicated deployment for the first client is allowed, but it is a **topology**
 - [ ] `authz.ts` capability matrix defined; RLS matches it; router resolves role via memberships.
 - [ ] `grants` applied (`authenticated` CRUD; `anon` nothing by default).
 - [ ] Private storage bucket with org/client path-scoped policies.
-- [ ] `rls_isolation.test.sql` runs green.
+- [ ] `activity_events` (append-only) and `notifications` (recipient-scoped) exist; delivery goes through the `lib/notifications.ts` seam.
+- [ ] `rls_isolation.test.sql` **and** `activity_notifications.test.sql` run green.
 
 Only when every box is checked does a feature slice (e.g. the appointment-request Request Engine) begin.
