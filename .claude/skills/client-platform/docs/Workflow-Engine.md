@@ -2,6 +2,8 @@
 
 A **workflow** is a state-driven business process. This is how Practice OS moves an engagement from request to completion without ad-hoc `status = '...'` writes scattered across the codebase.
 
+The CPA module runs **two separate but connected state machines**: an **appointment** manages *scheduled time*, an **engagement** manages *the professional work*. They advance independently and couple at defined points — one engagement can have many appointments over its life (an intake consult, a document drop-off, a signature meeting). Modeling them as one machine was the earlier mistake; keep them distinct.
+
 ## The five pieces
 - **State** — where an entity is (`appointments.status`, `engagements.status`).
 - **Transition** — a legal move from one state to another (`confirmed → checked_in`). Illegal moves are rejected.
@@ -11,31 +13,94 @@ A **workflow** is a state-driven business process. This is how Practice OS moves
 
 Model transitions in one place (a `transition(entity, to, ctx)` function per workflow) so guards, actions, and audit writes are consistent — never scatter raw status updates.
 
-## The appointment-to-completion workflow
-Primary happy path (mirrors the diagram in [`Architecture.md`](./Architecture.md)):
+## Machine 1 — appointment lifecycle (scheduled time)
+An appointment is a single scheduled touchpoint. Its states manage *time*, not work.
+
+States: `requested · scheduled · confirmed · checked_in · completed · cancelled · no_show`
+
+```mermaid
+stateDiagram-v2
+  [*] --> requested
+  requested --> scheduled : staff schedules
+  scheduled --> confirmed : client/staff confirms
+  confirmed --> checked_in : client arrives
+  checked_in --> completed : appointment ends
+  requested --> cancelled : cancel
+  scheduled --> cancelled : cancel
+  confirmed --> cancelled : cancel
+  confirmed --> no_show : start passes, no check-in
+  no_show --> requested : reschedule
+  cancelled --> [*]
+  completed --> [*]
+```
 
 | From | Trigger | Guard | To | Actions |
 |---|---|---|---|---|
-| — | client submits request | — | `requested` | create appointment; notify receptionist |
-| `requested` | payment choice made | deposit paid *or* no fee required | `scheduled` → `confirmed` | create payment (if fee); write event |
-| `confirmed` | receptionist preps | — | (stays `confirmed`) | create **prep task**; request documents |
-| `confirmed` | client arrives | — | `checked_in` | notify preparer; write event |
-| `checked_in` | preparer picks up | required docs received | `in_progress` | add to preparer **work queue**; write event |
-| `in_progress` | CPA reviews & signs off | preparer marked ready | `completed` | close engagement; notify client; write event |
+| — | client requests a time | — | `requested` | create appointment (link `engagement_id` if one exists); notify receptionist |
+| `requested` | staff schedules | slot free | `scheduled` | write event |
+| `scheduled` | client/staff confirms | deposit paid *or* no fee | `confirmed` | create payment if a fee applies; notify client; write event |
+| `confirmed` | client arrives | — | `checked_in` | signal the engagement (see coupling); write event |
+| `checked_in` | appointment ends | — | `completed` | write event |
+| `requested`/`scheduled`/`confirmed` | cancel | — | `cancelled` | release slot; notify other party; apply refund policy; write event |
+| `confirmed` | start passes, no check-in (scheduled sweep) | — | `no_show` | notify receptionist; deposit policy; offer reschedule; write event |
 
-Each row's **Actions** always include writing an `activity_event`. Notifications are logged (see [`Automation-Patterns.md`](./Automation-Patterns.md)).
+`completed` here means only *the meeting happened* — the professional work lives on the engagement machine.
+
+## Machine 2 — engagement lifecycle (the professional work)
+An engagement is one professional job (a tax return). Its states manage *work*, and it outlives any single appointment.
+
+States: `intake · waiting_for_documents · ready_for_preparation · in_preparation · ready_for_review · awaiting_client · completed · closed`
+
+```mermaid
+stateDiagram-v2
+  [*] --> intake
+  intake --> waiting_for_documents : documents requested
+  waiting_for_documents --> ready_for_preparation : all required docs received
+  ready_for_preparation --> in_preparation : preparer picks up
+  in_preparation --> ready_for_review : preparer marks ready
+  ready_for_review --> awaiting_client : needs client input/signature
+  awaiting_client --> in_preparation : client responds (rework)
+  ready_for_review --> completed : CPA signs off
+  awaiting_client --> completed : CPA signs off
+  completed --> closed : filed / archived
+  closed --> [*]
+```
+
+| From | Trigger | Guard | To | Actions |
+|---|---|---|---|---|
+| — | consultation converts / job opened | — | `intake` | create engagement; notify assigned staff |
+| `intake` | receptionist requests documents | — | `waiting_for_documents` | create prep task; request documents; notify client |
+| `waiting_for_documents` | document received | **all required docs received** | `ready_for_preparation` | add to preparer **work queue**; write event |
+| `ready_for_preparation` | preparer picks up | assigned to a preparer | `in_preparation` | write event |
+| `in_preparation` | preparer finishes | — | `ready_for_review` | notify CPA; write event |
+| `ready_for_review` | CPA needs client input | — | `awaiting_client` | notify client (what's needed, never the content); write event |
+| `awaiting_client` | client responds | — | `in_preparation` | back to preparer; write event |
+| `ready_for_review`/`awaiting_client` | CPA signs off | preparer marked ready | `completed` | notify client; write event |
+| `completed` | filed / archived | — | `closed` | write event |
+
+Every transition on both machines writes an `activity_event`. Notifications are logged (see [`Automation-Patterns.md`](./Automation-Patterns.md)).
+
+## How the two machines couple
+They stay separate but signal each other at defined points — never by one directly writing the other's `status`:
+- **Intake consult → engagement.** A converted `consultation_requests` (or a `completed` intake appointment) opens the engagement at `intake`.
+- **Check-in feeds documents.** An appointment reaching `checked_in`/`completed` where the client drops off records is the trigger to move the engagement `waiting_for_documents → ready_for_preparation` **once the "all required docs" guard passes** — the check-in alone doesn't advance the work; the guard does.
+- **Signature meeting.** An engagement in `awaiting_client` is what a follow-up appointment is *for*; that appointment completing lets the CPA move it toward `completed`.
+- **Independence.** An engagement can sit in `waiting_for_documents` across several appointments, or advance with no appointment at all (documents arrive by upload). Appointments can be cancelled/rescheduled without regressing the engagement.
+
+Model the coupling as engagement transitions that *read* appointment state through a guard, not appointment transitions that *write* engagement status.
 
 ## No-show and cancellation paths
-- **Cancellation** — from `requested`, `scheduled`, or `confirmed`, a client or staff can cancel → `cancelled`. Actions: release the slot, write event, notify the other party, apply the deposit/refund policy.
-- **No-show** — a scheduled job whose start time passes with no `checked_in` → `no_show` (triggered by a scheduled sweep, not a user). Actions: write event, notify receptionist, optionally forfeit deposit per policy, offer reschedule (`no_show → requested`).
-- Keep both as explicit off-ramps in the transition table; never let an appointment silently sit `confirmed` forever.
+These live on the **appointment** machine (above) and never regress the engagement:
+- **Cancellation** — from `requested`, `scheduled`, or `confirmed` → `cancelled`. Release the slot, write event, notify the other party, apply the deposit/refund policy. The engagement keeps its own state.
+- **No-show** — a `confirmed` appointment whose start time passes with no `checked_in` → `no_show` (scheduled sweep, not a user). Write event, notify receptionist, apply deposit policy, offer reschedule (`no_show → requested`).
+- Never let an appointment silently sit `confirmed` forever.
 
 ## Paid consultation request flow
-When intake carries a consultation fee:
-1. `consultation_requests.status = new` on submit (public insert).
+When intake carries a consultation fee (submission is validated + rate-limited + bot-checked server-side — see [`Permission-System.md`](./Permission-System.md)):
+1. `consultation_requests.status = new` on submit (server-validated insert; **no anonymous read**).
 2. Staff triage → `contacted`.
-3. Client pays the consult fee → a `payments` row (`type = 'consult_fee'`, `status = paid`) and request → `scheduled`; create the appointment.
-4. On conversion, request → `converted`, link `client_id` + `appointment_id`, and the appointment enters the main workflow at `confirmed`.
+3. Client pays the consult fee → a `payments` row (`type = 'consult_fee'`, `status = paid`); request → `scheduled`; create the intake **appointment** at `confirmed`.
+4. On conversion, request → `converted`, linking `client_id`, `engagement_id`, and `appointment_id`: the **appointment** starts its lifecycle at `confirmed` and the **engagement** opens at `intake`.
 5. Guard: don't schedule the consult until the fee is `paid` (or explicitly waived by an admin).
 
 ## Idempotency & preventing duplicate automations

@@ -10,7 +10,7 @@ Authorization is enforced **twice**: server-side application logic (the gate) an
   user_roles (
     user_id  uuid references profiles(id),
     role     text,               -- 'client' | 'receptionist' | 'tax_preparer' | 'cpa_admin'
-    org_id   uuid,               -- tenant scope, see below
+    org_id   uuid references organizations(id),  -- tenant scope, see below
     primary key (user_id, role, org_id)
   )
   ```
@@ -51,8 +51,17 @@ Treat this matrix as the source of truth for both the app-layer checks and the R
 - **Helper functions** (`security definer`, `stable`): `is_staff()`, `is_admin()` / `has_role(role)`, and `my_client_id()` (maps `auth.uid()` → `clients.id`).
 - **Staff policies**: `using (is_staff())` for broad read; narrow writes to `is_admin()` or role-specific helpers where the matrix requires.
 - **Client policies**: `using (client_id = my_client_id())`, and for documents also `and visibility = 'client_visible'`.
-- **Public intake**: `consultation_requests` gets an `insert with check (true)` policy so anonymous web forms can submit; nothing else is public.
+- **Public intake**: `consultation_requests` is the *only* table anonymous users touch, and **insert-only** — anon gets an `insert` policy (through the hardened path below) and **no `select` policy at all**, so anonymous read is impossible. Reads are staff-only. Nothing else is public.
+- **Org scoping in every policy**: each policy also constrains `org_id = current_org()` so a row is only reachable within its tenant (see below).
 - RLS mirrors the matrix — it is the **backstop**, catching anything the app layer misses.
+
+## Public consultation intake — hardening
+The intake form is the one anonymous surface, so it gets defense in depth. Never let the browser insert directly with the anon key on trust alone:
+- **Server-side validation.** Submissions go through a server action / edge function that validates every field (required fields present, email well-formed, lengths capped, values in range) and rejects/sanitizes the rest before any insert. The client-side form is convenience, not the check.
+- **Rate limiting.** Throttle by IP **and** by email/normalized fingerprint (e.g. N per minute, M per day). Return a generic "try again shortly" — don't reveal the limit. Back it with a store (Postgres counter or KV), not per-instance memory.
+- **Bot protection.** A **honeypot** field (hidden input that must stay empty), a **minimum time-to-submit** check (instant submits are bots), and a CAPTCHA/**Turnstile/hCaptcha** token verified server-side. Silently drop or `spam`-flag failures.
+- **No anonymous read.** Anon can `insert` only; there is deliberately no anon `select`/`update`/`delete`. A submitter never gets an id back that reads other rows.
+- **Scoped + minimal.** Stamp the correct `org_id` server-side (never trust a client-supplied org). Store only what intake needs; treat the free-text `message` as untrusted and escape on render.
 
 ## Service-role usage & its risks
 - The **service-role key bypasses RLS entirely.** It is server-only (`lib/supabase/admin.ts`), never imported into a client component, never sent to the browser, stored only as a secret env var.
@@ -64,7 +73,10 @@ Treat this matrix as the source of truth for both the app-layer checks and the R
 - The pattern: load the session, resolve roles, assert the capability from the matrix, then write. If it fails, return an error; don't rely on RLS to produce a confusing failure downstream.
 - RLS is defense in depth, not the primary check. The app layer gives correct, friendly authorization; RLS guarantees that even a bug can't cross a tenant or role boundary.
 
-## Organization / tenant scoping (future multi-tenant)
-- Even single-tenant today, carry an `org_id` on core tables (or design so it can be added cheaply). Scope every query and RLS policy by the caller's `org_id`.
-- `has_role(uid, role, org_id)` and `my_client_id()` become org-aware; a user's membership lives in `user_roles(org_id)`.
-- Done right, going multi-tenant is adding an `org_id` filter — not a rewrite. Never let one client's data be reachable without an org check.
+## Organization / tenant scoping (from day one)
+Build multi-tenant-ready from the start, even when there's exactly one client:
+- **Ship the `organizations` table and an `org_id` on every core and domain table now** — not "when we need it." Retrofitting `org_id` across a live schema + every policy is the expensive rewrite; adding it up front is nearly free.
+- **`current_org()`** — a `stable security definer` helper resolving `auth.uid()` → the caller's `org_id` (via `user_roles`/membership). Every query and every RLS policy constrains `org_id = current_org()`.
+- Role helpers are org-aware: `has_role(uid, role, org_id)`, `is_staff()`, `my_client_id()` all resolve within the caller's org; membership lives in `user_roles(org_id)`.
+- **Stamp `org_id` server-side** on every insert from the session — never accept a client-supplied org.
+- Single-tenant deployments simply have one `organizations` row; the scoping is inert but present. Going multi-tenant is then adding tenants, not a migration. **Never let one org's data be reachable without an org check.**

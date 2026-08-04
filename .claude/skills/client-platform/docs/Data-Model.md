@@ -6,7 +6,8 @@ Model the data before the screens. This is the shape to lock first: entities, re
 
 | Entity | Purpose |
 |---|---|
-| `profiles` | One row per login. Extends Supabase `auth.users`. Holds `role` (MVP) or joins to `user_roles`. |
+| `organizations` | The tenant. One row even for a single-tenant client. **Every table below carries `org_id references organizations(id)` from day one.** |
+| `profiles` | One row per login. Extends Supabase `auth.users`. Holds `role` (MVP) or joins to `user_roles`. Carries `org_id`. |
 | `user_roles` *(optional)* | Join table when a person can hold multiple responsibilities. See [`Permission-System.md`](./Permission-System.md). |
 | `clients` | The business's customers. **Exists with or without a login** — a walk-in is a client too; a `profile_id` links a login when they have one. |
 | `staff_members` | Internal people + their job title; usually a `profile_id` plus practice metadata. |
@@ -28,21 +29,29 @@ Model the data before the screens. This is the shape to lock first: entities, re
 Other CPA roles/records (`client`, `receptionist`, `tax_preparer`, `cpa_admin`; service catalog) sit on the core entities above.
 
 ## Entity relationships
+- `organizations` **1—many** every other table (via `org_id`) — the tenant boundary; scoped even when there's only one org.
 - `profiles` **1—1** `clients.profile_id` (optional) and `staff_members.profile_id`.
 - `clients` **1—many** `engagements`, `appointments`, `payments`, `document_metadata`.
-- `engagements` **1—many** `appointments`, `tasks`, `document_metadata`, `payments` (an engagement is the umbrella for a job).
+- `engagements` **1—many** `appointments`, `tasks`, `payments`, `document_metadata` — **the engagement is the umbrella**: one professional job groups all its scheduled time, work items, money, and files. One engagement, many appointments over its life.
+- `appointments` **many—1** `engagements` (`engagement_id`, **nullable** — an intake consult can exist before its engagement is opened).
 - `services` **1—many** `appointments`, `payments`.
-- `appointments` **1—many** `tasks`, `payments`.
-- `consultation_requests` **0—1** `clients`, **0—1** `appointments` (set on conversion).
+- `consultation_requests` **0—1** `clients`, **0—1** `engagements`, **0—1** `appointments` (set on conversion).
 - `activity_events` **many—1** any entity via a soft reference (`entity_type` + `entity_id`).
 - `notifications` **many—1** `profiles` (recipient).
+
+Appointments and engagements are **separate but connected state machines** (see [`Workflow-Engine.md`](./Workflow-Engine.md)): the appointment manages scheduled time, the engagement manages the professional work, and they couple through guards rather than one writing the other's `status`.
 
 See the ER diagram below.
 
 ## MVP ER diagram
 
+Every entity also carries `org_id references organizations(id)` (omitted from the diagram for legibility).
+
 ```mermaid
 erDiagram
+  organizations ||--o{ profiles : has
+  organizations ||--o{ clients : has
+  organizations ||--o{ engagements : has
   profiles ||--o| clients : "login for"
   profiles ||--o| staff_members : "login for"
   profiles ||--o{ notifications : receives
@@ -52,32 +61,32 @@ erDiagram
   clients ||--o{ document_metadata : owns
   engagements ||--o{ appointments : groups
   engagements ||--o{ tasks : groups
+  engagements ||--o{ payments : groups
   engagements ||--o{ document_metadata : groups
   services ||--o{ appointments : type
   services ||--o{ payments : "billed as"
-  appointments ||--o{ tasks : "prep for"
-  appointments ||--o{ payments : generates
   staff_members ||--o{ tasks : assigned
   consultation_requests ||--o| clients : "converts to"
-  consultation_requests ||--o| appointments : books
+  consultation_requests ||--o| engagements : opens
 ```
 
 ## Suggested status values
 Keep status sets as `CHECK` constraints (extend with a one-line `ALTER`, no enum migration):
 
-- **appointments.status**: `requested · scheduled · confirmed · checked_in · in_progress · completed · no_show · cancelled`
+- **appointments.status** *(scheduled time)*: `requested · scheduled · confirmed · checked_in · completed · cancelled · no_show`
+- **engagements.status** *(professional work)*: `intake · waiting_for_documents · ready_for_preparation · in_preparation · ready_for_review · awaiting_client · completed · closed`
 - **payments.status**: `pending · paid · failed · refunded · void`
 - **tasks.status**: `todo · in_progress · done · blocked`
 - **document_metadata.status**: `requested · uploaded · reviewed · needs_attention`
-- **engagements.status**: `open · in_progress · in_review · completed · closed`
 - **consultation_requests.status**: `new · contacted · scheduled · converted · declined · spam`
 
 ## Status-transition rules
 Don't allow arbitrary jumps. Encode legal transitions (enforced in the workflow layer, see [`Workflow-Engine.md`](./Workflow-Engine.md)):
 
-- appointment: `requested → scheduled → confirmed → checked_in → in_progress → completed`; from any pre-`checked_in` state → `cancelled`; from `confirmed` (past start, no check-in) → `no_show`.
+- **appointment** (scheduled time): `requested → scheduled → confirmed → checked_in → completed`; from any pre-`checked_in` state → `cancelled`; from `confirmed` (past start, no check-in) → `no_show`; `no_show → requested` (reschedule).
+- **engagement** (professional work): `intake → waiting_for_documents → ready_for_preparation → in_preparation → ready_for_review → awaiting_client → completed → closed`; `awaiting_client → in_preparation` (rework loop). Advances only when its gating tasks/documents are satisfied (a **guard**).
+- **coupling**: the two are separate machines that signal each other through guards — an appointment reaching `checked_in` can *let* the engagement advance once the "all required docs" guard passes, but the appointment never writes the engagement's status. Full model in [`Workflow-Engine.md`](./Workflow-Engine.md).
 - payment: `pending → paid`; `pending → failed`; `paid → refunded`; `pending → void`.
-- engagement advances only when its gating tasks/documents are satisfied (a **guard**).
 
 Every transition writes an **activity event**.
 

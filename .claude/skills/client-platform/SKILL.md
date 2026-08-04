@@ -63,16 +63,17 @@ The reference domain module. Roles:
 - **tax_preparer** — does the work; sees a work queue of engagements.
 - **cpa_admin** — the CPA / owner; reviews, approves, sees everything, manages the practice.
 
-Recommended CPA domain records:
+Recommended core + CPA domain records (each carries `org_id`):
+- **organizations** — the tenant; ship it + `org_id` on every table from day one, even single-tenant (see [`docs/Permission-System.md`](./docs/Permission-System.md)).
 - **clients**
 - **staff_members**
 - **services**
-- **engagements** (or **cases**) — a client's service job
-- **appointments**
+- **engagements** (or **cases**) — a client's service job; the umbrella that groups its appointments, tasks, payments, and documents
+- **appointments** — scheduled time; a **separate but connected state machine** from engagements (see [`docs/Workflow-Engine.md`](./docs/Workflow-Engine.md))
 - **payments**
 - **tasks**
 - **document metadata** (or **external secure-document links** — see below)
-- **consultation_requests**
+- **consultation_requests** — public intake; insert-only, server-validated, rate-limited, bot-checked, **no anonymous read**
 - **notifications**
 - **activity_events** (or **status_history**)
 

@@ -11,8 +11,9 @@ Success looks like: a new client platform starts at ~60% done, one engineer stan
 Two layers, kept deliberately apart:
 
 - **Shared core** — everything every professional-services business needs, identical across industries:
+  - **`organizations` + `org_id` on every table** (multi-tenant-ready from day one, even single-tenant)
   - identity & auth (`profiles`, roles / `user_roles`)
-  - the **workflow** engine (states, transitions, guards)
+  - the **workflow** engine (states, transitions, guards) — appointments and engagements as separate, connected state machines
   - `appointments`, `payments`, `tasks`, `notifications`
   - `activity_events` (audit history)
   - the portal shell, navigation, shared loaders, design tokens
@@ -49,25 +50,29 @@ Browser ─▶ Next.js (RSC + server actions)
 ```
 
 ## The end-to-end workflow
-The vertical slice every Practice OS build implements first — from a client's request to a completed engagement:
+The vertical slice every Practice OS build implements first — from a client's request to a completed engagement. It runs as **two connected state machines**: the *appointment* (scheduled time) and the *engagement* (the professional work). They advance independently and couple through guards.
 
 ```mermaid
 flowchart TD
-  A[Client: appointment request] --> B{Payment choice}
-  B -->|Pay deposit / consult fee| C[Confirmation]
-  B -->|Pay later / no fee| C
-  C --> D[Receptionist: preparation task<br/>set up client folder]
-  D --> E[Document collection<br/>client uploads / links]
-  E --> F[Client check-in]
-  F --> G[Tax preparer: work queue]
-  G --> H[CPA review]
-  H --> I[Completion]
-  C -.no-show.-> X[No-show handling]
-  C -.cancel.-> Y[Cancellation]
-  X -.reschedule.-> A
+  subgraph APPT[Appointment · scheduled time]
+    A[requested] --> B[scheduled] --> C[confirmed] --> D[checked_in] --> E[completed]
+    C -.cancel.-> X[cancelled]
+    C -.no-show.-> Y[no_show]
+    Y -.reschedule.-> A
+  end
+  subgraph ENG[Engagement · professional work]
+    I[intake] --> W[waiting_for_documents] --> R[ready_for_preparation] --> P[in_preparation] --> V[ready_for_review] --> AC[awaiting_client] --> DONE[completed] --> CL[closed]
+    AC -.rework.-> P
+    V --> DONE
+  end
+  B -. payment choice .-> PAY{{deposit / consult fee}}
+  PAY -. paid or waived .-> C
+  D -. drop-off + all docs .-> R
+  E -. intake consult .-> I
+  AC -. signature meeting .-> A
 ```
 
-Full state/transition/guard model, including the dotted off-ramps, is in [`Workflow-Engine.md`](./Workflow-Engine.md).
+Full state/transition/guard model for both machines — and exactly how they couple — is in [`Workflow-Engine.md`](./Workflow-Engine.md).
 
 ## Data-first & vertical-slice principles
 - **Data-first.** Model the minimum required data — entities, relationships, statuses, transitions, permissions, RLS, grants, ownership, audit history — *before* building screens. A screen built on a wrong model is thrown away.
@@ -89,7 +94,8 @@ A feature is done when:
 - **Service-role key is server-only**, never shipped to the browser, used only for deliberate admin operations (create/delete user). See [`Permission-System.md`](./Permission-System.md).
 - **Private storage** by default; serve files through short-lived signed URLs, never public buckets.
 - **Least data**: don't store sensitive documents you can instead link from a secure provider.
-- **Tenant scoping** designed in (even if single-tenant now) so multi-tenant is a filter, not a rewrite.
+- **Tenant scoping from day one**: ship the `organizations` table and an `org_id` on every table even for a single-tenant client, and scope every query, RLS policy, and helper by the caller's org. Going multi-tenant then adds a filter, not a rewrite. See [`Permission-System.md`](./Permission-System.md).
+- **Hardened public intake**: the only anonymous entry point (`consultation_requests`) is insert-only through a server-validated, rate-limited, bot-checked path — **no anonymous read**. See [`Permission-System.md`](./Permission-System.md).
 
 ## Deployment overview
 - **Netlify** site per client, `@netlify/plugin-nextjs`.
