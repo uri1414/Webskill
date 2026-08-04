@@ -1,0 +1,55 @@
+# ============================================================================
+# foundation-db-tests.yml — REPO-ROOT CI that actually runs the foundation SQL
+# tests for the client-platform skill against a real Supabase local stack.
+#
+# (The templates/.github/workflows/verify.yml is a TEMPLATE for generated client
+# apps and never runs here — Actions only runs workflows at the repo root. This
+# workflow validates just the SQL layer, which is what the foundation gate needs;
+# lint/typecheck belong to an assembled Next app, not this skills library.)
+# ============================================================================
+name: foundation-db-tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/client-platform-skill"]
+    paths:
+      - ".claude/skills/client-platform/templates/supabase/**"
+      - ".github/workflows/foundation-db-tests.yml"
+
+jobs:
+  db-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local stack (Postgres + auth + storage)
+        run: |
+          mkdir -p "$RUNNER_TEMP/sb"
+          cd "$RUNNER_TEMP/sb"
+          supabase init || true
+          supabase start
+
+      - name: Apply foundation migrations + run SQL tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:54322/postgres
+        run: |
+          cd .claude/skills/client-platform/templates
+          for f in supabase/0*.sql; do
+            echo "== apply $f =="
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+          for f in supabase/tests/*.test.sql; do
+            echo "== test $f =="
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"
+          done
+          echo "ALL GREEN: migrations applied and every SQL test passed."
+
+      - name: Stop Supabase
+        if: always()
+        run: |
+          cd "$RUNNER_TEMP/sb" && supabase stop || true
