@@ -7,6 +7,15 @@ description: Build a branded, multi-role client platform (a customer/client port
 
 This skill turns "build a whole client platform from scratch" into "copy a proven skeleton and edit it down." It captures how the Baseline Studio platform was built (auth, three role-based portals, Supabase data, file uploads, admin CRUD, payments-ready patterns) so a new client platform starts at ~60% done.
 
+> **Baseline Practice OS** is the name for the reusable professional-services platform this skill produces — a shared core (auth, roles, portals, workflow, notifications) plus swappable industry modules (CPA first). The deeper architecture guide lives in [`docs/`](./docs) — start with [`docs/Architecture.md`](./docs/Architecture.md).
+
+## Terminology (use these consistently)
+- **Baseline Practice OS** — the reusable professional-services platform (shared core + industry modules).
+- **portal** — a role-specific user experience (client portal, receptionist portal, etc.).
+- **workflow** — a state-driven business process (e.g. appointment → completion).
+- **engagement** — a client's service job / case (a tax return, an audit, a matter).
+- **activity event** — an audit/history record of a meaningful change.
+
 ## When to use
 - A client needs software where **their** customers log in — booking, payments, document upload, status tracking — **and** the client's staff manage those customers (a front-desk / admin side).
 - You're productizing: the same shape recurs across clients (CPA, clinic, salon, law firm, contractor). Build once, template it, edit per client.
@@ -20,6 +29,54 @@ One Next.js app with **role-based portals** behind Supabase auth:
 - (Optional third role — e.g. **partner/referrer** — same pattern.)
 
 Each role gets its own **shell** (sidebar nav + top bar) and its own set of section routes. A single `role` on the user's profile decides which shell + routes they land in.
+
+## Core principles (read before building screens)
+These are the non-negotiables that keep a platform reusable and correct. Full treatment in [`docs/`](./docs); the short version:
+
+- **Data-first development.** Model the *minimum required data* before building portal screens. A screen you build on a wrong data model gets thrown away; a data model you get right carries every screen.
+- **Model the whole shape up front.** Before code: define **entities, relationships, statuses, transitions, permissions, RLS, grants, ownership, and audit history**. (See [`docs/Data-Model.md`](./docs/Data-Model.md), [`docs/Workflow-Engine.md`](./docs/Workflow-Engine.md), [`docs/Permission-System.md`](./docs/Permission-System.md).)
+- **Separate core from domain.** Keep **reusable platform-core tables** (profiles, roles, notifications, activity_events) apart from **industry/domain tables** (engagements, tax documents). See [`docs/Industry-Modules.md`](./docs/Industry-Modules.md).
+- **Vertical slice first.** Build **one complete workflow end-to-end** (all roles, all states) before building every dashboard page. A working spine beats ten half-wired screens.
+- **Roles: right-size the model.** For a simple MVP, a **single `profile.role`** is acceptable. For reusable systems where a person may hold **multiple responsibilities**, recommend a **`user_roles` join table** / permission model. See [`docs/Permission-System.md`](./docs/Permission-System.md).
+- **Record history, don't just overwrite.** Store meaningful workflow changes in **`activity_events`** (or `status_history`) — not only the current `status` column. The audit trail is a product feature, not just a debugging aid.
+- **Enforce permissions twice.** Every mutation is authorized in **server-side application logic** *and* protected by **Supabase RLS**. RLS is the backstop; the app layer is the gate. Never rely on one alone.
+
+## Recommended first workflow (the vertical slice to build first)
+Build this one thread all the way through before anything else:
+
+```
+Appointment request
+  → payment choice
+    → confirmation
+      → receptionist preparation task
+        → client check-in
+          → tax preparer / CPA work queue
+            → completion
+```
+
+Every role touches this thread, every core table gets exercised, and every status transition gets modeled. Get it working end-to-end and the rest of the portals are variations on parts you've already built. Details + no-show/cancellation paths in [`docs/Workflow-Engine.md`](./docs/Workflow-Engine.md).
+
+## CPA practice starter (the first industry module)
+The reference domain module. Roles:
+- **client** — the practice's customer; books, pays, uploads, tracks their engagement.
+- **receptionist** — front desk; schedules, checks people in, preps folders/tasks.
+- **tax_preparer** — does the work; sees a work queue of engagements.
+- **cpa_admin** — the CPA / owner; reviews, approves, sees everything, manages the practice.
+
+Recommended CPA domain records:
+- **clients**
+- **staff_members**
+- **services**
+- **engagements** (or **cases**) — a client's service job
+- **appointments**
+- **payments**
+- **tasks**
+- **document metadata** (or **external secure-document links** — see below)
+- **consultation_requests**
+- **notifications**
+- **activity_events** (or **status_history**)
+
+**Scope & professional-responsibility guardrail.** Baseline Practice OS may automate **intake, routing, reminders, document tracking, appointment management, and work queues**. It must **not** represent itself as replacing licensed tax judgment or professional tax-preparation requirements. The software organizes the practice; the CPA does the tax work. Keep advisory/administrative actions visually and functionally distinct (see [`docs/UI-Guidelines.md`](./docs/UI-Guidelines.md)), and prefer **linking** to an existing secure-document provider over storing sensitive tax documents yourself when one is available ([`docs/Data-Model.md`](./docs/Data-Model.md)).
 
 ## Stack & repo layout
 - **Next.js 14 App Router** (server components + server actions), **TypeScript**, **Tailwind** (custom brand tokens), **Supabase** (Postgres + Auth + Storage), deployed on **Netlify**.
@@ -79,6 +136,7 @@ When you copy the skeleton, edit these and (mostly) nothing else:
 - **Supabase**: run the migrations. The three things people forget (all in gotchas): the **storage bucket + its policies**, the **table GRANTs to `authenticated`** (RLS ≠ grants), and using **temp passwords** instead of magic links when there's no SMTP.
 
 ## What's in this skill
+- `docs/` — the **Baseline Practice OS architecture guide**: Architecture, Data-Model, Workflow-Engine, Permission-System, Portal-Patterns, UI-Guidelines, Automation-Patterns, Industry-Modules. Read these when *designing*; use `templates/` when *building*.
 - `templates/` — copyable foundation files (design tokens, components, supabase clients, shell layout, migrations, env example, deps).
 - `references/runbook.md` — "stand up a new client platform" step by step.
 - `references/patterns.md` — annotated reusable code + migration SQL templates.
