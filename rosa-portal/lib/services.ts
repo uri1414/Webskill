@@ -8,6 +8,7 @@ export const SERVICES = [
   { key: "bookkeeping", label: "Bookkeeping" },
   { key: "doc_dropoff", label: "Document drop-off" },
   { key: "followup", label: "Existing appointment follow-up" },
+  { key: "business_consult", label: "Business consultation" },
   { key: "other", label: "Other" },
 ] as const;
 

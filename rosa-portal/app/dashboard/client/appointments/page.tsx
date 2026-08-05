@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
 import { type AppointmentStatus } from "@/lib/appointments";
 import { formatMoney } from "@/lib/payments";
+import { prepFor } from "@/lib/prep";
 
 // Client-facing status wording — softer than the internal labels.
 const CLIENT_STATUS: Partial<Record<AppointmentStatus, string>> = {
@@ -34,10 +35,10 @@ export default async function ClientAppointments() {
 
   const { data } = await supabase
     .from("appointments")
-    .select("id, title, starts_at, status")
+    .select("id, title, starts_at, status, service_key")
     .order("starts_at", { ascending: true, nullsFirst: true });
 
-  const rows = (data ?? []) as { id: string; title: string | null; starts_at: string | null; status: AppointmentStatus }[];
+  const rows = (data ?? []) as { id: string; title: string | null; starts_at: string | null; status: AppointmentStatus; service_key: string | null }[];
   const upcoming = rows.filter((r) => UPCOMING.includes(r.status));
   const past = rows.filter((r) => !UPCOMING.includes(r.status));
 
@@ -77,6 +78,28 @@ export default async function ClientAppointments() {
           <span aria-hidden>📅</span> Add to calendar
         </a>
       )}
+      {(() => {
+        const prep = prepFor(a.service_key);
+        if (!prep || a.status === "cancelled") return null;
+        return (
+          <details className="mt-2 border-t border-line pt-2">
+            <summary className="cursor-pointer text-sm font-semibold text-brand-600">What to bring</summary>
+            <ul className="mt-2 space-y-1">
+              {prep.bring.map((b, i) => (
+                <li key={i} className="flex gap-2 text-sm text-ink"><span aria-hidden className="text-green-700">✓</span>{b}</li>
+              ))}
+            </ul>
+            {prep.avoid && prep.avoid.length > 0 && (
+              <ul className="mt-2 space-y-1">
+                {prep.avoid.map((b, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-muted"><span aria-hidden className="text-red-600">✕</span>{b}</li>
+                ))}
+              </ul>
+            )}
+            {prep.note && <p className="mt-2 text-xs text-muted">{prep.note}</p>}
+          </details>
+        );
+      })()}
     </div>
   );
 

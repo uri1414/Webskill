@@ -229,7 +229,7 @@ export async function convertRequestToAppointment(
 export async function confirmRequestAsAppointment(
   ctx: Context,
   requestId: string,
-  appt: { clientId: string; title: string; startsAt?: string; endsAt?: string },
+  appt: { clientId: string; title: string; startsAt?: string; endsAt?: string; serviceKey?: string },
 ): Promise<Result<{ appointmentId: string }>> {
   assertCan(ctx, "appointments.write");
   const supabase = createClient();
@@ -245,6 +245,7 @@ export async function confirmRequestAsAppointment(
       title: appt.title,
       starts_at: appt.startsAt ?? null,
       ends_at: appt.endsAt ?? null,
+      service_key: appt.serviceKey ?? null,   // drives the client's "what to bring" list
       status: "confirmed",       // approved in one step — no separate confirm
       staff_id: ctx.userId,
     })

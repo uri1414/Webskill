@@ -10,8 +10,9 @@ import { submitAppointmentRequestAction } from "../actions";
 const field =
   "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand";
 
-export default function NewRequestPage({ searchParams }: { searchParams?: { error?: string } }) {
-  const [service, setService] = useState("");
+export default function NewRequestPage({ searchParams }: { searchParams?: { error?: string; service?: string } }) {
+  const preselected = SERVICES.some((s) => s.key === searchParams?.service) ? (searchParams!.service as string) : "";
+  const [service, setService] = useState(preselected);
   const isOther = service === "other";
   const error = searchParams?.error;
 

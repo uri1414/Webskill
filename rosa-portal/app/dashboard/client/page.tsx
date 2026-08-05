@@ -43,6 +43,21 @@ export default async function ClientHome() {
           ))
         )}
       </div>
+
+      {/* Start / add a business — always via an in-person consultation first. */}
+      <div className="mt-8 rounded-xl border border-line bg-surface-soft p-5">
+        <h2 className="font-display text-base font-bold text-ink">Have a business — or want to start one?</h2>
+        <p className="mt-1 text-sm text-muted">
+          Rosa helps you add an existing business or form a new one. It starts with a quick in-person
+          consultation; afterward we&apos;ll set up your business profile here.
+        </p>
+        <Link
+          href="/dashboard/client/requests/new?service=business_consult"
+          className="mt-3 inline-block rounded-lg border border-line-strong bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft"
+        >
+          Book a business consultation
+        </Link>
+      </div>
     </div>
   );
 }

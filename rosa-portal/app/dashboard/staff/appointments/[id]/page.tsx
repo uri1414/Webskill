@@ -110,7 +110,7 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
       </span>
 
       <dl className="mt-4 space-y-2 rounded-xl border border-line bg-white p-4 text-sm">
-        <div><dt className="text-xs font-semibold uppercase text-muted">Client</dt><dd className="text-ink">{clientName(appt.clients as ClientRef | ClientRef[] | null)}</dd></div>
+        <div><dt className="text-xs font-semibold uppercase text-muted">Client</dt><dd><Link href={`/dashboard/staff/clients/${clientId}`} className="font-semibold text-brand-600">{clientName(appt.clients as ClientRef | ClientRef[] | null)} →</Link></dd></div>
         <div><dt className="text-xs font-semibold uppercase text-muted">When</dt><dd className="text-ink">{whenLabel(appt.starts_at as string | null)}</dd></div>
         {rel?.request_id && (
           <div>
