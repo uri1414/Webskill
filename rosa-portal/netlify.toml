@@ -1,0 +1,11 @@
+# Netlify config for the Rosa & Co. CPA portal (Next.js).
+# In Netlify: Add new site → Import from Git → pick this repo, and set
+#   Base directory: rosa-portal
+# The Next.js runtime plugin handles build + publish.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
