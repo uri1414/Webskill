@@ -13,9 +13,17 @@
 -- transition pattern); this file is the data layer + its RLS backstop.
 -- ============================================================================
 
--- request_categories: a GLOBAL seeded lookup (deliberately NOT org-scoped) —
--- reference data, like an enum. Seeded here; no tenant-facing editor in v1
--- (ADR-0001). Any authenticated user may read it; the app never writes it.
+-- request_categories: a GLOBAL seeded lookup (NOT org-scoped) — reference data,
+-- like an enum. Seeded here; no tenant-facing editor in v1. Any authenticated
+-- user may read it; the app never writes it.
+--
+-- PROVISIONAL (MVP): "global" is a first-slice simplification, NOT the target.
+-- The long-term model is org/module-scoped category catalogs (every row carries
+-- org_id, seeded per org at provisioning). Requests reference a category BY KEY,
+-- so moving to (org_id, key) scoping is additive. Future industry modules
+-- (Legal, Medical, Insurance) must NOT extend this global list — build against a
+-- scoped catalog. See docs/adr/0001-request-engine.md, "Provisional decisions"
+-- (PD-1) for the rationale and migration path.
 create table if not exists public.request_categories (
   key          text primary key,
   label        text not null,
