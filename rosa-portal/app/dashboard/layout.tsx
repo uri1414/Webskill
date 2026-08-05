@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
+import { NotificationBell, type BellNote } from "@/components/NotificationBell";
 
 // Minimal shell. Auth + membership are resolved here (redirects to /login when
 // signed out or not a member); role-scoped subtrees add their own capability
@@ -15,6 +16,27 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .single();
   const name = profile?.full_name || profile?.email || "there";
   const isStaff = ctx.role === "staff" || ctx.role === "admin";
+
+  // Notification center: the user's own recent notifications + accurate unread
+  // count (RLS scopes both to recipient_id = the signed-in user).
+  const { data: noteRows } = await supabase
+    .from("notifications")
+    .select("id, title, link, created_at, status")
+    .eq("recipient_id", ctx.userId)
+    .order("created_at", { ascending: false })
+    .limit(12);
+  const { count: unread } = await supabase
+    .from("notifications")
+    .select("id", { count: "exact", head: true })
+    .eq("recipient_id", ctx.userId)
+    .neq("status", "read");
+  const notifications: BellNote[] = (noteRows ?? []).map((n) => ({
+    id: n.id as string,
+    title: n.title as string,
+    link: (n.link as string | null) ?? null,
+    createdAt: n.created_at as string,
+    read: n.status === "read",
+  }));
 
   return (
     <div className="min-h-screen bg-surface-soft">
@@ -37,6 +59,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           )}
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm">
+          <NotificationBell notifications={notifications} unread={unread ?? 0} />
           <span className="hidden text-muted sm:inline">
             {name} · <span className="capitalize">{ctx.role}</span>
           </span>
