@@ -92,10 +92,20 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
               <input id="startsAt" name="startsAt" type="datetime-local" required defaultValue={prefillDateTime}
                 className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
             </div>
+            <div>
+              <label htmlFor="fee" className="block text-xs font-semibold text-muted">
+                Service fee <span className="font-normal">(optional — leave blank if free)</span>
+              </label>
+              <div className="mt-1 flex items-center rounded-lg border border-line pl-3 focus-within:border-brand">
+                <span className="text-sm text-muted">$</span>
+                <input id="fee" name="fee" type="number" min="0" step="0.01" inputMode="decimal" placeholder="150.00"
+                  className="w-full rounded-lg px-2 py-2 text-sm text-ink outline-none" />
+              </div>
+            </div>
             <button type="submit" className="w-full rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
               Confirm appointment
             </button>
-            <p className="text-xs text-muted">Books it and notifies the client right away.</p>
+            <p className="text-xs text-muted">Books it and notifies the client. If you set a fee, they&apos;ll see a balance due.</p>
           </form>
 
           <form action={declineRequestAction}>

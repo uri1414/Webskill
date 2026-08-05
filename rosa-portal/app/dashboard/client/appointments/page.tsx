@@ -5,7 +5,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
-import { APPOINTMENT_STATUS_LABEL, type AppointmentStatus } from "@/lib/appointments";
+import { type AppointmentStatus } from "@/lib/appointments";
+import { formatMoney } from "@/lib/payments";
 
 // Client-facing status wording — softer than the internal labels.
 const CLIENT_STATUS: Partial<Record<AppointmentStatus, string>> = {
@@ -40,6 +41,21 @@ export default async function ClientAppointments() {
   const upcoming = rows.filter((r) => UPCOMING.includes(r.status));
   const past = rows.filter((r) => !UPCOMING.includes(r.status));
 
+  // The client's own fees (RLS scopes to them), summed per appointment.
+  const { data: pays } = await supabase
+    .from("payments")
+    .select("appointment_id, amount, status")
+    .not("appointment_id", "is", null);
+  const fees = new Map<string, { due: number; paid: number }>();
+  for (const p of pays ?? []) {
+    const key = p.appointment_id as string;
+    const cur = fees.get(key) ?? { due: 0, paid: 0 };
+    const amt = Number(p.amount ?? 0);
+    if (p.status === "pending") cur.due += amt;
+    else if (p.status === "paid") cur.paid += amt;
+    fees.set(key, cur);
+  }
+
   const Card = ({ a }: { a: (typeof rows)[number] }) => (
     <div className="rounded-xl border border-line bg-white px-4 py-3">
       <div className="flex items-center justify-between gap-3">
@@ -47,6 +63,12 @@ export default async function ClientAppointments() {
         <span className="text-xs font-semibold text-muted">{CLIENT_STATUS[a.status] ?? a.status}</span>
       </div>
       <p className="mt-1 text-sm text-muted">{whenLabel(a.starts_at)}</p>
+      {(() => {
+        const f = fees.get(a.id);
+        if (f && f.due > 0) return <p className="mt-1 text-sm font-semibold text-amber-700">Balance due: {formatMoney(f.due)}</p>;
+        if (f && f.paid > 0) return <p className="mt-1 text-sm font-semibold text-green-700">Paid {formatMoney(f.paid)}</p>;
+        return null;
+      })()}
       {a.starts_at && a.status !== "cancelled" && (
         <a
           href={`/dashboard/appointments/${a.id}`}

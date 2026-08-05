@@ -9,7 +9,22 @@ import {
   allowedTransitions,
   type AppointmentStatus,
 } from "@/lib/appointments";
-import { rescheduleAppointmentAction, setAppointmentStatusAction } from "../actions";
+import { formatMoney, PAYMENT_TYPE_LABEL, PAYMENT_METHOD_LABEL } from "@/lib/payments";
+import {
+  rescheduleAppointmentAction,
+  setAppointmentStatusAction,
+  addAppointmentFeeAction,
+  markPaymentPaidAction,
+  waivePaymentAction,
+} from "../actions";
+
+const PAY_STATUS_CHIP: Record<string, string> = {
+  pending: "bg-amber-50 text-amber-700",
+  paid: "bg-green-50 text-green-700",
+  void: "bg-surface-soft text-muted",
+  refunded: "bg-surface-soft text-muted",
+  failed: "bg-red-50 text-red-700",
+};
 
 // Friendly verb for each move the engine allows from the current state.
 const ACTION_LABEL: Record<AppointmentStatus, string> = {
@@ -74,6 +89,17 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
     .eq("entity_type", "appointment")
     .eq("entity_id", params.id)
     .order("created_at", { ascending: true });
+
+  const { data: payments } = await supabase
+    .from("payments")
+    .select("id, type, amount, status, method, memo, created_at")
+    .eq("appointment_id", params.id)
+    .order("created_at", { ascending: true });
+  const pays = payments ?? [];
+  const balanceDue = pays
+    .filter((p) => p.status === "pending")
+    .reduce((sum, p) => sum + Number(p.amount ?? 0), 0);
+  const clientId = appt.client_id as string;
 
   return (
     <div className="mx-auto max-w-xl">
@@ -144,6 +170,88 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
           </div>
         </div>
       )}
+
+      {/* Fees & payments */}
+      <div className="mt-5 rounded-xl border border-line bg-white p-4">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-ink">Fees &amp; payments</p>
+          {balanceDue > 0 && (
+            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
+              {formatMoney(balanceDue)} due
+            </span>
+          )}
+        </div>
+
+        {pays.length === 0 ? (
+          <p className="mt-2 text-sm text-muted">No fees on this appointment.</p>
+        ) : (
+          <ul className="mt-3 space-y-2">
+            {pays.map((p) => (
+              <li key={p.id as string} className="rounded-lg border border-line px-3 py-2.5 text-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium text-ink">
+                    {PAYMENT_TYPE_LABEL[p.type as string] ?? (p.type as string)} · {formatMoney(p.amount as number)}
+                  </span>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${PAY_STATUS_CHIP[p.status as string] ?? "bg-surface-soft text-muted"}`}>
+                    {p.status === "paid"
+                      ? `Paid${p.method ? ` · ${PAYMENT_METHOD_LABEL[p.method as string] ?? p.method}` : ""}`
+                      : p.status === "void" ? "Waived" : (p.status as string)}
+                  </span>
+                </div>
+                {p.memo && <p className="mt-1 text-xs text-muted">{p.memo as string}</p>}
+
+                {p.status === "pending" && (
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <form action={markPaymentPaidAction} className="flex items-center gap-2">
+                      <input type="hidden" name="appointmentId" value={appt.id as string} />
+                      <input type="hidden" name="paymentId" value={p.id as string} />
+                      <select name="method" defaultValue="cash" className="rounded-lg border border-line px-2 py-1.5 text-xs text-ink outline-none focus:border-brand">
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="check">Check</option>
+                        <option value="ach">Bank transfer</option>
+                        <option value="other">Other</option>
+                      </select>
+                      <button type="submit" className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-600">
+                        Mark paid
+                      </button>
+                    </form>
+                    <form action={waivePaymentAction}>
+                      <input type="hidden" name="appointmentId" value={appt.id as string} />
+                      <input type="hidden" name="paymentId" value={p.id as string} />
+                      <button type="submit" className="text-xs font-semibold text-muted transition hover:underline">Waive</button>
+                    </form>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* Add a fee */}
+        <form action={addAppointmentFeeAction} className="mt-4 space-y-2 border-t border-line pt-3">
+          <input type="hidden" name="appointmentId" value={appt.id as string} />
+          <input type="hidden" name="clientId" value={clientId} />
+          <p className="text-xs font-semibold uppercase text-muted">Add a fee</p>
+          <div className="flex flex-wrap gap-2">
+            <select name="type" defaultValue="service_fee" className="rounded-lg border border-line px-2 py-2 text-sm text-ink outline-none focus:border-brand">
+              <option value="service_fee">Service fee</option>
+              <option value="cancellation_fee">Cancellation fee</option>
+              <option value="no_show_fee">No-show fee</option>
+              <option value="deposit">Deposit</option>
+            </select>
+            <div className="flex flex-1 items-center rounded-lg border border-line pl-3 focus-within:border-brand">
+              <span className="text-sm text-muted">$</span>
+              <input name="amount" type="number" min="0" step="0.01" inputMode="decimal" required placeholder="0.00"
+                className="w-full rounded-lg px-2 py-2 text-sm text-ink outline-none" />
+            </div>
+          </div>
+          <input name="memo" placeholder="Note (optional)" className="w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
+          <button type="submit" className="rounded-lg border border-line-strong px-3 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft">
+            Add fee
+          </button>
+        </form>
+      </div>
 
       {/* Activity timeline */}
       <div className="mt-6">

@@ -4,7 +4,7 @@
 // The application layer (server actions, route guards, the role router) enforces
 // these capabilities; Supabase RLS (supabase/002_rls.sql) mirrors the SAME shape
 // as the backstop. Keep the two in agreement — this file is the definition, RLS
-// is the safety net.
+// is the safety net. See references/foundation.md.
 //
 // Identity vs. membership: a person (profile) may belong to several orgs. The
 // ACTIVE org determines the role in play. RLS still guarantees a person can only
@@ -20,6 +20,7 @@ export type Capability =
   | "clients.read" | "clients.write"
   | "engagements.read" | "engagements.write"
   | "appointments.read" | "appointments.write"
+  | "payments.read" | "payments.write"
   | "documents.read" | "documents.write"
   | "tasks.read" | "tasks.write"
   | "members.manage" | "org.settings";
@@ -31,6 +32,7 @@ const MATRIX: Record<Role, Capability[]> = {
     "clients.read", "clients.write",
     "engagements.read", "engagements.write",
     "appointments.read", "appointments.write",
+    "payments.read", "payments.write",
     "documents.read", "documents.write",
     "tasks.read", "tasks.write",
     "members.manage", "org.settings",
@@ -39,10 +41,11 @@ const MATRIX: Record<Role, Capability[]> = {
     "clients.read", "clients.write",
     "engagements.read", "engagements.write",
     "appointments.read", "appointments.write",
+    "payments.read", "payments.write",
     "documents.read", "documents.write",
     "tasks.read", "tasks.write",
   ],
-  client: ["appointments.read", "documents.read"],
+  client: ["appointments.read", "payments.read", "documents.read"],
 };
 
 export function can(role: Role, cap: Capability): boolean {
@@ -99,12 +102,13 @@ export function assertCan(ctx: Context, cap: Capability): void {
   }
 }
 
-// ---- Route & action guards -------------------------------------------------
+// ---- Route & action guards (#16) -------------------------------------------
 
 // Route guard for a PROTECTED layout / page: resolves context, sends signed-out
 // or non-member users to /login, and bounces a member who lacks `capability`
 // back to their own dashboard home — so children never render for the wrong
-// role. RLS is the backstop; this is the gate.
+// role. Call it at the top of a role-scoped layout. RLS is the backstop; this
+// is the gate.
 export async function requireCapability(
   capability: Capability,
   activeOrgId?: string,
