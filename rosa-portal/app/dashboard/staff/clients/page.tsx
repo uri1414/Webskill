@@ -13,6 +13,7 @@ type ClientRow = {
   last_name: string | null;
   business_name: string | null;
   email: string | null;
+  client_type: string | null;
 };
 function clientName(c: ClientRow): string {
   return c.business_name || [c.first_name, c.last_name].filter(Boolean).join(" ") || c.email || "Client";
@@ -24,7 +25,7 @@ export default async function StaffClients() {
 
   const { data: clients } = await supabase
     .from("clients")
-    .select("id, first_name, last_name, business_name, email")
+    .select("id, first_name, last_name, business_name, email, client_type")
     .order("created_at", { ascending: false });
   const { data: payments } = await supabase.from("payments").select("client_id, amount, status");
   const { data: appts } = await supabase.from("appointments").select("client_id, status");
@@ -71,7 +72,12 @@ export default async function StaffClients() {
                 return (
                   <tr key={c.id} className="border-b border-line last:border-0">
                     <td className="px-4 py-3">
-                      <span className="font-medium text-ink">{clientName(c)}</span>
+                      <span className="flex items-center gap-2">
+                        <span className="font-medium text-ink">{clientName(c)}</span>
+                        {c.client_type === "business" && (
+                          <span className="rounded-full bg-brand-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-600">Business</span>
+                        )}
+                      </span>
                       {c.email && <span className="block text-xs text-muted">{c.email}</span>}
                     </td>
                     <td className="px-4 py-3">
