@@ -16,6 +16,15 @@ on:
     paths:
       - ".claude/skills/client-platform/templates/supabase/**"
       - ".github/workflows/foundation-db-tests.yml"
+  # Also run on PRs INTO the protected foundation branch, so the required
+  # `db-tests` check reports on the PR (branch protection needs it to pass
+  # before merge). For pull_request events GitHub uses the workflow file from
+  # the PR head branch, so a PR that adds a migration/test runs it against them.
+  pull_request:
+    branches: ["claude/client-platform-skill"]
+    paths:
+      - ".claude/skills/client-platform/templates/supabase/**"
+      - ".github/workflows/foundation-db-tests.yml"
 
 jobs:
   db-tests:

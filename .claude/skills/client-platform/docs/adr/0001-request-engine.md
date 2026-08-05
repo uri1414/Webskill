@@ -74,7 +74,7 @@ All tables carry `org_id references organizations(id)`.
 
 - **requests** — `client_id`, `category_id`, `status`, `priority`, `subject`, `body` (portal-originated, stored), `assigned_role` (routing target/queue), `assigned_user_id` (current owner/claimant), `resolution`, timestamps, `deleted_at`.
 - **request_messages** — `request_id`, `direction` (in/out), `author`, `body` / `body_ref`, `provider` (nullable in v1; outbound is Baseline-managed), `provider_message_id` (nullable), `delivery_status`, `created_at`. **Threading token is optional** at the interface, so a future SMS channel needs no interface change.
-- **request_categories** — `key`, `label`, default routing role. **Seeded; no tenant-facing editor in v1.**
+- **request_categories** — `key`, `label`, default routing role. **Seeded; no tenant-facing editor in v1.** In the first slice this is a **global** lookup — a **provisional MVP simplification**, not the target model; see [Provisional decisions](#provisional-decisions-mvp-simplifications).
 - **request_relations** — `(request_id, entity_type, entity_id, relation)`. v1 uses it for the `Appointment` link; ready for engagement/task later without new columns.
 - **Reused:** `activity_events` (audit of every step), `notifications` (system alerts).
 
@@ -138,6 +138,21 @@ Assumptions 1, 2, and 5 are make-or-break and carry the two hard metrics above. 
 - **Retention rules for portal request content.** *Set a default now* — retain for the request/engagement lifecycle; deletable on client request — and finalize the policy before real client data accumulates. (v1 already stores this content, so this cannot stay fully open.)
 - **Future provider-capability model** — formal channel capability tiers, added when a second materially different channel (e.g., SMS) is approved.
 - **Whether/when to unify `consultation_requests` into Requests** — only after public-intake protections are preserved (server-side validation, rate limiting, bot protection, no anonymous read).
+- **Category scoping** — `request_categories` is a **global** seeded lookup in v1; the target is **org/module-scoped** catalogs. Provisional — see [Provisional decisions](#provisional-decisions-mvp-simplifications).
+
+## Provisional decisions (MVP simplifications)
+
+Decisions taken to ship the first slice that are **explicitly not** the long-term architecture. They are recorded here so future modules (Legal, Medical, Insurance, …) do not inherit them as settled platform assumptions.
+
+### PD-1 — `request_categories` is a global seeded lookup (v1 only)
+
+- **What shipped.** One global `request_categories` table (keyed by `key`, no `org_id`), seeded by migration, read-only via RLS. The Appointment Request slice (`supabase/008_requests.sql`) uses it.
+- **Why (v1 only).** ADR-0001 fixes the category set and defers a tenant-facing editor, so a *fixed* list was sufficient. More decisively, there is **no org-provisioning seam yet** — no hook that runs at organization creation to seed per-org rows — so an `org_id`-scoped table could not be seeded from a migration. Global was the cheapest correct option for one CPA slice.
+- **Why this is NOT the target.** A multi-industry platform cannot share one category vocabulary: a CPA's "Appointment request," a Legal practice's "Discovery request," and a Medical practice's "Referral request" do not belong in one flat global list. Categories are inherently **module/industry-scoped** and eventually **org-customizable**.
+- **Target architecture.** Each **module** owns a category catalog; each **org** is seeded from its module's catalog at provisioning; every category row carries **`org_id`** (a nullable `org_id` may denote system defaults, with per-org rows overriding). Org add/rename lands later behind the deferred tenant editor.
+- **Migration path (additive, non-breaking).** `requests` reference a category **by key**, so scoping is added, not rewritten: (1) add nullable `org_id` to `request_categories`; (2) introduce an org-provisioning seed step that copies the module catalog into per-org rows; (3) make category resolution org-aware — composite `(org_id, key)` — and backfill existing requests; (4) retire reliance on global rows. No `requests` data is invalidated at any step.
+- **Constraint on future modules.** Do **not** extend the global list with other industries' categories, and do **not** treat "categories are global" as a platform invariant. Build new request types against a **scoped** catalog; if the org-provisioning seam still doesn't exist when a second module starts, building it is part of that module's cost — not another global extension.
+- **Trigger to promote this to a real decision.** The **second industry module**, or the **first org-provisioning seam**, whichever comes first. At that point this provisional note is replaced by a full ADR for the scoped category model.
 
 ## Consequences
 
