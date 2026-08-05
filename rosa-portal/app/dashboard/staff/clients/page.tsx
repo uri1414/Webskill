@@ -49,7 +49,12 @@ export default async function StaffClients() {
 
   return (
     <div>
-      <h1 className="font-display text-xl font-bold text-ink">Clients</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="font-display text-xl font-bold text-ink">Clients</h1>
+        <Link href="/dashboard/staff/clients/new" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+          New client
+        </Link>
+      </div>
       <p className="mt-1 text-sm text-muted">Everyone Rosa &amp; Co. works with. Balance due and no-shows at a glance.</p>
 
       <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-white">

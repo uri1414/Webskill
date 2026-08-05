@@ -2,9 +2,46 @@
 // Thin wrappers over lib/clients.ts, guarded by clients.write; RLS backstops.
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { guardedAction } from "@/lib/authz";
-import { updateClientDetails, createBusinessClient, type ClientType } from "@/lib/clients";
+import { updateClientDetails, createBusinessClient, createClientRecord, type ClientType } from "@/lib/clients";
+
+const NEW = "/dashboard/staff/clients/new";
+
+// Create a client (and, optionally, their business in the same step), then open
+// the new client's profile.
+export async function createClientAction(formData: FormData): Promise<void> {
+  const firstName = String(formData.get("first_name") ?? "").trim();
+  const lastName = String(formData.get("last_name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const businessName = String(formData.get("business_name") ?? "").trim();
+
+  // Need at least something to identify the client.
+  if (!firstName && !lastName && !email && !businessName) redirect(`${NEW}?error=empty`);
+
+  const run = guardedAction(
+    "clients.write",
+    async (ctx) => {
+      const res = await createClientRecord(ctx, { firstName, lastName, email, phone });
+      if (res.ok && businessName) {
+        await createBusinessClient(ctx, {
+          ownerClientId: res.data.id,
+          businessName,
+          email: String(formData.get("business_email") ?? "").trim() || undefined,
+          phone: String(formData.get("business_phone") ?? "").trim() || undefined,
+        });
+      }
+      return res;
+    },
+  );
+  const result = await run();
+
+  revalidatePath("/dashboard/staff/clients");
+  if ("ok" in result && result.ok) redirect(`/dashboard/staff/clients/${result.data.id}`);
+  redirect(`${NEW}?error=failed`);
+}
 
 export async function updateClientAction(formData: FormData): Promise<void> {
   const clientId = String(formData.get("clientId") ?? "");

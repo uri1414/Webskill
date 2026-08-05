@@ -51,6 +51,33 @@ export async function updateClientDetails(
   return { ok: true, data: {} };
 }
 
+// Staff create a new client record directly (a walk-in / known client who
+// hasn't signed up). No profile_id — they have no login yet; it's a record Rosa
+// manages. An invite-to-portal flow can attach a login later.
+export async function createClientRecord(
+  ctx: Context,
+  input: { firstName?: string; lastName?: string; email?: string; phone?: string },
+): Promise<Result<{ id: string }>> {
+  assertCan(ctx, "clients.write");
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("clients")
+    .insert({
+      org_id: ctx.orgId,
+      client_type: "individual",
+      first_name: input.firstName || null,
+      last_name: input.lastName || null,
+      email: input.email || null,
+      phone: input.phone || null,
+      status: "active",
+    })
+    .select("id")
+    .single();
+  if (error || !data) return { ok: false, error: error?.message ?? "insert failed" };
+  return { ok: true, data: { id: data.id as string } };
+}
+
 // Create a business client linked to an owner (their personal record). This is
 // how a business profile gets "attached" to a person.
 export async function createBusinessClient(
