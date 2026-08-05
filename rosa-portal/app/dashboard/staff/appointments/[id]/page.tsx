@@ -94,6 +94,16 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
         )}
       </dl>
 
+      {/* Add to calendar — universal .ics, works with Apple/Google/Outlook */}
+      {appt.starts_at && (
+        <a
+          href={`/dashboard/appointments/${appt.id}`}
+          className="mt-3 inline-flex items-center gap-2 rounded-lg border border-line-strong px-3 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft"
+        >
+          <span aria-hidden>📅</span> Add to calendar
+        </a>
+      )}
+
       {/* Reschedule / set time */}
       {status !== "completed" && status !== "cancelled" && status !== "no_show" && (
         <form action={rescheduleAppointmentAction} className="mt-5 space-y-3 rounded-xl border border-line bg-white p-4">

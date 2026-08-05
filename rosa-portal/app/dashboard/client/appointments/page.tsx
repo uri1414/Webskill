@@ -47,6 +47,14 @@ export default async function ClientAppointments() {
         <span className="text-xs font-semibold text-muted">{CLIENT_STATUS[a.status] ?? a.status}</span>
       </div>
       <p className="mt-1 text-sm text-muted">{whenLabel(a.starts_at)}</p>
+      {a.starts_at && a.status !== "cancelled" && (
+        <a
+          href={`/dashboard/appointments/${a.id}`}
+          className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600"
+        >
+          <span aria-hidden>📅</span> Add to calendar
+        </a>
+      )}
     </div>
   );
 
