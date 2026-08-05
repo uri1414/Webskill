@@ -1,18 +1,29 @@
-// Client self-service action. Thin: resolve the caller, find THEIR OWN client
-// row server-side (never trust a client-supplied id), and hand off to the
-// Request Engine. RLS is the backstop (client can only insert their own, new).
+// Client self-service action. Thin: validate the intake choice, resolve the
+// caller's OWN client row server-side, and hand off to the Request Engine. The
+// service reuses the category mechanism; RLS is the backstop.
 "use server";
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
 import { submitRequest } from "@/lib/requests";
+import { SERVICE_LABEL } from "@/lib/services";
+
+const NEW = "/dashboard/client/requests/new";
 
 export async function submitAppointmentRequestAction(formData: FormData): Promise<void> {
   const ctx = await requireContext();
-  const subject = String(formData.get("subject") ?? "").trim();
-  const body = String(formData.get("body") ?? "").trim();
-  if (!subject) redirect("/dashboard/client/requests/new?error=subject");
+  const service = String(formData.get("service") ?? "").trim();
+  const otherDetail = String(formData.get("other_detail") ?? "").trim();
+  const note = String(formData.get("body") ?? "").trim();
+  const preferredDate = String(formData.get("preferred_date") ?? "").trim();
+  const preferredTime = String(formData.get("preferred_time") ?? "").trim();
+
+  if (!service || !SERVICE_LABEL[service]) redirect(`${NEW}?error=service`);
+  if (service === "other" && !otherDetail) redirect(`${NEW}?error=other`);
+
+  // subject = the human title: the service label, or the clarification for "Other".
+  const subject = service === "other" ? otherDetail : SERVICE_LABEL[service];
 
   const supabase = createClient();
   const { data: client } = await supabase
@@ -25,10 +36,12 @@ export async function submitAppointmentRequestAction(formData: FormData): Promis
 
   const res = await submitRequest(ctx, {
     clientId: client!.id as string,
-    categoryKey: "appointment",
+    categoryKey: service,
     subject,
-    body: body || undefined,
+    body: note || undefined,
+    preferredDate: preferredDate || undefined,
+    preferredTime: preferredTime || undefined,
   });
-  if (!res.ok) redirect("/dashboard/client/requests/new?error=submit");
+  if (!res.ok) redirect(`${NEW}?error=submit`);
   redirect(`/dashboard/client/requests/${res.data.id}`);
 }

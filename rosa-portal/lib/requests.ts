@@ -5,8 +5,7 @@
 // module is the ONE place a request's status changes — the Workflow-Engine
 // transition() pattern applied to `requests`: every move is guarded, writes an
 // activity_event, and (where relevant) notifies through the delivery seam. The
-// DB mirrors these rules in RLS (supabase/008_requests.sql); this is the app
-// gate, RLS is the backstop.
+// DB mirrors these rules in RLS; this is the app gate, RLS is the backstop.
 // ============================================================================
 
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -105,7 +104,14 @@ export async function transitionRequest(
 // `route_request` SECURITY DEFINER function (supabase/009_route_request.sql).
 export async function submitRequest(
   ctx: Context,
-  input: { clientId: string; categoryKey: string; subject: string; body?: string },
+  input: {
+    clientId: string;
+    categoryKey: string;
+    subject: string;
+    body?: string;
+    preferredDate?: string;
+    preferredTime?: string;
+  },
 ): Promise<Result<{ id: string }>> {
   const supabase = createClient();
 
@@ -117,6 +123,8 @@ export async function submitRequest(
       category_key: input.categoryKey,
       subject: input.subject,
       body: input.body ?? null,
+      preferred_date: input.preferredDate ?? null,
+      preferred_time: input.preferredTime ?? null,
       status: "new",
     })
     .select("id")
