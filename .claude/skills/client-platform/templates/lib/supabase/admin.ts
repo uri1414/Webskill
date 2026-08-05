@@ -1,12 +1,20 @@
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+// ============================================================================
+// admin.ts — service-role Supabase client for TRUSTED server-side SYSTEM steps
+// only (automation, routing, notifications to other recipients). It BYPASSES
+// RLS, so:
+//   - NEVER import this into a client component or expose it to the browser.
+//   - Only call it for system actions with server-validated inputs.
+// The request-scoped server client (lib/supabase/server) remains the default;
+// reach for this solely where a step is the platform acting as itself, not the
+// user — e.g. routing a freshly submitted request (a client cannot update
+// requests). See lib/requests.ts and lib/notifications.ts.
+// ============================================================================
+import { createClient as createSupabase, type SupabaseClient } from "@supabase/supabase-js";
 
-// Service-role client. BYPASSES Row Level Security — server-side ONLY, never
-// import into a Client Component. For privileged writes (create/delete users).
-// Requires SUPABASE_SERVICE_ROLE_KEY; never exposed to the browser.
-export function createAdminClient() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set.");
-  return createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, key, {
-    auth: { autoRefreshToken: false, persistSession: false },
+export function createAdminClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createSupabase(url, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
   });
 }

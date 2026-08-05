@@ -10,7 +10,9 @@
 // docs/Workflow-Engine.md.
 // ============================================================================
 
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notify } from "@/lib/notifications";
 import { assertCan, type Context } from "@/lib/authz";
 
@@ -35,10 +37,11 @@ const LEGAL: Record<RequestStatus, RequestStatus[]> = {
 
 type Result<T> = { ok: true; data: T } | { ok: false; error: string };
 
-// Append one audit row. System/automation writes run via the service-role
-// client; here the caller is a signed-in member acting as themselves.
+// Append one audit row. Accepts whichever client the caller is using (the
+// request-scoped server client for user actions, or the admin client for
+// system steps), so the audit is written with the same authority as the step.
 async function writeEvent(
-  supabase: ReturnType<typeof createClient>,
+  client: SupabaseClient,
   ctx: Context,
   requestId: string,
   verb: string,
@@ -46,7 +49,7 @@ async function writeEvent(
   to?: string,
   metadata: Record<string, unknown> = {},
 ): Promise<void> {
-  await supabase.from("activity_events").insert({
+  await client.from("activity_events").insert({
     org_id: ctx.orgId,
     actor_id: ctx.userId,
     entity_type: "request",
@@ -98,19 +101,23 @@ export async function transitionRequest(
   return { ok: true, data: { status: to } };
 }
 
-// Client action: submit a request. RLS enforces client_id = my own + status new;
-// the app sets the same shape and routes it to the category's default role.
+// Client action: submit a request. The INSERT runs as the client (RLS enforces
+// client_id = my own + status new). ROUTING (new -> routed) is a SYSTEM step —
+// a client cannot update requests — so it runs via the service-role client.
+// The UI never does either; it just calls this.
 export async function submitRequest(
   ctx: Context,
   input: { clientId: string; categoryKey: string; subject: string; body?: string },
 ): Promise<Result<{ id: string }>> {
   const supabase = createClient();
+  const admin = createAdminClient();
 
   const { data: cat } = await supabase
     .from("request_categories")
     .select("default_role")
     .eq("key", input.categoryKey)
     .single();
+  const role = (cat?.default_role as string) ?? "staff";
 
   const { data, error } = await supabase
     .from("requests")
@@ -128,13 +135,15 @@ export async function submitRequest(
 
   const id = data.id as string;
   await writeEvent(supabase, ctx, id, "created", undefined, "new", { category: input.categoryKey });
-  // route immediately to the category's default role (new -> routed)
-  await supabase
+
+  // Route immediately (new -> routed) as the system, then audit it as the system.
+  await admin
     .from("requests")
-    .update({ status: "routed", assigned_role: cat?.default_role ?? "staff" })
+    .update({ status: "routed", assigned_role: role })
     .eq("id", id)
     .eq("status", "new");
-  await writeEvent(supabase, ctx, id, "routed", "new", "routed", { role: cat?.default_role ?? "staff" });
+  await writeEvent(admin, ctx, id, "routed", "new", "routed", { role });
+
   return { ok: true, data: { id } };
 }
 
@@ -202,7 +211,7 @@ export async function convertRequestToAppointment(
       recipientId: client.profile_id as string,
       type: "appointment_created",
       title: "Your appointment request was accepted",
-      link: `/dashboard/client/appointments/${appointmentId}`,
+      link: `/dashboard/client/requests/${requestId}`,
       entityType: "appointment",
       entityId: appointmentId,
     });
