@@ -24,10 +24,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           {isStaff ? (
-            <Link href="/dashboard/staff/requests" className="font-semibold text-brand">Requests</Link>
+            <>
+              <Link href="/dashboard/staff/requests" className="font-semibold text-brand">Requests</Link>
+              <Link href="/dashboard/staff/appointments" className="font-semibold text-brand">Appointments</Link>
+            </>
           ) : (
             <>
               <Link href="/dashboard/client" className="font-semibold text-brand">My requests</Link>
+              <Link href="/dashboard/client/appointments" className="font-semibold text-brand">My appointments</Link>
               <Link href="/dashboard/client/requests/new" className="font-semibold text-brand">New request</Link>
             </>
           )}
