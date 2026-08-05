@@ -12,7 +12,6 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { notify } from "@/lib/notifications";
 import { assertCan, type Context } from "@/lib/authz";
 
@@ -37,9 +36,9 @@ const LEGAL: Record<RequestStatus, RequestStatus[]> = {
 
 type Result<T> = { ok: true; data: T } | { ok: false; error: string };
 
-// Append one audit row. Accepts whichever client the caller is using (the
-// request-scoped server client for user actions, or the admin client for
-// system steps), so the audit is written with the same authority as the step.
+// Append one audit row as the caller. RLS on activity_events permits a member
+// to append for their own org as themselves; the routing event is written in
+// SQL by route_request (009), not here.
 async function writeEvent(
   client: SupabaseClient,
   ctx: Context,
@@ -103,21 +102,16 @@ export async function transitionRequest(
 
 // Client action: submit a request. The INSERT runs as the client (RLS enforces
 // client_id = my own + status new). ROUTING (new -> routed) is a SYSTEM step —
-// a client cannot update requests — so it runs via the service-role client.
-// The UI never does either; it just calls this.
+// a client cannot update requests under RLS — so it runs through the
+// `route_request` SECURITY DEFINER function (supabase/009_route_request.sql),
+// which authorizes the caller in-SQL, bumps the status, and writes the "routed"
+// audit event atomically. No service-role client in app code. The UI never does
+// either; it just calls this.
 export async function submitRequest(
   ctx: Context,
   input: { clientId: string; categoryKey: string; subject: string; body?: string },
 ): Promise<Result<{ id: string }>> {
   const supabase = createClient();
-  const admin = createAdminClient();
-
-  const { data: cat } = await supabase
-    .from("request_categories")
-    .select("default_role")
-    .eq("key", input.categoryKey)
-    .single();
-  const role = (cat?.default_role as string) ?? "staff";
 
   const { data, error } = await supabase
     .from("requests")
@@ -136,13 +130,9 @@ export async function submitRequest(
   const id = data.id as string;
   await writeEvent(supabase, ctx, id, "created", undefined, "new", { category: input.categoryKey });
 
-  // Route immediately (new -> routed) as the system, then audit it as the system.
-  await admin
-    .from("requests")
-    .update({ status: "routed", assigned_role: role })
-    .eq("id", id)
-    .eq("status", "new");
-  await writeEvent(admin, ctx, id, "routed", "new", "routed", { role });
+  // Route new -> routed in the database (definer function; app never bypasses RLS).
+  const { error: routeErr } = await supabase.rpc("route_request", { p_request_id: id });
+  if (routeErr) return { ok: false, error: routeErr.message };
 
   return { ok: true, data: { id } };
 }
