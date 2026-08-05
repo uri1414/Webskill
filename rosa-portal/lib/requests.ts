@@ -5,7 +5,9 @@
 // module is the ONE place a request's status changes — the Workflow-Engine
 // transition() pattern applied to `requests`: every move is guarded, writes an
 // activity_event, and (where relevant) notifies through the delivery seam. The
-// DB mirrors these rules in RLS; this is the app gate, RLS is the backstop.
+// DB mirrors these rules in RLS (supabase/008_requests.sql); this is the app
+// gate, RLS is the backstop. See docs/adr/0001-request-engine.md and
+// docs/Workflow-Engine.md.
 // ============================================================================
 
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -24,7 +26,7 @@ export type Resolution = "answered" | "converted" | "duplicate" | "no_action" | 
 const LEGAL: Record<RequestStatus, RequestStatus[]> = {
   new:               ["routed", "no_action", "spam"],
   routed:            ["in_progress", "no_action", "spam"],
-  in_progress:       ["waiting_on_client", "resolved"],
+  in_progress:       ["waiting_on_client", "resolved", "no_action"],
   waiting_on_client: ["in_progress", "resolved"],
   resolved:          ["closed", "in_progress"], // reopen if the client replies
   closed:            [],
@@ -101,7 +103,10 @@ export async function transitionRequest(
 // Client action: submit a request. The INSERT runs as the client (RLS enforces
 // client_id = my own + status new). ROUTING (new -> routed) is a SYSTEM step —
 // a client cannot update requests under RLS — so it runs through the
-// `route_request` SECURITY DEFINER function (supabase/009_route_request.sql).
+// `route_request` SECURITY DEFINER function (supabase/009_route_request.sql),
+// which authorizes the caller in-SQL, bumps the status, and writes the "routed"
+// audit event atomically. No service-role client in app code. The UI never does
+// either; it just calls this.
 export async function submitRequest(
   ctx: Context,
   input: {
@@ -147,6 +152,8 @@ export async function claimRequest(ctx: Context, requestId: string): Promise<Res
 }
 
 // Staff action: the ONE v1 conversion path — Appointment Request -> Appointment.
+// Create the appointment, link it to the request (idempotent via the unique
+// relation key), resolve the request as `converted`, and notify the client.
 export async function convertRequestToAppointment(
   ctx: Context,
   requestId: string,
@@ -210,4 +217,96 @@ export async function convertRequestToAppointment(
   }
 
   return { ok: true, data: { appointmentId } };
+}
+
+// Staff action: the ONE-STEP approve. Rosa's flow is simple — every request is
+// an appointment she just approves — so this collapses claim + convert +
+// schedule + confirm into a single move: create the appointment already
+// CONFIRMED at the chosen time, link it, resolve the request, and tell the
+// client it's confirmed. The request lifecycle stays legal by stepping through
+// in_progress internally (routed -> in_progress -> resolved); the audit trail is
+// identical to doing it by hand, it just happens in one action.
+export async function confirmRequestAsAppointment(
+  ctx: Context,
+  requestId: string,
+  appt: { clientId: string; title: string; startsAt?: string; endsAt?: string },
+): Promise<Result<{ appointmentId: string }>> {
+  assertCan(ctx, "appointments.write");
+  const supabase = createClient();
+
+  // Take ownership first so resolving is a legal transition (routed -> in_progress).
+  await transitionRequest(ctx, requestId, "in_progress", { assignedUserId: ctx.userId });
+
+  const { data: appointment, error: apptErr } = await supabase
+    .from("appointments")
+    .insert({
+      org_id: ctx.orgId,
+      client_id: appt.clientId,
+      title: appt.title,
+      starts_at: appt.startsAt ?? null,
+      ends_at: appt.endsAt ?? null,
+      status: "confirmed",       // approved in one step — no separate confirm
+      staff_id: ctx.userId,
+    })
+    .select("id")
+    .single();
+  if (apptErr || !appointment) return { ok: false, error: apptErr?.message ?? "appointment insert failed" };
+  const appointmentId = appointment.id as string;
+
+  const { error: relErr } = await supabase
+    .from("request_relations")
+    .insert({
+      org_id: ctx.orgId,
+      request_id: requestId,
+      entity_type: "appointment",
+      entity_id: appointmentId,
+      relation: "converted_to",
+    });
+  if (relErr && !/duplicate key/i.test(relErr.message)) return { ok: false, error: relErr.message };
+
+  const resolved = await transitionRequest(ctx, requestId, "resolved", { resolution: "converted" });
+  if (!resolved.ok) return { ok: false, error: resolved.error };
+
+  await writeEvent(supabase, ctx, requestId, "converted", undefined, undefined, {
+    entity_type: "appointment", entity_id: appointmentId, confirmed: true,
+  });
+  // Seed the appointment's OWN timeline (entity_type 'appointment', not 'request').
+  await supabase.from("activity_events").insert({
+    org_id: ctx.orgId,
+    actor_id: ctx.userId,
+    entity_type: "appointment",
+    entity_id: appointmentId,
+    verb: "status_changed",
+    from_status: null,
+    to_status: "confirmed",
+    metadata: {},
+  });
+
+  const { data: client } = await supabase
+    .from("clients")
+    .select("profile_id")
+    .eq("id", appt.clientId)
+    .single();
+  if (client?.profile_id) {
+    await notify({
+      orgId: ctx.orgId,
+      recipientId: client.profile_id as string,
+      type: "appointment_confirmed",
+      title: "Your appointment is confirmed",
+      link: "/dashboard/client/appointments",
+      entityType: "appointment",
+      entityId: appointmentId,
+    });
+  }
+
+  return { ok: true, data: { appointmentId } };
+}
+
+// Staff action: decline a request (no appointment). Marks it no_action; legal
+// from new / routed / in_progress.
+export async function declineRequest(
+  ctx: Context,
+  requestId: string,
+): Promise<Result<{ status: RequestStatus }>> {
+  return transitionRequest(ctx, requestId, "no_action");
 }

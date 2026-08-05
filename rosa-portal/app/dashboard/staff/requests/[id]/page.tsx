@@ -1,18 +1,26 @@
-// Screens 3 & 4: staff request detail — Claim + Convert. Shows the selected
-// service, timing preference, the client's note, the activity timeline, and the
-// legal action for the current state. Convert carries the request info forward.
+// Staff request detail — Rosa's one-step approve. She reviews the request and
+// confirms it as an appointment in a single action (title + time pre-filled
+// from what the client asked for, editable), or declines it. The old
+// claim → convert → schedule → confirm chain is collapsed into this.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/authz";
 import { serviceLabel } from "@/lib/services";
-import { claimRequestAction, convertToAppointmentAction } from "../actions";
+import { confirmAppointmentAction, declineRequestAction } from "../actions";
 
 const VERB_LABEL: Record<string, string> = {
   created: "Request created",
   routed: "Routed to staff",
   status_changed: "Status changed",
-  converted: "Converted to appointment",
+  converted: "Confirmed as appointment",
 };
+
+// Requests still awaiting a decision.
+const OPEN = ["new", "routed", "in_progress", "waiting_on_client"];
+
+// Turn the client's rough time preference into a sensible default hour so the
+// admin usually only has to glance at it, not retype it.
+const PREF_HOUR: Record<string, string> = { Morning: "09:00", Midday: "12:00", Afternoon: "14:00" };
 
 export default async function StaffRequestDetail({ params }: { params: { id: string } }) {
   await requireCapability("clients.read");
@@ -20,7 +28,7 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
 
   const { data: request } = await supabase
     .from("requests")
-    .select("id, subject, body, status, resolution, category_key, client_id, assigned_user_id, preferred_date, preferred_time")
+    .select("id, subject, body, status, resolution, category_key, client_id, preferred_date, preferred_time")
     .eq("id", params.id)
     .single();
   if (!request) return <p className="text-sm text-muted">Request not found.</p>;
@@ -30,6 +38,9 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
   const isOther = category === "other";
   const preferred = [request.preferred_date, request.preferred_time].filter(Boolean).join(" · ");
   const defaultTitle = (request.subject as string) || serviceLabel(category);
+
+  const prefHour = PREF_HOUR[(request.preferred_time as string) ?? ""] ?? "09:00";
+  const prefillDateTime = request.preferred_date ? `${request.preferred_date}T${prefHour}` : undefined;
 
   const { data: rel } = await supabase
     .from("request_relations")
@@ -45,7 +56,7 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
     .eq("entity_id", params.id)
     .order("created_at", { ascending: true });
 
-  const prefillDateTime = request.preferred_date ? `${request.preferred_date}T09:00` : undefined;
+  const isOpen = OPEN.includes(status);
 
   return (
     <div className="mx-auto max-w-xl">
@@ -53,6 +64,7 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
       <h1 className="mt-2 font-display text-xl font-bold text-ink">{serviceLabel(category)}</h1>
       <span className="mt-2 inline-block rounded-full bg-surface-soft px-3 py-1 text-xs font-semibold text-ink">{status}</span>
 
+      {/* Request details */}
       <dl className="mt-4 space-y-2 rounded-xl border border-line bg-white p-4 text-sm">
         {isOther && (
           <div><dt className="text-xs font-semibold uppercase text-muted">Client described</dt><dd className="text-ink">{request.subject as string}</dd></div>
@@ -61,47 +73,62 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
         <div><dt className="text-xs font-semibold uppercase text-muted">Note</dt><dd className="text-ink">{(request.body as string) || "—"}</dd></div>
       </dl>
 
-      {(status === "routed" || status === "new") && (
-        <form action={claimRequestAction} className="mt-5">
-          <input type="hidden" name="requestId" value={request.id as string} />
-          <button type="submit" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
-            Claim request
-          </button>
-        </form>
+      {/* One-step approve: confirm this request as an appointment */}
+      {isOpen && (
+        <div className="mt-5 space-y-3">
+          <form action={confirmAppointmentAction} className="space-y-3 rounded-xl border border-line bg-white p-4">
+            <p className="text-sm font-semibold text-ink">Confirm this appointment</p>
+            <input type="hidden" name="requestId" value={request.id as string} />
+            <input type="hidden" name="clientId" value={request.client_id as string} />
+            <div>
+              <label htmlFor="title" className="block text-xs font-semibold text-muted">Title</label>
+              <input id="title" name="title" defaultValue={defaultTitle}
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
+            </div>
+            <div>
+              <label htmlFor="startsAt" className="block text-xs font-semibold text-muted">
+                Date &amp; time {preferred && <span className="font-normal">— client prefers {preferred}</span>}
+              </label>
+              <input id="startsAt" name="startsAt" type="datetime-local" required defaultValue={prefillDateTime}
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
+            </div>
+            <button type="submit" className="w-full rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+              Confirm appointment
+            </button>
+            <p className="text-xs text-muted">Books it and notifies the client right away.</p>
+          </form>
+
+          <form action={declineRequestAction}>
+            <input type="hidden" name="requestId" value={request.id as string} />
+            <button type="submit" className="text-sm font-semibold text-red-700 transition hover:underline">
+              Decline request
+            </button>
+          </form>
+        </div>
       )}
 
-      {status === "in_progress" && (
-        <form action={convertToAppointmentAction} className="mt-5 space-y-3 rounded-xl border border-line bg-white p-4">
-          <p className="text-sm font-semibold text-ink">Create the appointment</p>
-          <input type="hidden" name="requestId" value={request.id as string} />
-          <input type="hidden" name="clientId" value={request.client_id as string} />
-          <div>
-            <label htmlFor="title" className="block text-xs font-semibold text-muted">Title</label>
-            <input id="title" name="title" defaultValue={defaultTitle}
-              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
-          </div>
-          <div>
-            <label htmlFor="startsAt" className="block text-xs font-semibold text-muted">
-              Date &amp; time {preferred && <span className="font-normal">— client prefers {preferred}</span>}
-            </label>
-            <input id="startsAt" name="startsAt" type="datetime-local" defaultValue={prefillDateTime}
-              className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
-          </div>
-          {request.body && <p className="text-xs text-muted">Client note: {request.body as string}</p>}
-          <button type="submit" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
-            Create appointment &amp; confirm
-          </button>
-        </form>
-      )}
-
+      {/* Confirmed */}
       {status === "resolved" && (
         <div className="mt-5 rounded-xl border border-line bg-white p-4 text-sm">
-          <p className="font-semibold text-ink">Converted to an appointment.</p>
-          {rel?.entity_id && <p className="mt-1 text-muted">Appointment id: {rel.entity_id as string}</p>}
+          <p className="font-semibold text-ink">Confirmed as an appointment.</p>
+          {rel?.entity_id && (
+            <Link href={`/dashboard/staff/appointments/${rel.entity_id}`} className="mt-1 inline-block font-semibold text-brand-600">
+              Open the appointment →
+            </Link>
+          )}
           <p className="mt-1 text-muted">The client has been notified in-portal.</p>
         </div>
       )}
 
+      {/* Declined */}
+      {(status === "no_action" || status === "spam") && (
+        <div className="mt-5 rounded-xl border border-line bg-white p-4 text-sm">
+          <p className="font-semibold text-ink">Request declined.</p>
+          <p className="mt-1 text-muted">No appointment was created.</p>
+        </div>
+      )}
+
+      {/* Activity timeline */}
       <div className="mt-6">
         <h2 className="text-sm font-semibold text-ink">Activity</h2>
         <ol className="mt-2 space-y-1.5 border-l border-line pl-4 text-sm">
