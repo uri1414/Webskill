@@ -10,7 +10,7 @@ import {
   type AppointmentStatus,
 } from "@/lib/appointments";
 import { formatMoney, PAYMENT_TYPE_LABEL, PAYMENT_METHOD_LABEL } from "@/lib/payments";
-import { TASK_STATUS_LABEL, listOrgStaff, type TaskStatus } from "@/lib/tasks";
+import { TASK_STATUS_LABEL, listOrgStaff, seedDefaultTasks, DEFAULT_TASKS, type TaskStatus } from "@/lib/tasks";
 import {
   rescheduleAppointmentAction,
   setAppointmentStatusAction,
@@ -70,7 +70,7 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
 
   const { data: appt } = await supabase
     .from("appointments")
-    .select("id, title, starts_at, ends_at, status, client_id, clients(first_name, last_name, business_name)")
+    .select("id, title, starts_at, ends_at, status, service_key, client_id, clients(first_name, last_name, business_name)")
     .eq("id", params.id)
     .single();
   if (!appt) return <p className="text-sm text-muted">Appointment not found.</p>;
@@ -103,11 +103,25 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
     .reduce((sum, p) => sum + Number(p.amount ?? 0), 0);
   const clientId = appt.client_id as string;
 
-  const { data: tasks } = await supabase
-    .from("tasks")
-    .select("id, title, status, due_at, assignee_id")
-    .eq("appointment_id", params.id)
-    .order("created_at", { ascending: true });
+  const taskCols = "id, title, status, due_at, assignee_id";
+  let { data: tasks } = await supabase
+    .from("tasks").select(taskCols).eq("appointment_id", params.id).order("created_at", { ascending: true });
+
+  // Backfill: an appointment made before prep-tasks existed has none. If it has
+  // a service with defaults and no tasks yet, generate them now (once) so prep
+  // shows up without anyone re-booking.
+  const serviceKey = appt.service_key as string | null;
+  if ((tasks ?? []).length === 0 && serviceKey && DEFAULT_TASKS[serviceKey]) {
+    await seedDefaultTasks(ctx, {
+      appointmentId: params.id,
+      clientId,
+      serviceKey,
+      dueAt: (appt.starts_at as string | null) ?? undefined,
+      assigneeId: ctx.userId,
+    });
+    ({ data: tasks } = await supabase
+      .from("tasks").select(taskCols).eq("appointment_id", params.id).order("created_at", { ascending: true }));
+  }
   const prepTasks = tasks ?? [];
   const staff = await listOrgStaff(ctx.orgId);
   const staffName = new Map(staff.map((s) => [s.id, s.name]));
