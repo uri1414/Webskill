@@ -50,7 +50,7 @@ export default async function StaffHome() {
   const overdueTasks = tasks.filter((t) => t.due_at && new Date(t.due_at as string).getTime() < now.getTime()).length;
 
   const Tile = ({ href, value, label, tone }: { href: string; value: string | number; label: string; tone?: "warn" | "ok" }) => (
-    <Link href={href} className="rounded-xl border border-line bg-white p-4 shadow-card transition hover:border-line-strong">
+    <Link href={href} className="lift rounded-xl border border-line bg-white p-4 shadow-card hover:border-brand">
       <div className={`font-display text-2xl font-bold ${tone === "warn" ? "text-amber-700" : "text-ink"}`}>{value}</div>
       <div className="mt-0.5 text-xs font-semibold text-muted">{label}</div>
     </Link>
@@ -80,7 +80,7 @@ export default async function StaffHome() {
             {requests.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted">All caught up.</p>
             ) : requests.map((r) => (
-              <Link key={r.id as string} href={`/dashboard/staff/requests/${r.id}`} className="block rounded-lg border border-line px-3 py-2 text-sm transition hover:bg-surface-soft">
+              <Link key={r.id as string} href={`/dashboard/staff/requests/${r.id}`} className="lift block rounded-lg border border-line px-3 py-2 text-sm hover:border-brand hover:shadow-card">
                 <span className="font-medium text-ink">{serviceLabel(r.category_key as string)}</span>
               </Link>
             ))}
@@ -97,7 +97,7 @@ export default async function StaffHome() {
             {appts.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted">Nothing scheduled.</p>
             ) : appts.map((a) => (
-              <Link key={a.id as string} href={`/dashboard/staff/appointments/${a.id}`} className="block rounded-lg border border-line px-3 py-2 text-sm transition hover:bg-surface-soft">
+              <Link key={a.id as string} href={`/dashboard/staff/appointments/${a.id}`} className="lift block rounded-lg border border-line px-3 py-2 text-sm hover:border-brand hover:shadow-card">
                 <span className="font-medium text-ink">{clientName(a.clients as ClientRef | ClientRef[] | null)}</span>
                 <span className="block text-xs text-muted">
                   {a.starts_at ? new Date(a.starts_at as string).toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "No time set"}
@@ -122,7 +122,7 @@ export default async function StaffHome() {
             const overdue = t.due_at && new Date(t.due_at as string).getTime() < now.getTime();
             const href = t.appointment_id ? `/dashboard/staff/appointments/${t.appointment_id}` : "/dashboard/staff/tasks";
             return (
-              <Link key={t.id as string} href={href} className="flex items-center justify-between rounded-lg border border-line px-3 py-2 text-sm transition hover:bg-surface-soft">
+              <Link key={t.id as string} href={href} className="lift flex items-center justify-between rounded-lg border border-line px-3 py-2 text-sm hover:border-brand hover:shadow-card">
                 <span className="font-medium text-ink">{t.title as string}</span>
                 <span className={`text-xs font-semibold ${overdue ? "text-red-700" : "text-muted"}`}>
                   {t.due_at ? `${overdue ? "Overdue" : "Due"} ${new Date(t.due_at as string).toLocaleDateString()}` : "No due date"}

@@ -88,7 +88,7 @@ export default async function ClientHome() {
         ) : (
           <div className="mt-2 rounded-xl border border-line bg-white px-4 py-6 text-center">
             <p className="text-sm text-muted">No upcoming appointments.</p>
-            <Link href="/dashboard/client/requests/new" className="mt-3 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+            <Link href="/dashboard/client/requests/new" className="mt-3 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-brand transition hover:bg-brand-600">
               Request an appointment
             </Link>
           </div>
@@ -106,7 +106,7 @@ export default async function ClientHome() {
             <p className="rounded-xl border border-line bg-white px-4 py-6 text-center text-sm text-muted">No requests yet.</p>
           ) : requests.map((r) => (
             <Link key={r.id as string} href={`/dashboard/client/requests/${r.id}`}
-              className="flex items-center justify-between rounded-xl border border-line bg-white px-4 py-3 transition hover:border-line-strong">
+              className="lift flex items-center justify-between rounded-xl border border-line bg-white px-4 py-3 hover:border-brand hover:shadow-card">
               <span className="font-medium text-ink">{(r.subject as string) || "Appointment request"}</span>
               <span className="text-xs font-semibold text-muted">{STATUS_LABEL[r.status as string] ?? (r.status as string)}</span>
             </Link>

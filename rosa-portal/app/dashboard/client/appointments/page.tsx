@@ -62,7 +62,7 @@ export default async function ClientAppointments() {
   // an absolute overlay, and the nested controls (calendar, prep) sit above it
   // (relative z-10) so they stay independently clickable — no nested anchors.
   const Card = ({ a }: { a: (typeof rows)[number] }) => (
-    <div className="relative rounded-xl border border-line bg-white px-4 py-3 transition hover:border-brand hover:shadow-card">
+    <div className="lift relative rounded-xl border border-line bg-white px-4 py-3 hover:border-brand hover:shadow-card">
       <div className="flex items-center justify-between gap-3">
         <Link
           href={`/dashboard/client/appointments/${a.id}`}
@@ -98,13 +98,6 @@ export default async function ClientAppointments() {
                 <li key={i} className="flex gap-2 text-sm text-ink"><span aria-hidden className="text-green-700">✓</span>{b}</li>
               ))}
             </ul>
-            {prep.avoid && prep.avoid.length > 0 && (
-              <ul className="mt-2 space-y-1">
-                {prep.avoid.map((b, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-muted"><span aria-hidden className="text-red-600">✕</span>{b}</li>
-                ))}
-              </ul>
-            )}
             {prep.note && <p className="mt-2 text-xs text-muted">{prep.note}</p>}
           </details>
         );
@@ -116,7 +109,7 @@ export default async function ClientAppointments() {
     <div className="mx-auto max-w-lg">
       <div className="flex items-center justify-between gap-4">
         <h1 className="font-display text-xl font-bold text-ink">Your appointments</h1>
-        <Link href="/dashboard/client/requests/new" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+        <Link href="/dashboard/client/requests/new" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-brand transition hover:bg-brand-600">
           Request an appointment
         </Link>
       </div>
