@@ -55,7 +55,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </>
           ) : (
             <>
-              <Link href="/dashboard/client" className="font-semibold text-brand">My requests</Link>
+              <Link href="/dashboard/client" className="font-semibold text-brand">Home</Link>
               <Link href="/dashboard/client/appointments" className="font-semibold text-brand">My appointments</Link>
               <Link href="/dashboard/client/requests/new" className="font-semibold text-brand">New request</Link>
             </>
