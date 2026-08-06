@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/authz";
 import { serviceLabel } from "@/lib/services";
 import { confirmAppointmentAction, declineRequestAction } from "../actions";
+import { ConfirmAppointmentForm } from "@/components/ConfirmAppointmentForm";
 
 const VERB_LABEL: Record<string, string> = {
   created: "Request created",
@@ -40,7 +41,7 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
   const defaultTitle = (request.subject as string) || serviceLabel(category);
 
   const prefHour = PREF_HOUR[(request.preferred_time as string) ?? ""] ?? "09:00";
-  const prefillDateTime = request.preferred_date ? `${request.preferred_date}T${prefHour}` : undefined;
+  const defaultDate = (request.preferred_date as string) || new Date().toISOString().slice(0, 10);
 
   const { data: rel } = await supabase
     .from("request_relations")
@@ -76,37 +77,16 @@ export default async function StaffRequestDetail({ params }: { params: { id: str
       {/* One-step approve: confirm this request as an appointment */}
       {isOpen && (
         <div className="mt-5 space-y-3">
-          <form action={confirmAppointmentAction} className="space-y-3 rounded-xl border border-line bg-white p-4">
-            <p className="text-sm font-semibold text-ink">Confirm this appointment</p>
-            <input type="hidden" name="requestId" value={request.id as string} />
-            <input type="hidden" name="clientId" value={request.client_id as string} />
-            <div>
-              <label htmlFor="title" className="block text-xs font-semibold text-muted">Title</label>
-              <input id="title" name="title" defaultValue={defaultTitle}
-                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
-            </div>
-            <div>
-              <label htmlFor="startsAt" className="block text-xs font-semibold text-muted">
-                Date &amp; time {preferred && <span className="font-normal">— client prefers {preferred}</span>}
-              </label>
-              <input id="startsAt" name="startsAt" type="datetime-local" required defaultValue={prefillDateTime}
-                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
-            </div>
-            <div>
-              <label htmlFor="fee" className="block text-xs font-semibold text-muted">
-                Service fee <span className="font-normal">(optional — leave blank if free)</span>
-              </label>
-              <div className="mt-1 flex items-center rounded-lg border border-line pl-3 focus-within:border-brand">
-                <span className="text-sm text-muted">$</span>
-                <input id="fee" name="fee" type="number" min="0" step="0.01" inputMode="decimal" placeholder="150.00"
-                  className="w-full rounded-lg px-2 py-2 text-sm text-ink outline-none" />
-              </div>
-            </div>
-            <button type="submit" className="w-full rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
-              Confirm appointment
-            </button>
-            <p className="text-xs text-muted">Books it and notifies the client. If you set a fee, they&apos;ll see a balance due.</p>
-          </form>
+          <ConfirmAppointmentForm
+            action={confirmAppointmentAction}
+            requestId={request.id as string}
+            clientId={request.client_id as string}
+            categoryKey={category}
+            defaultTitle={defaultTitle}
+            defaultDate={defaultDate}
+            defaultTime={prefHour}
+            preferred={preferred || undefined}
+          />
 
           <form action={declineRequestAction}>
             <input type="hidden" name="requestId" value={request.id as string} />
