@@ -1,11 +1,12 @@
 // Client Appointments — upcoming visits as time-tracking cards (countdown bar,
 // length, fee, what to bring); the 3 most-recent past visits shown, the rest in
-// a collapsible dropdown. Read-only; RLS (appointments_own_read) scopes this to
-// the client's own rows.
+// a collapsible dropdown. Unpaid past visits are flagged red. Read-only; RLS
+// (appointments_own_read) scopes this to the client's own rows.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
 import { type AppointmentStatus } from "@/lib/appointments";
+import { formatMoney } from "@/lib/payments";
 import { prepFor } from "@/lib/prep";
 import { resolveServiceKey } from "@/lib/services";
 import { AppointmentCard } from "@/components/AppointmentCard";
@@ -110,15 +111,22 @@ export default async function ClientAppointments() {
               <div className="mt-2 space-y-1.5">
                 {recentPast.map((a) => {
                   const fee = fees.get(a.id);
+                  const unpaid = (fee?.due ?? 0) > 0;
                   return (
                     <Link key={a.id} href={`/dashboard/client/appointments/${a.id}`}
-                      className="flex items-center justify-between gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm transition hover:border-line-strong">
+                      className={`flex items-center justify-between gap-3 rounded-lg border px-3.5 py-2.5 text-sm transition ${
+                        unpaid ? "border-red-300 bg-red-50/40 hover:border-red-400" : "border-line bg-white hover:border-line-strong"
+                      }`}>
                       <span className="min-w-0">
                         <span className="block truncate font-medium text-ink">{a.title || "Appointment"}</span>
                         <span className="block text-xs text-muted">{dateShort(a.starts_at)}</span>
                       </span>
                       <span className="flex flex-none items-center gap-2">
-                        {fee && fee.paid > 0 && <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">Paid</span>}
+                        {unpaid ? (
+                          <span className="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">{formatMoney(fee!.due)} due</span>
+                        ) : fee && fee.paid > 0 ? (
+                          <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">Paid</span>
+                        ) : null}
                         <span className="text-xs font-semibold text-muted">{CLIENT_STATUS[a.status] ?? a.status}</span>
                       </span>
                     </Link>
@@ -126,10 +134,14 @@ export default async function ClientAppointments() {
                 })}
               </div>
 
-              {/* Everything older — tucked away, clearable */}
+              {/* Everything older — tucked away, clearable. Unpaid ones flag red. */}
               <RequestHistory
                 items={olderPast.map((a): HistoryItem => {
                   const status = a.status;
+                  const due = fees.get(a.id)?.due ?? 0;
+                  if (due > 0) {
+                    return { id: a.id, subject: a.title || "Appointment", dateText: dateShort(a.starts_at), statusLabel: `${formatMoney(due)} due`, tone: "red", alert: true };
+                  }
                   const tone: HistoryItem["tone"] = status === "cancelled" || status === "no_show" ? "red" : status === "completed" ? "green" : "grey";
                   return { id: a.id, subject: a.title || "Appointment", dateText: dateShort(a.starts_at), statusLabel: CLIENT_STATUS[status] ?? status, tone };
                 })}

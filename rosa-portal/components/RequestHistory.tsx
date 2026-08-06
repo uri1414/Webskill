@@ -8,7 +8,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export type HistoryItem = { id: string; subject: string; dateText: string; statusLabel: string; tone: "grey" | "green" | "red" };
+// `alert` flags a row that needs action (e.g. an unpaid balance) — it gets a red
+// border so it stands out from the neutral history.
+export type HistoryItem = { id: string; subject: string; dateText: string; statusLabel: string; tone: "grey" | "green" | "red"; alert?: boolean };
 
 const CHIP: Record<HistoryItem["tone"], string> = {
   grey: "bg-surface-soft text-muted",
@@ -82,7 +84,9 @@ export function RequestHistory({
               <Link
                 key={i.id}
                 href={`${hrefBase}/${i.id}`}
-                className="flex items-center justify-between gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm transition hover:border-line-strong"
+                className={`flex items-center justify-between gap-3 rounded-lg border px-3.5 py-2.5 text-sm transition ${
+                  i.alert ? "border-red-300 bg-red-50/40 hover:border-red-400" : "border-line bg-white hover:border-line-strong"
+                }`}
               >
                 <span className="min-w-0">
                   <span className="block truncate font-medium text-ink">{i.subject}</span>

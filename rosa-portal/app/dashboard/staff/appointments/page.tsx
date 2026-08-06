@@ -1,11 +1,13 @@
 // Staff Appointments list. Open appointments render as cards — the receptionist's
 // view: a time-tracking progress bar, countdown, length, fee, and the prep tasks
 // for the visit with Start / Done actions. Recently closed show as compact rows;
-// everything older lives in a clearable dropdown. RLS scopes to org + staff.
+// everything older lives in a clearable dropdown. Unpaid past visits flag red.
+// RLS scopes to org + staff.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/authz";
 import { APPOINTMENT_STATUS_LABEL, type AppointmentStatus } from "@/lib/appointments";
+import { formatMoney } from "@/lib/payments";
 import { TASK_STATUS_LABEL, listOrgStaff, type TaskStatus } from "@/lib/tasks";
 import { StaffAppointmentCard, type CardTask } from "@/components/StaffAppointmentCard";
 import { RequestHistory, type HistoryItem } from "@/components/RequestHistory";
@@ -153,21 +155,34 @@ export default async function StaffAppointments() {
         <>
           <h2 className="mt-8 text-sm font-semibold text-ink">Recently closed</h2>
           <div className="mt-2.5 space-y-1.5">
-            {recentDone.map((a) => (
-              <Link key={a.id} href={`/dashboard/staff/appointments/${a.id}`}
-                className="flex items-center justify-between gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm transition hover:border-line-strong">
-                <span className="min-w-0">
-                  <span className="block truncate font-medium text-ink">{clientName(a.clients)}</span>
-                  <span className="block text-xs text-muted">{a.title || "Appointment"} · {whenLabel(a.starts_at)}</span>
-                </span>
-                <span className={`flex-none rounded-full px-2 py-0.5 text-[11px] font-semibold ${statusChip(a.status)}`}>{APPOINTMENT_STATUS_LABEL[a.status] ?? a.status}</span>
-              </Link>
-            ))}
+            {recentDone.map((a) => {
+              const unpaid = (feeByAppt.get(a.id)?.due ?? 0) > 0;
+              return (
+                <Link key={a.id} href={`/dashboard/staff/appointments/${a.id}`}
+                  className={`flex items-center justify-between gap-3 rounded-lg border px-3.5 py-2.5 text-sm transition ${
+                    unpaid ? "border-red-300 bg-red-50/40 hover:border-red-400" : "border-line bg-white hover:border-line-strong"
+                  }`}>
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium text-ink">{clientName(a.clients)}</span>
+                    <span className="block text-xs text-muted">{a.title || "Appointment"} · {whenLabel(a.starts_at)}</span>
+                  </span>
+                  {unpaid ? (
+                    <span className="flex-none rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">{formatMoney(feeByAppt.get(a.id)!.due)} due</span>
+                  ) : (
+                    <span className={`flex-none rounded-full px-2 py-0.5 text-[11px] font-semibold ${statusChip(a.status)}`}>{APPOINTMENT_STATUS_LABEL[a.status] ?? a.status}</span>
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Everything older — tucked away, clearable */}
+          {/* Everything older — tucked away, clearable. Unpaid ones flag red. */}
           <RequestHistory
             items={olderDone.map((a): HistoryItem => {
+              const due = feeByAppt.get(a.id)?.due ?? 0;
+              if (due > 0) {
+                return { id: a.id, subject: `${clientName(a.clients)} · ${a.title || "Appointment"}`, dateText: whenLabel(a.starts_at), statusLabel: `${formatMoney(due)} due`, tone: "red", alert: true };
+              }
               const tone: HistoryItem["tone"] = a.status === "cancelled" || a.status === "no_show" ? "red" : a.status === "completed" ? "green" : "grey";
               return { id: a.id, subject: `${clientName(a.clients)} · ${a.title || "Appointment"}`, dateText: whenLabel(a.starts_at), statusLabel: APPOINTMENT_STATUS_LABEL[a.status] ?? a.status, tone };
             })}
