@@ -11,6 +11,7 @@ import {
 } from "@/lib/appointments";
 import { formatMoney, PAYMENT_TYPE_LABEL, PAYMENT_METHOD_LABEL } from "@/lib/payments";
 import { TASK_STATUS_LABEL, listOrgStaff, seedDefaultTasks, DEFAULT_TASKS, type TaskStatus } from "@/lib/tasks";
+import { resolveServiceKey } from "@/lib/services";
 import {
   rescheduleAppointmentAction,
   setAppointmentStatusAction,
@@ -110,7 +111,7 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
   // Backfill: an appointment made before prep-tasks existed has none. If it has
   // a service with defaults and no tasks yet, generate them now (once) so prep
   // shows up without anyone re-booking.
-  const serviceKey = appt.service_key as string | null;
+  const serviceKey = resolveServiceKey(appt.service_key as string | null, appt.title as string | null);
   if ((tasks ?? []).length === 0 && serviceKey && DEFAULT_TASKS[serviceKey]) {
     await seedDefaultTasks(ctx, {
       appointmentId: params.id,

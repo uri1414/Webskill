@@ -13,17 +13,25 @@ const NEW = "/dashboard/client/requests/new";
 
 export async function submitAppointmentRequestAction(formData: FormData): Promise<void> {
   const ctx = await requireContext();
-  const service = String(formData.get("service") ?? "").trim();
+  // A visit can cover several services — the form is multi-select.
+  const services = formData.getAll("services").map((s) => String(s).trim()).filter((s) => SERVICE_LABEL[s]);
   const otherDetail = String(formData.get("other_detail") ?? "").trim();
   const note = String(formData.get("body") ?? "").trim();
   const preferredDate = String(formData.get("preferred_date") ?? "").trim();
   const preferredTime = String(formData.get("preferred_time") ?? "").trim();
 
-  if (!service || !SERVICE_LABEL[service]) redirect(`${NEW}?error=service`);
-  if (service === "other" && !otherDetail) redirect(`${NEW}?error=other`);
+  if (services.length === 0) redirect(`${NEW}?error=service`);
+  if (services.includes("other") && !otherDetail) redirect(`${NEW}?error=other`);
 
-  // subject = the human title: the service label, or the clarification for "Other".
-  const subject = service === "other" ? otherDetail : SERVICE_LABEL[service];
+  // Human title: each service's label, with the clarification standing in for
+  // "Other". The primary category (first pick) drives routing + the prep list;
+  // the full set is preserved in the subject and appended to the note so staff
+  // sees everything without a schema change.
+  const labels = services.map((s) => (s === "other" ? otherDetail : SERVICE_LABEL[s]));
+  const subject = labels.join(", ");
+  const primary = services[0];
+  const servicesLine = services.length > 1 ? `Requested services: ${labels.join(", ")}` : "";
+  const body = [servicesLine, note].filter(Boolean).join("\n\n");
 
   const supabase = createClient();
   const { data: client } = await supabase
@@ -36,9 +44,9 @@ export async function submitAppointmentRequestAction(formData: FormData): Promis
 
   const res = await submitRequest(ctx, {
     clientId: client!.id as string,
-    categoryKey: service,
+    categoryKey: primary,
     subject,
-    body: note || undefined,
+    body: body || undefined,
     preferredDate: preferredDate || undefined,
     preferredTime: preferredTime || undefined,
   });

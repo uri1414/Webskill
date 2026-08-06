@@ -20,3 +20,23 @@ export function serviceLabel(key: string | null | undefined): string {
   if (!key) return "Appointment request";
   return SERVICE_LABEL[key] ?? key;
 }
+
+// Reverse lookup: label → key. Lets us recover a service for appointments
+// created before service_key was captured (their title is the service label).
+const LABEL_TO_KEY: Record<string, string> = Object.fromEntries(
+  SERVICES.map((s) => [s.label.toLowerCase(), s.key]),
+);
+
+export function serviceKeyFromTitle(title: string | null | undefined): string | null {
+  if (!title) return null;
+  return LABEL_TO_KEY[title.trim().toLowerCase()] ?? null;
+}
+
+// The service key to use: the stored one, or — for older appointments that
+// never captured it — inferred from the title.
+export function resolveServiceKey(
+  serviceKey: string | null | undefined,
+  title: string | null | undefined,
+): string | null {
+  return (serviceKey && serviceKey.length > 0 ? serviceKey : null) ?? serviceKeyFromTitle(title);
+}

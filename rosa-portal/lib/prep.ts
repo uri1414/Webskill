@@ -1,7 +1,7 @@
 // ============================================================================
-// prep.ts — "what to bring / what not to bring" per service. Shown to the client
-// on their appointment so they arrive prepared. This is STARTER content keyed to
-// each service; Rosa can refine the wording later (it's plain data — no schema).
+// prep.ts — "what to bring" per service. Shown to the client on their
+// appointment so they arrive prepared. STARTER content keyed to each service;
+// Rosa can refine the wording later (it's plain data — no schema).
 // ============================================================================
 
 export type Prep = {
@@ -20,10 +20,6 @@ export const PREP: Record<string, Prep> = {
       "Records for deductions (mortgage interest, property tax, charitable gifts, medical)",
       "Bank routing & account number for direct deposit",
     ],
-    avoid: [
-      "Original documents you need back the same day (bring copies)",
-      "Unrelated paperwork — it slows things down",
-    ],
   },
   tax_question: {
     bring: [
@@ -39,7 +35,6 @@ export const PREP: Record<string, Prep> = {
       "Records of business income and expenses",
       "Payroll records, if you have employees",
     ],
-    avoid: ["Personal (non-business) receipts unless we ask for them"],
   },
   bookkeeping: {
     bring: [
@@ -74,6 +69,24 @@ export const PREP: Record<string, Prep> = {
     bring: ["Anything relevant to what you described in your request"],
   },
 };
+
+// Combine the "bring" lists for several services into one de-duplicated list,
+// so a client requesting multiple things sees one checklist. Notes are kept
+// (first occurrence wins) so service-specific guidance isn't lost.
+export function prepForMany(keys: (string | null | undefined)[]): Prep | null {
+  const preps = keys.map((k) => prepFor(k)).filter((p): p is Prep => !!p);
+  if (preps.length === 0) return null;
+  const bring: string[] = [];
+  const seen = new Set<string>();
+  for (const p of preps) {
+    for (const b of p.bring) {
+      const norm = b.toLowerCase();
+      if (!seen.has(norm)) { seen.add(norm); bring.push(b); }
+    }
+  }
+  const note = preps.find((p) => p.note)?.note;
+  return { bring, note };
+}
 
 export function prepFor(key: string | null | undefined): Prep | null {
   if (!key) return null;

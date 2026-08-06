@@ -10,6 +10,7 @@ import { requireContext } from "@/lib/authz";
 import { type AppointmentStatus } from "@/lib/appointments";
 import { formatMoney } from "@/lib/payments";
 import { prepFor } from "@/lib/prep";
+import { resolveServiceKey } from "@/lib/services";
 import { PrepChecklist } from "@/components/PrepChecklist";
 
 const CLIENT_STATUS: Partial<Record<AppointmentStatus, string>> = {
@@ -45,7 +46,8 @@ export default async function ClientAppointmentDetail({ params }: { params: { id
   // Fetched separately so a missing service_key column (pre-migration) can't
   // break the page — "what to bring" just won't show.
   const { data: svc } = await supabase.from("appointments").select("service_key").eq("id", params.id).maybeSingle();
-  const prep = prepFor((svc?.service_key as string | null) ?? null);
+  const serviceKey = resolveServiceKey((svc?.service_key as string | null) ?? null, appt.title as string | null);
+  const prep = prepFor(serviceKey);
 
   const { data: pays } = await supabase
     .from("payments").select("amount, status").eq("appointment_id", params.id);

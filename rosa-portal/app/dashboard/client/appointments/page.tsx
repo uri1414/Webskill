@@ -8,6 +8,7 @@ import { requireContext } from "@/lib/authz";
 import { type AppointmentStatus } from "@/lib/appointments";
 import { formatMoney } from "@/lib/payments";
 import { prepFor } from "@/lib/prep";
+import { resolveServiceKey } from "@/lib/services";
 
 // Client-facing status wording — softer than the internal labels.
 const CLIENT_STATUS: Partial<Record<AppointmentStatus, string>> = {
@@ -87,7 +88,7 @@ export default async function ClientAppointments() {
         </a>
       )}
       {(() => {
-        const prep = prepFor(a.service_key);
+        const prep = prepFor(resolveServiceKey(a.service_key, a.title));
         if (!prep || a.status === "cancelled") return null;
         return (
           <details className="relative z-10 mt-2 border-t border-line pt-2">
