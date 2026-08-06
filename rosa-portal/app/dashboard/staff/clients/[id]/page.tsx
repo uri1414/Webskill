@@ -85,6 +85,9 @@ export default async function ClientProfile({ params }: { params: { id: string }
         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${isBusiness ? "bg-brand-soft text-brand-600" : "bg-surface-soft text-muted"}`}>
           {isBusiness ? "Business" : "Individual"}
         </span>
+        <Link href={`/dashboard/staff/appointments/new?client=${params.id}`} className="ml-auto rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-600">
+          New appointment
+        </Link>
       </div>
 
       {/* Linked owner / businesses */}

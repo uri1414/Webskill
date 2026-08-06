@@ -188,3 +188,37 @@ export async function rescheduleAppointment(
 
   return { ok: true, data: { status: nextStatus } };
 }
+
+// Staff action: create an appointment directly for a client (no request needed).
+// This is how Rosa books for walk-ins / phone clients who have no portal login.
+// Born 'confirmed'; seeds the timeline and notifies the client IF they have a
+// login (a record-only client simply isn't notified).
+export async function createAppointment(
+  ctx: Context,
+  input: { clientId: string; title: string; serviceKey?: string; startsAt?: string },
+): Promise<Result<{ appointmentId: string }>> {
+  assertCan(ctx, "appointments.write");
+  const supabase = createClient();
+
+  const { data: appointment, error } = await supabase
+    .from("appointments")
+    .insert({
+      org_id: ctx.orgId,
+      client_id: input.clientId,
+      title: input.title,
+      starts_at: input.startsAt ?? null,
+      service_key: input.serviceKey ?? null,
+      status: "confirmed",
+      staff_id: ctx.userId,
+    })
+    .select("id")
+    .single();
+  if (error || !appointment) return { ok: false, error: error?.message ?? "appointment insert failed" };
+  const appointmentId = appointment.id as string;
+
+  await writeEvent(supabase, ctx, appointmentId, "status_changed", undefined, "confirmed");
+  await notifyClient(supabase, ctx, input.clientId, appointmentId,
+    "appointment_confirmed", "Your appointment is confirmed");
+
+  return { ok: true, data: { appointmentId } };
+}

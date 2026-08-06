@@ -5,9 +5,11 @@
 // lifecycle logic here — it lives in lib/appointments.ts; RLS backstops.
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { guardedAction } from "@/lib/authz";
 import {
+  createAppointment,
   rescheduleAppointment,
   transitionAppointment,
   type AppointmentStatus,
@@ -19,6 +21,37 @@ import {
   type PaymentType,
   type PaymentMethod,
 } from "@/lib/payments";
+import { SERVICE_LABEL } from "@/lib/services";
+
+const NEW_APPT = "/dashboard/staff/appointments/new";
+
+// Staff create an appointment directly for a client (walk-in / phone client with
+// no portal login). Optionally attach a service fee in the same step.
+export async function createAppointmentAction(formData: FormData): Promise<void> {
+  const clientId = String(formData.get("clientId") ?? "");
+  const serviceKey = String(formData.get("service") ?? "").trim() || undefined;
+  const title = String(formData.get("title") ?? "").trim()
+    || (serviceKey ? SERVICE_LABEL[serviceKey] : "")
+    || "Appointment";
+  const startsAt = String(formData.get("startsAt") ?? "") || undefined;
+  const feeRaw = String(formData.get("fee") ?? "").trim();
+  const fee = feeRaw ? Number(feeRaw) : 0;
+
+  if (!clientId) redirect(`${NEW_APPT}?error=client`);
+
+  const run = guardedAction("appointments.write", async (ctx) => {
+    const res = await createAppointment(ctx, { clientId, title, serviceKey, startsAt });
+    if (res.ok && fee > 0) {
+      await createPayment(ctx, { clientId, appointmentId: res.data.appointmentId, type: "service_fee", amount: fee });
+    }
+    return res;
+  });
+  const result = await run();
+
+  revalidatePath("/dashboard/staff/appointments");
+  if ("ok" in result && result.ok) redirect(`/dashboard/staff/appointments/${result.data.appointmentId}`);
+  redirect(`${NEW_APPT}?error=failed`);
+}
 
 export async function rescheduleAppointmentAction(formData: FormData): Promise<void> {
   const appointmentId = String(formData.get("appointmentId") ?? "");

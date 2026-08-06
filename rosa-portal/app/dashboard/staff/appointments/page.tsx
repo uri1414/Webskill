@@ -88,13 +88,18 @@ export default async function StaffAppointments() {
 
   return (
     <div>
-      <h1 className="font-display text-xl font-bold text-ink">Appointments</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="font-display text-xl font-bold text-ink">Appointments</h1>
+        <Link href="/dashboard/staff/appointments/new" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+          New appointment
+        </Link>
+      </div>
       <p className="mt-1 text-sm text-muted">Schedule, confirm, and complete client appointments.</p>
 
       <h2 className="mt-6 text-sm font-semibold text-ink">Open ({open.length})</h2>
       <div className="mt-2">
         {open.length === 0
-          ? <p className="rounded-xl border border-line bg-white px-4 py-8 text-center text-sm text-muted">No open appointments. Convert a request to create one.</p>
+          ? <p className="rounded-xl border border-line bg-white px-4 py-8 text-center text-sm text-muted">No open appointments. Book one, or convert a request.</p>
           : <Table rows={open} />}
       </div>
 
