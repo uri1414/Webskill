@@ -1,13 +1,14 @@
 // Staff Appointments list. Open appointments render as cards — the receptionist's
 // view: a time-tracking progress bar, countdown, length, fee, and the prep tasks
-// for the visit with Start / Done actions. Closed ones collapse to compact rows.
-// RLS scopes to the org + staff; the staff layout guards the whole subtree.
+// for the visit with Start / Done actions. Recently closed show as compact rows;
+// everything older lives in a clearable dropdown. RLS scopes to org + staff.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/authz";
 import { APPOINTMENT_STATUS_LABEL, type AppointmentStatus } from "@/lib/appointments";
 import { TASK_STATUS_LABEL, listOrgStaff, type TaskStatus } from "@/lib/tasks";
 import { StaffAppointmentCard, type CardTask } from "@/components/StaffAppointmentCard";
+import { RequestHistory, type HistoryItem } from "@/components/RequestHistory";
 
 type ClientRef = { first_name: string | null; last_name: string | null; business_name: string | null };
 function clientName(c: ClientRef | ClientRef[] | null): string {
@@ -60,7 +61,10 @@ export default async function StaffAppointments() {
   const rows = (data ?? []) as Row[];
   const open = rows.filter((r) => OPEN.includes(r.status))
     .sort((a, b) => (a.starts_at ? new Date(a.starts_at).getTime() : Infinity) - (b.starts_at ? new Date(b.starts_at).getTime() : Infinity));
-  const done = rows.filter((r) => !OPEN.includes(r.status));
+  const done = rows.filter((r) => !OPEN.includes(r.status))
+    .sort((a, b) => (b.starts_at ? new Date(b.starts_at).getTime() : 0) - (a.starts_at ? new Date(a.starts_at).getTime() : 0));
+  const recentDone = done.slice(0, 3);
+  const olderDone = done.slice(3);
   const openIds = open.map((r) => r.id);
 
   // Fees per appointment.
@@ -147,12 +151,9 @@ export default async function StaffAppointments() {
 
       {done.length > 0 && (
         <>
-          <div className="mt-8 flex items-center gap-2">
-            <h2 className="text-sm font-semibold text-ink">Closed</h2>
-            <span className="rounded-full bg-surface-soft px-2 py-0.5 text-xs font-semibold text-muted">{done.length}</span>
-          </div>
+          <h2 className="mt-8 text-sm font-semibold text-ink">Recently closed</h2>
           <div className="mt-2.5 space-y-1.5">
-            {done.map((a) => (
+            {recentDone.map((a) => (
               <Link key={a.id} href={`/dashboard/staff/appointments/${a.id}`}
                 className="flex items-center justify-between gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm transition hover:border-line-strong">
                 <span className="min-w-0">
@@ -163,6 +164,17 @@ export default async function StaffAppointments() {
               </Link>
             ))}
           </div>
+
+          {/* Everything older — tucked away, clearable */}
+          <RequestHistory
+            items={olderDone.map((a): HistoryItem => {
+              const tone: HistoryItem["tone"] = a.status === "cancelled" || a.status === "no_show" ? "red" : a.status === "completed" ? "green" : "grey";
+              return { id: a.id, subject: `${clientName(a.clients)} · ${a.title || "Appointment"}`, dateText: whenLabel(a.starts_at), statusLabel: APPOINTMENT_STATUS_LABEL[a.status] ?? a.status, tone };
+            })}
+            title="Older appointments"
+            hrefBase="/dashboard/staff/appointments"
+            storageKey="rosa:staff-appt-history-cleared"
+          />
         </>
       )}
     </div>
