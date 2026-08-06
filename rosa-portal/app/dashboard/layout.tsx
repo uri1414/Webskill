@@ -47,6 +47,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <nav className="flex items-center gap-4 text-sm">
           {isStaff ? (
             <>
+              <Link href="/dashboard/staff" className="font-semibold text-brand">Home</Link>
               <Link href="/dashboard/staff/requests" className="font-semibold text-brand">Requests</Link>
               <Link href="/dashboard/staff/appointments" className="font-semibold text-brand">Appointments</Link>
               <Link href="/dashboard/staff/tasks" className="font-semibold text-brand">Tasks</Link>

@@ -6,6 +6,6 @@ import { resolveContext } from "@/lib/authz";
 export default async function DashboardIndex() {
   const ctx = await resolveContext();
   if (!ctx || ctx.memberships.length === 0) redirect("/login");
-  if (ctx.role === "staff" || ctx.role === "admin") redirect("/dashboard/staff/requests");
+  if (ctx.role === "staff" || ctx.role === "admin") redirect("/dashboard/staff");
   redirect("/dashboard/client");
 }
