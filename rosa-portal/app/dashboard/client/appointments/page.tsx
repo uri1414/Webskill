@@ -1,6 +1,7 @@
 // Client Appointments — upcoming visits as time-tracking cards (countdown bar,
-// length, fee, what to bring), past ones in a collapsible, clearable section.
-// Read-only; RLS (appointments_own_read) scopes this to the client's own rows.
+// length, fee, what to bring); the 3 most-recent past visits shown, the rest in
+// a collapsible dropdown. Read-only; RLS (appointments_own_read) scopes this to
+// the client's own rows.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
@@ -41,7 +42,12 @@ export default async function ClientAppointments() {
   const now = Date.now();
   const isUpcoming = (r: Row) => UPCOMING.includes(r.status) && (!r.starts_at || new Date(r.starts_at).getTime() >= now);
   const upcoming = rows.filter(isUpcoming);
-  const past = rows.filter((r) => !isUpcoming(r));
+  // Past, most-recent first — show the latest few, tuck the rest in a dropdown.
+  const past = rows
+    .filter((r) => !isUpcoming(r))
+    .sort((a, b) => (b.starts_at ? new Date(b.starts_at).getTime() : 0) - (a.starts_at ? new Date(a.starts_at).getTime() : 0));
+  const recentPast = past.slice(0, 3);
+  const olderPast = past.slice(3);
 
   // The client's own fees (RLS scopes to them), summed per appointment.
   const { data: pays } = await supabase.from("payments").select("appointment_id, amount, status").not("appointment_id", "is", null);
@@ -97,17 +103,42 @@ export default async function ClientAppointments() {
             )}
           </div>
 
-          {/* Past — tucked away, clearable, so history doesn't fill the page */}
-          <RequestHistory
-            items={past.map((a): HistoryItem => {
-              const status = a.status;
-              const tone: HistoryItem["tone"] = status === "cancelled" || status === "no_show" ? "red" : status === "completed" ? "green" : "grey";
-              return { id: a.id, subject: a.title || "Appointment", dateText: dateShort(a.starts_at), statusLabel: CLIENT_STATUS[status] ?? status, tone };
-            })}
-            title="Past appointments"
-            hrefBase="/dashboard/client/appointments"
-            storageKey="rosa:appt-history-cleared"
-          />
+          {/* Past — show the 3 most recent, then a dropdown for everything else */}
+          {past.length > 0 && (
+            <>
+              <h2 className="mt-8 text-sm font-semibold text-ink">Recent visits</h2>
+              <div className="mt-2 space-y-1.5">
+                {recentPast.map((a) => {
+                  const fee = fees.get(a.id);
+                  return (
+                    <Link key={a.id} href={`/dashboard/client/appointments/${a.id}`}
+                      className="flex items-center justify-between gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm transition hover:border-line-strong">
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium text-ink">{a.title || "Appointment"}</span>
+                        <span className="block text-xs text-muted">{dateShort(a.starts_at)}</span>
+                      </span>
+                      <span className="flex flex-none items-center gap-2">
+                        {fee && fee.paid > 0 && <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">Paid</span>}
+                        <span className="text-xs font-semibold text-muted">{CLIENT_STATUS[a.status] ?? a.status}</span>
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Everything older — tucked away, clearable */}
+              <RequestHistory
+                items={olderPast.map((a): HistoryItem => {
+                  const status = a.status;
+                  const tone: HistoryItem["tone"] = status === "cancelled" || status === "no_show" ? "red" : status === "completed" ? "green" : "grey";
+                  return { id: a.id, subject: a.title || "Appointment", dateText: dateShort(a.starts_at), statusLabel: CLIENT_STATUS[status] ?? status, tone };
+                })}
+                title="Older appointments"
+                hrefBase="/dashboard/client/appointments"
+                storageKey="rosa:appt-history-cleared"
+              />
+            </>
+          )}
         </>
       )}
     </div>
