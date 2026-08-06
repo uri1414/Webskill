@@ -1,7 +1,8 @@
-// Collapsible, clearable "Past requests" section. Completed / closed requests
-// pile up and become noise, so they live here — collapsed by default, with a
-// "Clear" that hides them from this device (localStorage; nothing is deleted
-// server-side, and "Show cleared" brings them back).
+// Collapsible, clearable history section. Completed / closed items pile up and
+// become noise, so they live here — collapsed by default, with a "Clear" that
+// hides them from this device (localStorage; nothing is deleted server-side,
+// and "Show cleared" brings them back). Reused for past requests and past
+// appointments via the hrefBase / storageKey / title props.
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,24 +15,33 @@ const CHIP: Record<HistoryItem["tone"], string> = {
   green: "bg-green-50 text-green-700",
   red: "bg-red-50 text-red-700",
 };
-const KEY = "rosa:req-history-cleared";
 
-export function RequestHistory({ items }: { items: HistoryItem[] }) {
+export function RequestHistory({
+  items,
+  title = "Past requests",
+  hrefBase = "/dashboard/client/requests",
+  storageKey = "rosa:req-history-cleared",
+}: {
+  items: HistoryItem[];
+  title?: string;
+  hrefBase?: string;
+  storageKey?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [cleared, setCleared] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(KEY);
+      const raw = localStorage.getItem(storageKey);
       if (raw) setCleared(JSON.parse(raw));
     } catch { /* ignore */ }
     setReady(true);
-  }, []);
+  }, [storageKey]);
 
   function persist(next: string[]) {
     setCleared(next);
-    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* ignore */ }
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch { /* ignore */ }
   }
 
   const visible = ready ? items.filter((i) => !cleared.includes(i.id)) : items;
@@ -49,7 +59,7 @@ export function RequestHistory({ items }: { items: HistoryItem[] }) {
         <span aria-hidden className={`text-muted transition-transform duration-200 ${open ? "rotate-90" : ""}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
         </span>
-        <h2 className="font-display text-base font-bold text-ink">Past requests</h2>
+        <h2 className="font-display text-base font-bold text-ink">{title}</h2>
         <span className="rounded-full bg-surface-soft px-2 py-0.5 text-xs font-semibold text-muted">{visible.length}</span>
         {open && visible.length > 0 && (
           <span
@@ -71,7 +81,7 @@ export function RequestHistory({ items }: { items: HistoryItem[] }) {
             visible.map((i) => (
               <Link
                 key={i.id}
-                href={`/dashboard/client/requests/${i.id}`}
+                href={`${hrefBase}/${i.id}`}
                 className="flex items-center justify-between gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm transition hover:border-line-strong"
               >
                 <span className="min-w-0">
