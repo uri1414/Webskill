@@ -60,7 +60,7 @@ export default async function ClientAppointments() {
   const Card = ({ a }: { a: (typeof rows)[number] }) => (
     <div className="rounded-xl border border-line bg-white px-4 py-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="font-medium text-ink">{a.title || "Appointment"}</span>
+        <Link href={`/dashboard/client/appointments/${a.id}`} className="font-medium text-ink transition hover:text-brand-600">{a.title || "Appointment"}</Link>
         <span className="text-xs font-semibold text-muted">{CLIENT_STATUS[a.status] ?? a.status}</span>
       </div>
       <p className="mt-1 text-sm text-muted">{whenLabel(a.starts_at)}</p>
