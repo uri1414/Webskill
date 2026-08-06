@@ -22,6 +22,7 @@ import {
   type PaymentMethod,
 } from "@/lib/payments";
 import { SERVICE_LABEL } from "@/lib/services";
+import { seedDefaultTasks } from "@/lib/tasks";
 
 const NEW_APPT = "/dashboard/staff/appointments/new";
 
@@ -43,6 +44,9 @@ export async function createAppointmentAction(formData: FormData): Promise<void>
     const res = await createAppointment(ctx, { clientId, title, serviceKey, startsAt });
     if (res.ok && fee > 0) {
       await createPayment(ctx, { clientId, appointmentId: res.data.appointmentId, type: "service_fee", amount: fee });
+    }
+    if (res.ok) {
+      await seedDefaultTasks(ctx, { appointmentId: res.data.appointmentId, clientId, serviceKey, dueAt: startsAt, assigneeId: ctx.userId });
     }
     return res;
   });

@@ -10,6 +10,7 @@ import {
   type AppointmentStatus,
 } from "@/lib/appointments";
 import { formatMoney, PAYMENT_TYPE_LABEL, PAYMENT_METHOD_LABEL } from "@/lib/payments";
+import { TASK_STATUS_LABEL, listOrgStaff, type TaskStatus } from "@/lib/tasks";
 import {
   rescheduleAppointmentAction,
   setAppointmentStatusAction,
@@ -17,6 +18,7 @@ import {
   markPaymentPaidAction,
   waivePaymentAction,
 } from "../actions";
+import { createTaskAction, setTaskStatusAction } from "../../tasks/actions";
 
 const PAY_STATUS_CHIP: Record<string, string> = {
   pending: "bg-amber-50 text-amber-700",
@@ -63,7 +65,7 @@ function toLocalInput(iso: string | null): string | undefined {
 }
 
 export default async function StaffAppointmentDetail({ params }: { params: { id: string } }) {
-  await requireCapability("appointments.read");
+  const ctx = await requireCapability("appointments.read");
   const supabase = createClient();
 
   const { data: appt } = await supabase
@@ -100,6 +102,15 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
     .filter((p) => p.status === "pending")
     .reduce((sum, p) => sum + Number(p.amount ?? 0), 0);
   const clientId = appt.client_id as string;
+
+  const { data: tasks } = await supabase
+    .from("tasks")
+    .select("id, title, status, due_at, assignee_id")
+    .eq("appointment_id", params.id)
+    .order("created_at", { ascending: true });
+  const prepTasks = tasks ?? [];
+  const staff = await listOrgStaff(ctx.orgId);
+  const staffName = new Map(staff.map((s) => [s.id, s.name]));
 
   return (
     <div className="mx-auto max-w-xl">
@@ -250,6 +261,64 @@ export default async function StaffAppointmentDetail({ params }: { params: { id:
           <button type="submit" className="rounded-lg border border-line-strong px-3 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft">
             Add fee
           </button>
+        </form>
+      </div>
+
+      {/* Preparation tasks */}
+      <div className="mt-5 rounded-xl border border-line bg-white p-4">
+        <p className="text-sm font-semibold text-ink">Preparation</p>
+        {prepTasks.length === 0 ? (
+          <p className="mt-2 text-sm text-muted">No prep tasks. Add what needs doing before this appointment.</p>
+        ) : (
+          <ul className="mt-3 space-y-2">
+            {prepTasks.map((t) => {
+              const status = t.status as TaskStatus;
+              const done = status === "done";
+              const who = t.assignee_id ? (staffName.get(t.assignee_id as string) ?? "Staff") : "Unassigned";
+              return (
+                <li key={t.id as string} className="flex items-center justify-between gap-2 rounded-lg border border-line px-3 py-2 text-sm">
+                  <div className="min-w-0">
+                    <p className={`font-medium ${done ? "text-muted line-through" : "text-ink"}`}>{t.title as string}</p>
+                    <p className="text-xs text-muted">{who}{t.due_at ? ` · due ${new Date(t.due_at as string).toLocaleDateString()}` : ""} · {TASK_STATUS_LABEL[status]}</p>
+                  </div>
+                  <div className="flex flex-none gap-1.5">
+                    {status === "todo" && (
+                      <form action={setTaskStatusAction}>
+                        <input type="hidden" name="taskId" value={t.id as string} />
+                        <input type="hidden" name="appointmentId" value={appt.id as string} />
+                        <input type="hidden" name="status" value="in_progress" />
+                        <button type="submit" className="rounded-lg border border-line-strong px-2.5 py-1 text-xs font-semibold text-ink transition hover:bg-surface-soft">Start</button>
+                      </form>
+                    )}
+                    {!done && (
+                      <form action={setTaskStatusAction}>
+                        <input type="hidden" name="taskId" value={t.id as string} />
+                        <input type="hidden" name="appointmentId" value={appt.id as string} />
+                        <input type="hidden" name="status" value="done" />
+                        <button type="submit" className="rounded-lg bg-brand px-2.5 py-1 text-xs font-semibold text-white transition hover:bg-brand-600">Done</button>
+                      </form>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {/* Add a task */}
+        <form action={createTaskAction} className="mt-4 space-y-2 border-t border-line pt-3">
+          <input type="hidden" name="appointmentId" value={appt.id as string} />
+          <input type="hidden" name="clientId" value={clientId} />
+          <p className="text-xs font-semibold uppercase text-muted">Add a task</p>
+          <input name="title" required placeholder="e.g. Prepare client folder" className="w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
+          <div className="flex flex-wrap gap-2">
+            <select name="assignee_id" defaultValue={ctx.userId} className="rounded-lg border border-line px-2 py-2 text-sm text-ink outline-none focus:border-brand">
+              <option value="">Unassigned</option>
+              {staff.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+            <input name="due_at" type="datetime-local" className="flex-1 rounded-lg border border-line px-2 py-2 text-sm text-ink outline-none focus:border-brand" />
+          </div>
+          <button type="submit" className="rounded-lg border border-line-strong px-3 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft">Add task</button>
         </form>
       </div>
 

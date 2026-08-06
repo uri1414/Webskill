@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 import { guardedAction } from "@/lib/authz";
 import { confirmRequestAsAppointment, declineRequest } from "@/lib/requests";
 import { createPayment } from "@/lib/payments";
+import { seedDefaultTasks } from "@/lib/tasks";
 
 export async function confirmAppointmentAction(formData: FormData): Promise<void> {
   const requestId = String(formData.get("requestId") ?? "");
@@ -36,6 +37,16 @@ export async function confirmAppointmentAction(formData: FormData): Promise<void
           appointmentId: res.data.appointmentId,
           type: "service_fee",
           amount: args.fee,
+        });
+      }
+      // Generate default prep tasks for the service (owner = the booking staffer).
+      if (res.ok) {
+        await seedDefaultTasks(ctx, {
+          appointmentId: res.data.appointmentId,
+          clientId: args.clientId,
+          serviceKey: args.serviceKey,
+          dueAt: args.startsAt,
+          assigneeId: ctx.userId,
         });
       }
       return res;
