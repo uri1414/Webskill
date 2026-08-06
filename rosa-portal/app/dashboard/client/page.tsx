@@ -1,30 +1,28 @@
 // Client home — a visual, progress-driven overview. Active requests show an
-// amber progress bar while the team reviews them; confirmed upcoming ones turn
-// green and pop open with the appointment's time, what's owed, and the
-// what-to-bring checklist. Everything done/closed drops into a collapsible,
-// clearable "Past requests" section so the home stays clean. RLS scopes every
-// query to this client.
+// amber progress bar while the team reviews them; confirmed upcoming ones become
+// full time-tracking appointment cards (countdown, length, fee, what to bring).
+// Everything done/closed drops into a collapsible, clearable "Past requests"
+// section so the home stays clean. RLS scopes every query to this client.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
 import { formatMoney } from "@/lib/payments";
 import { prepFor } from "@/lib/prep";
-import { PrepChecklist } from "@/components/PrepChecklist";
+import { AppointmentCard } from "@/components/AppointmentCard";
 import { RequestHistory, type HistoryItem } from "@/components/RequestHistory";
 
 const UPCOMING_APPT = ["requested", "scheduled", "confirmed", "checked_in"];
+const APPT_LABEL: Record<string, string> = {
+  requested: "Being scheduled", scheduled: "Scheduled", confirmed: "Confirmed",
+  checked_in: "Checked in", completed: "Completed", cancelled: "Cancelled", no_show: "Missed",
+};
 
-function whenLabel(iso: string | null): string {
-  if (!iso) return "Time to be confirmed";
-  return new Date(iso).toLocaleString(undefined, { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" });
-}
 function dateShort(iso: string | null): string {
   if (!iso) return "";
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
-// Amber stage (still being reviewed) → progress-bar card. Anything else is
-// handled separately (upcoming green card, or history).
+// Amber stage (still being reviewed) → progress-bar card.
 function amberStage(status: string): { label: string; pct: number; index: number } | null {
   if (status === "new" || status === "routed") return { label: "Received", pct: 34, index: 0 };
   if (status === "in_progress" || status === "waiting_on_client") return { label: "In review", pct: 67, index: 1 };
@@ -50,9 +48,9 @@ export default async function ClientHome() {
   const apptByReq = new Map<string, string>();
   for (const r of rels ?? []) apptByReq.set(r.request_id as string, r.entity_id as string);
 
-  const { data: appts } = await supabase.from("appointments").select("id, starts_at, service_key, status");
-  const apptById = new Map<string, { starts_at: string | null; service_key: string | null; status: string }>();
-  for (const a of appts ?? []) apptById.set(a.id as string, { starts_at: a.starts_at as string | null, service_key: a.service_key as string | null, status: a.status as string });
+  const { data: appts } = await supabase.from("appointments").select("id, title, starts_at, ends_at, service_key, status");
+  const apptById = new Map<string, { title: string | null; starts_at: string | null; ends_at: string | null; service_key: string | null; status: string }>();
+  for (const a of appts ?? []) apptById.set(a.id as string, { title: a.title as string | null, starts_at: a.starts_at as string | null, ends_at: a.ends_at as string | null, service_key: a.service_key as string | null, status: a.status as string });
 
   const { data: pays } = await supabase.from("payments").select("appointment_id, amount, status");
   const feeByAppt = new Map<string, { due: number; paid: number }>();
@@ -69,7 +67,7 @@ export default async function ClientHome() {
 
   const now = Date.now();
   type Active = { id: string; subject: string; label: string; pct: number; index: number };
-  type Upcoming = { id: string; subject: string; apptId: string | null; startsAt: string | null; due: number; paid: number; categoryKey: string };
+  type Upcoming = { id: string; apptId: string; title: string; statusLabel: string; startsAt: string | null; endsAt: string | null; due: number; paid: number; categoryKey: string };
   const active: Active[] = [];
   const upcoming: Upcoming[] = [];
   const history: HistoryItem[] = [];
@@ -80,18 +78,20 @@ export default async function ClientHome() {
     const status = r.status as string;
     const amber = amberStage(status);
 
-    if (amber) {
-      active.push({ id, subject, ...amber });
-      continue;
-    }
+    if (amber) { active.push({ id, subject, ...amber }); continue; }
+
     if (status === "resolved") {
       const apptId = apptByReq.get(id) ?? null;
       const appt = apptId ? apptById.get(apptId) : null;
       const past = appt?.starts_at ? new Date(appt.starts_at).getTime() < now : false;
-      const isUpcoming = appt ? UPCOMING_APPT.includes(appt.status) && !past : !past;
-      if (isUpcoming) {
-        const fee = apptId ? feeByAppt.get(apptId) : undefined;
-        upcoming.push({ id, subject, apptId, startsAt: appt?.starts_at ?? null, due: fee?.due ?? 0, paid: fee?.paid ?? 0, categoryKey: (r.category_key as string) ?? "" });
+      const isUpcoming = !!appt && UPCOMING_APPT.includes(appt.status) && !past;
+      if (apptId && appt && isUpcoming) {
+        const fee = feeByAppt.get(apptId);
+        upcoming.push({
+          id, apptId, title: appt.title || subject, statusLabel: APPT_LABEL[appt.status] ?? appt.status,
+          startsAt: appt.starts_at, endsAt: appt.ends_at, due: fee?.due ?? 0, paid: fee?.paid ?? 0,
+          categoryKey: (r.category_key as string) ?? "",
+        });
       } else {
         const tone: HistoryItem["tone"] = appt?.status === "cancelled" || appt?.status === "no_show" ? "red" : "green";
         const label = appt?.status === "completed" ? "Completed" : appt?.status === "cancelled" ? "Cancelled" : appt?.status === "no_show" ? "Missed" : "Past";
@@ -99,10 +99,11 @@ export default async function ClientHome() {
       }
       continue;
     }
-    // closed / no_action / spam
     history.push({ id, subject, dateText: dateShort(r.created_at as string), statusLabel: "Closed", tone: "grey" });
   }
 
+  // Soonest first among upcoming.
+  upcoming.sort((a, b) => (a.startsAt ? new Date(a.startsAt).getTime() : Infinity) - (b.startsAt ? new Date(b.startsAt).getTime() : Infinity));
   const hasCards = upcoming.length + active.length > 0;
 
   return (
@@ -122,7 +123,7 @@ export default async function ClientHome() {
       )}
 
       <div className="mt-6 flex items-center justify-between">
-        <h2 className="font-display text-base font-bold text-ink">Your requests</h2>
+        <h2 className="font-display text-base font-bold text-ink">Your appointments &amp; requests</h2>
         <Link href="/dashboard/client/requests/new" className="rounded-lg bg-brand px-3.5 py-1.5 text-sm font-semibold text-white shadow-brand transition hover:bg-brand-600">
           + New request
         </Link>
@@ -137,55 +138,21 @@ export default async function ClientHome() {
           </div>
         ) : (
           <>
-            {/* Confirmed & upcoming — green cards that pop open the details */}
-            {upcoming.map((u) => {
-              const prep = prepFor(u.categoryKey);
-              return (
-                <div key={u.id} className="overflow-hidden rounded-xl border border-line bg-white">
-                  <Link href={`/dashboard/client/requests/${u.id}`} className="block px-4 pt-4 transition hover:bg-surface-soft/40">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="truncate font-semibold text-ink">{u.subject}</p>
-                      <span className="flex-none rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">Confirmed</span>
-                    </div>
-                    <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-soft">
-                      <div className="h-full w-full rounded-full bg-green-500 transition-all duration-500" />
-                    </div>
-                    <div className="mt-1.5 flex justify-between pb-4 text-[11px] font-semibold text-green-700">
-                      {STEPS.map((s) => <span key={s}>{s}</span>)}
-                    </div>
-                  </Link>
-
-                  <div className="border-t border-green-200 bg-green-50/60 px-4 py-4">
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                      <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Expected time</p>
-                        <p className="text-sm font-semibold text-ink">{whenLabel(u.startsAt)}</p>
-                      </div>
-                      <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Payment</p>
-                        {u.due > 0 ? (
-                          <p className="text-sm font-semibold text-amber-700">{formatMoney(u.due)} due</p>
-                        ) : u.paid > 0 ? (
-                          <p className="text-sm font-semibold text-green-700">Paid {formatMoney(u.paid)}</p>
-                        ) : (
-                          <p className="text-sm text-muted">To be confirmed</p>
-                        )}
-                      </div>
-                      {u.startsAt && (
-                        <a href={`/dashboard/appointments/${u.apptId}`} className="ml-auto inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
-                          <span aria-hidden>📅</span> Add to calendar
-                        </a>
-                      )}
-                    </div>
-                    {prep && (
-                      <div className="mt-3 rounded-lg border border-green-200 bg-white p-3">
-                        <PrepChecklist id={(u.apptId ?? u.id)} bring={prep.bring} avoid={prep.avoid} note={prep.note} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            {/* Confirmed & upcoming — time-tracking appointment cards */}
+            {upcoming.map((u) => (
+              <AppointmentCard
+                key={u.id}
+                apptId={u.apptId}
+                href={`/dashboard/client/appointments/${u.apptId}`}
+                title={u.title}
+                statusLabel={u.statusLabel}
+                startsAt={u.startsAt}
+                endsAt={u.endsAt}
+                due={u.due}
+                paid={u.paid}
+                prep={prepFor(u.categoryKey)}
+              />
+            ))}
 
             {/* Being reviewed — amber progress cards */}
             {active.map((a) => (
