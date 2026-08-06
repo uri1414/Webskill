@@ -12,6 +12,10 @@ import { formatMoney } from "@/lib/payments";
 import { prepFor } from "@/lib/prep";
 import { resolveServiceKey } from "@/lib/services";
 import { PrepChecklist } from "@/components/PrepChecklist";
+import { RescheduleBox } from "@/components/RescheduleBox";
+
+const UPCOMING: AppointmentStatus[] = ["requested", "scheduled", "confirmed", "checked_in"];
+const RESCHEDULE_FREE_HOURS = 48;
 
 const CLIENT_STATUS: Partial<Record<AppointmentStatus, string>> = {
   requested: "Being scheduled",
@@ -30,7 +34,7 @@ function whenLabel(iso: string | null): string {
   });
 }
 
-export default async function ClientAppointmentDetail({ params }: { params: { id: string } }) {
+export default async function ClientAppointmentDetail({ params, searchParams }: { params: { id: string }; searchParams?: { rq?: string } }) {
   await requireContext();
   const supabase = createClient();
 
@@ -55,6 +59,14 @@ export default async function ClientAppointmentDetail({ params }: { params: { id
   const paid = (pays ?? []).filter((p) => p.status === "paid").reduce((s, p) => s + Number(p.amount ?? 0), 0);
 
   const showCalendar = !!appt.starts_at && status !== "cancelled";
+
+  // Reschedule / cancel — offered while the appointment is still upcoming. The
+  // 48-hour policy: free outside the window, a fee may apply inside it. No set
+  // time yet ⇒ treat as free.
+  const startsMs = appt.starts_at ? new Date(appt.starts_at as string).getTime() : null;
+  const canChange = UPCOMING.includes(status);
+  const freeWindow = startsMs === null ? true : startsMs - Date.now() >= RESCHEDULE_FREE_HOURS * 3_600_000;
+  const rq = searchParams?.rq;
 
   return (
     <div className="mx-auto max-w-lg">
@@ -92,6 +104,21 @@ export default async function ClientAppointmentDetail({ params }: { params: { id
         <div className="mt-5 rounded-xl border border-line bg-white p-4">
           <PrepChecklist id={appt.id as string} bring={prep.bring} avoid={prep.avoid} note={prep.note} />
         </div>
+      )}
+
+      {rq === "ok" && (
+        <div className="mt-4 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+          Your request was sent — we&apos;ll confirm the change with you shortly.
+        </div>
+      )}
+      {rq === "err" && (
+        <div className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          Something went wrong sending your request — please try again.
+        </div>
+      )}
+
+      {canChange && (
+        <RescheduleBox appointmentId={appt.id as string} freeWindow={freeWindow} hasTime={!!appt.starts_at} />
       )}
     </div>
   );
