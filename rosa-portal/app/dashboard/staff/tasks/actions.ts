@@ -1,6 +1,6 @@
 // app/dashboard/staff/tasks/actions.ts — prep-task actions. Guarded by
-// tasks.write; RLS backstops. Shared by the Tasks dashboard and the appointment
-// detail's Preparation card.
+// tasks.write; RLS backstops. Shared by the Tasks dashboard, the appointment
+// detail's Preparation card, and the staff appointment cards.
 "use server";
 
 import { revalidatePath } from "next/cache";
@@ -22,6 +22,7 @@ export async function createTaskAction(formData: FormData): Promise<void> {
   );
   await run({ clientId, appointmentId, title, assigneeId, dueAt });
   if (appointmentId) revalidatePath(`/dashboard/staff/appointments/${appointmentId}`);
+  revalidatePath("/dashboard/staff/appointments");
   revalidatePath("/dashboard/staff/tasks");
 }
 
@@ -36,5 +37,6 @@ export async function setTaskStatusAction(formData: FormData): Promise<void> {
   );
   await run({ taskId, status });
   if (appointmentId) revalidatePath(`/dashboard/staff/appointments/${appointmentId}`);
+  revalidatePath("/dashboard/staff/appointments");
   revalidatePath("/dashboard/staff/tasks");
 }
