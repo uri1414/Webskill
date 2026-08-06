@@ -57,10 +57,18 @@ export default async function ClientAppointments() {
     fees.set(key, cur);
   }
 
+  // The whole card is tappable: the title link is stretched over the box with
+  // an absolute overlay, and the nested controls (calendar, prep) sit above it
+  // (relative z-10) so they stay independently clickable — no nested anchors.
   const Card = ({ a }: { a: (typeof rows)[number] }) => (
-    <div className="rounded-xl border border-line bg-white px-4 py-3">
+    <div className="relative rounded-xl border border-line bg-white px-4 py-3 transition hover:border-brand hover:shadow-card">
       <div className="flex items-center justify-between gap-3">
-        <Link href={`/dashboard/client/appointments/${a.id}`} className="font-medium text-ink transition hover:text-brand-600">{a.title || "Appointment"}</Link>
+        <Link
+          href={`/dashboard/client/appointments/${a.id}`}
+          className="font-medium text-ink transition after:absolute after:inset-0 hover:text-brand-600"
+        >
+          {a.title || "Appointment"}
+        </Link>
         <span className="text-xs font-semibold text-muted">{CLIENT_STATUS[a.status] ?? a.status}</span>
       </div>
       <p className="mt-1 text-sm text-muted">{whenLabel(a.starts_at)}</p>
@@ -73,7 +81,7 @@ export default async function ClientAppointments() {
       {a.starts_at && a.status !== "cancelled" && (
         <a
           href={`/dashboard/appointments/${a.id}`}
-          className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600"
+          className="relative z-10 mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600"
         >
           <span aria-hidden>📅</span> Add to calendar
         </a>
@@ -82,7 +90,7 @@ export default async function ClientAppointments() {
         const prep = prepFor(a.service_key);
         if (!prep || a.status === "cancelled") return null;
         return (
-          <details className="mt-2 border-t border-line pt-2">
+          <details className="relative z-10 mt-2 border-t border-line pt-2">
             <summary className="cursor-pointer text-sm font-semibold text-brand-600">What to bring</summary>
             <ul className="mt-2 space-y-1">
               {prep.bring.map((b, i) => (
