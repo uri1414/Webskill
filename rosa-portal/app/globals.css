@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,4 +11,108 @@ body {
 
 body {
   @apply bg-surface-soft text-body font-sans antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  /* Typography — tracking is size-specific (Apple: large text wants negative
+     tracking, body sits near 0). Display headings are set large, so tighten
+     them; leading rides inversely with size. */
+  .font-display {
+    letter-spacing: -0.021em;
+    line-height: 1.08;
+  }
+  h1.font-display { letter-spacing: -0.028em; }
+
+  /* Respond on press, not release, everywhere — a button dips the instant it's
+     touched. Compositor-only transform + opacity so it never drops a frame. */
+  button,
+  [role="button"],
+  summary,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled):active,
+  [role="button"]:not([aria-disabled="true"]):active {
+    transform: scale(0.97);
+  }
+  button,
+  [role="button"] {
+    transition: transform 120ms cubic-bezier(0.22, 1, 0.36, 1), background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  }
+
+  /* Focus that reads as intentional, not the default halo. */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(37, 99, 235, 0.55);
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: #cfe0ff;
+    color: #0e1015;
+  }
+}
+
+@layer utilities {
+  /* Translucent chrome: a floating material with content scrolling under it. */
+  .material {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  /* Scroll-edge effect: a soft fade where floating chrome meets content,
+     instead of a hard 1px divider. */
+  .scroll-edge {
+    box-shadow: 0 1px 0 rgba(14, 16, 21, 0.05), 0 12px 16px -16px rgba(14, 16, 21, 0.28);
+  }
+
+  /* Materialize — glass surfaces arrive as a real material (blur + scale +
+     fade together), not a flat opacity swap. Used by overlays/menus. */
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.96) translateY(-4px); filter: blur(4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0);       filter: blur(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .animate-pop {
+    animation: pop-in 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: var(--pop-origin, top right);
+  }
+  .animate-fade {
+    animation: fade-in 0.2s ease-out;
+  }
+  /* Card that lifts toward the pointer — hint of physicality on hover. */
+  .lift {
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms ease, border-color 180ms ease;
+  }
+  .lift:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* Reduced motion — keep comprehension cues, drop the vestibular ones. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  button:not(:disabled):active,
+  [role="button"]:active { transform: none; }
+  .animate-pop, .animate-fade { animation: fade-in 0.12s ease both; filter: none; }
+}
+
+/* Reduced transparency — frost the glass into a solid so text stays legible. */
+@media (prefers-reduced-transparency: reduce) {
+  .material {
+    background: #ffffff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }

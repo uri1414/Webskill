@@ -102,8 +102,8 @@ export default function NewRequestPage({ searchParams }: { searchParams?: { erro
 
         {confirming && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <button type="button" aria-label="Close" onClick={() => setConfirming(false)} className="absolute inset-0 bg-ink/40" />
-            <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-md">
+            <button type="button" aria-label="Close" onClick={() => setConfirming(false)} className="animate-fade absolute inset-0 bg-ink/40 backdrop-blur-[2px]" />
+            <div className="animate-pop relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-md" style={{ ["--pop-origin" as string]: "center" }}>
               <h2 className="font-display text-lg font-bold text-ink">Before you book</h2>
               <p className="mt-2 text-sm text-muted">Please review and agree so we can hold your time.</p>
 

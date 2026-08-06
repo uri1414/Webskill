@@ -2,7 +2,21 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
 import { NotificationBell } from "@/components/NotificationBell";
+import { NavLinks, type NavItem } from "@/components/NavLinks";
 import { type UINote } from "@/lib/notify-ui";
+
+const STAFF_NAV: NavItem[] = [
+  { href: "/dashboard/staff", label: "Home" },
+  { href: "/dashboard/staff/requests", label: "Requests" },
+  { href: "/dashboard/staff/appointments", label: "Appointments" },
+  { href: "/dashboard/staff/tasks", label: "Tasks" },
+  { href: "/dashboard/staff/clients", label: "Clients" },
+];
+const CLIENT_NAV: NavItem[] = [
+  { href: "/dashboard/client", label: "Home" },
+  { href: "/dashboard/client/appointments", label: "My appointments" },
+  { href: "/dashboard/client/requests/new", label: "New request" },
+];
 
 // Minimal shell. Auth + membership are resolved here (redirects to /login when
 // signed out or not a member); role-scoped subtrees add their own capability
@@ -42,39 +56,29 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-surface-soft">
-      <header className="flex h-14 items-center gap-5 border-b border-line bg-white px-5">
+      <header className="material scroll-edge sticky top-0 z-40 flex h-14 items-center gap-4 px-5">
         <Link href="/dashboard" className="font-display text-[15px] font-bold text-ink">
           Rosa &amp; Co. <span className="font-semibold text-muted">CPA</span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-          {isStaff ? (
-            <>
-              <Link href="/dashboard/staff" className="font-semibold text-brand">Home</Link>
-              <Link href="/dashboard/staff/requests" className="font-semibold text-brand">Requests</Link>
-              <Link href="/dashboard/staff/appointments" className="font-semibold text-brand">Appointments</Link>
-              <Link href="/dashboard/staff/tasks" className="font-semibold text-brand">Tasks</Link>
-              <Link href="/dashboard/staff/clients" className="font-semibold text-brand">Clients</Link>
-            </>
-          ) : (
-            <>
-              <Link href="/dashboard/client" className="font-semibold text-brand">Home</Link>
-              <Link href="/dashboard/client/appointments" className="font-semibold text-brand">My appointments</Link>
-              <Link href="/dashboard/client/requests/new" className="font-semibold text-brand">New request</Link>
-            </>
-          )}
-        </nav>
+        <div className="hidden sm:block">
+          <NavLinks items={isStaff ? STAFF_NAV : CLIENT_NAV} />
+        </div>
         <div className="ml-auto flex items-center gap-3 text-sm">
           <NotificationBell notifications={notifications} unread={unread ?? 0} />
-          <span className="hidden text-muted sm:inline">
+          <span className="hidden text-muted md:inline">
             {name} · <span className="capitalize">{ctx.role}</span>
           </span>
           <form action="/auth/signout" method="post">
-            <button type="submit" className="rounded-full border border-line-strong px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-surface-soft">
+            <button type="submit" className="rounded-full border border-line-strong bg-white/60 px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-surface-soft">
               Sign out
             </button>
           </form>
         </div>
       </header>
+      {/* Mobile nav — the section links wrap below the bar on small screens. */}
+      <div className="material scroll-edge sticky top-14 z-30 overflow-x-auto px-4 py-2 sm:hidden">
+        <NavLinks items={isStaff ? STAFF_NAV : CLIENT_NAV} />
+      </div>
       <main className="mx-auto max-w-[1000px] px-5 py-8">{children}</main>
     </div>
   );

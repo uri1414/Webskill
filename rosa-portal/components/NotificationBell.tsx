@@ -35,7 +35,7 @@ export function NotificationBell({ notifications, unread }: { notifications: UIN
       {open && (
         <>
           <button type="button" aria-hidden tabIndex={-1} onClick={() => setOpen(false)} className="fixed inset-0 z-30 cursor-default" />
-          <div className="absolute right-0 z-40 mt-2 w-80 max-w-[86vw] overflow-hidden rounded-xl border border-line bg-white shadow-md">
+          <div className="animate-pop absolute right-0 z-40 mt-2 w-80 max-w-[86vw] overflow-hidden rounded-2xl border border-line bg-white shadow-md">
             <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
               <span className="text-sm font-semibold text-ink">Notifications</span>
               {unread > 0 && (
