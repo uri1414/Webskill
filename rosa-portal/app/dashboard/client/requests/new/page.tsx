@@ -17,8 +17,15 @@ export default function NewRequestPage({ searchParams }: { searchParams?: { erro
   const preselected = SERVICES.some((s) => s.key === searchParams?.service) ? [searchParams!.service as string] : [];
   const [selected, setSelected] = useState<string[]>(preselected);
   const [confirming, setConfirming] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const error = searchParams?.error;
   const isOther = selected.includes("other");
+
+  function openConfirm() {
+    if (selected.length === 0) return;
+    setAgreed(false); // must re-acknowledge each time
+    setConfirming(true);
+  }
 
   function toggle(key: string) {
     setSelected((cur) => (cur.includes(key) ? cur.filter((k) => k !== key) : [...cur, key]));
@@ -94,7 +101,7 @@ export default function NewRequestPage({ searchParams }: { searchParams?: { erro
             inside the modal so a request can't go through without it. */}
         <button
           type="button"
-          onClick={() => selected.length > 0 && setConfirming(true)}
+          onClick={openConfirm}
           disabled={selected.length === 0}
           className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -121,11 +128,17 @@ export default function NewRequestPage({ searchParams }: { searchParams?: { erro
 
               <p className="mt-4 text-xs text-muted">We&apos;ll confirm the exact fee with you before any work begins.</p>
 
+              {/* Must acknowledge before the request can be submitted. */}
+              <label className="mt-4 flex cursor-pointer items-start gap-2.5 rounded-lg border border-line px-3 py-3 transition hover:border-line-strong">
+                <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5 h-4 w-4 flex-none accent-brand" />
+                <span className="text-sm text-ink">I understand and agree to the service-fee and no-show policy above.</span>
+              </label>
+
               <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                 <button type="button" onClick={() => setConfirming(false)} className="rounded-lg border border-line-strong px-4 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft">
                   Go back
                 </button>
-                <SubmitButton pendingText="Submitting…" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+                <SubmitButton disabled={!agreed} pendingText="Submitting…" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
                   I understand — submit request
                 </SubmitButton>
               </div>
