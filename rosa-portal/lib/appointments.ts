@@ -195,7 +195,7 @@ export async function rescheduleAppointment(
 // login (a record-only client simply isn't notified).
 export async function createAppointment(
   ctx: Context,
-  input: { clientId: string; title: string; serviceKey?: string; startsAt?: string },
+  input: { clientId: string; title: string; serviceKey?: string; startsAt?: string; endsAt?: string },
 ): Promise<Result<{ appointmentId: string }>> {
   assertCan(ctx, "appointments.write");
   const supabase = createClient();
@@ -207,6 +207,7 @@ export async function createAppointment(
       client_id: input.clientId,
       title: input.title,
       starts_at: input.startsAt ?? null,
+      ends_at: input.endsAt ?? null,
       service_key: input.serviceKey ?? null,
       status: "confirmed",
       staff_id: ctx.userId,

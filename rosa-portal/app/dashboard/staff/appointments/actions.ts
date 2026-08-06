@@ -26,6 +26,17 @@ import { seedDefaultTasks } from "@/lib/tasks";
 
 const NEW_APPT = "/dashboard/staff/appointments/new";
 
+// Add minutes to a wall-clock "YYYY-MM-DDTHH:MM" value, staying in the same
+// wall-clock convention starts_at is stored in.
+function addMinutesWallClock(local: string, minutes: number): string | undefined {
+  if (!local || !minutes) return undefined;
+  const d = new Date(`${local}:00Z`);
+  if (Number.isNaN(d.getTime())) return undefined;
+  const e = new Date(d.getTime() + minutes * 60_000);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${e.getUTCFullYear()}-${p(e.getUTCMonth() + 1)}-${p(e.getUTCDate())}T${p(e.getUTCHours())}:${p(e.getUTCMinutes())}`;
+}
+
 // Staff create an appointment directly for a client (walk-in / phone client with
 // no portal login). Optionally attach a service fee in the same step.
 export async function createAppointmentAction(formData: FormData): Promise<void> {
@@ -35,13 +46,15 @@ export async function createAppointmentAction(formData: FormData): Promise<void>
     || (serviceKey ? SERVICE_LABEL[serviceKey] : "")
     || "Appointment";
   const startsAt = String(formData.get("startsAt") ?? "") || undefined;
+  const lengthMin = Number(String(formData.get("lengthMin") ?? "")) || 0;
+  const endsAt = startsAt ? addMinutesWallClock(startsAt, lengthMin) : undefined;
   const feeRaw = String(formData.get("fee") ?? "").trim();
   const fee = feeRaw ? Number(feeRaw) : 0;
 
   if (!clientId) redirect(`${NEW_APPT}?error=client`);
 
   const run = guardedAction("appointments.write", async (ctx) => {
-    const res = await createAppointment(ctx, { clientId, title, serviceKey, startsAt });
+    const res = await createAppointment(ctx, { clientId, title, serviceKey, startsAt, endsAt });
     if (res.ok && fee > 0) {
       await createPayment(ctx, { clientId, appointmentId: res.data.appointmentId, type: "service_fee", amount: fee });
     }

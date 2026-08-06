@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { requestRescheduleAction } from "@/app/dashboard/client/appointments/actions";
 import { SubmitButton } from "@/components/SubmitButton";
+import { TimePicker } from "@/components/TimePicker";
 
 const field = "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none transition focus:border-brand";
 
@@ -56,21 +57,7 @@ export function RescheduleBox({ appointmentId, freeWindow, hasTime }: { appointm
           </div>
 
           {mode === "reschedule" && (
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label htmlFor="rq_date" className="block text-xs font-semibold text-muted">Preferred date <span className="font-normal">(optional)</span></label>
-                <input id="rq_date" name="preferred_date" type="date" className={field} />
-              </div>
-              <div>
-                <label htmlFor="rq_time" className="block text-xs font-semibold text-muted">Preferred time <span className="font-normal">(optional)</span></label>
-                <select id="rq_time" name="preferred_time" defaultValue="" className={field}>
-                  <option value="">No preference</option>
-                  <option value="Morning">Morning</option>
-                  <option value="Midday">Midday</option>
-                  <option value="Afternoon">Afternoon</option>
-                </select>
-              </div>
-            </div>
+            <TimePicker mode="preferred" defaultDate="" defaultTime="09:00" preferredNote="pick a preferred new time" />
           )}
 
           <div>

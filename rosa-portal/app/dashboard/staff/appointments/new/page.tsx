@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/authz";
 import { SERVICES } from "@/lib/services";
 import { createAppointmentAction } from "../actions";
+import { TimePicker } from "@/components/TimePicker";
 
 const field = "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand";
 
@@ -24,6 +25,7 @@ export default async function NewAppointmentPage({ searchParams }: { searchParam
   const rows = (clients ?? []) as C[];
   const preClient = searchParams?.client ?? "";
   const error = searchParams?.error;
+  const today = new Date().toISOString().slice(0, 10);
 
   return (
     <div className="mx-auto max-w-lg">
@@ -58,10 +60,7 @@ export default async function NewAppointmentPage({ searchParams }: { searchParam
             <label htmlFor="title" className="block text-xs font-semibold text-muted">Title <span className="font-normal">(optional — defaults to the service)</span></label>
             <input id="title" name="title" className={field} />
           </div>
-          <div>
-            <label htmlFor="startsAt" className="block text-xs font-semibold text-muted">Date &amp; time</label>
-            <input id="startsAt" name="startsAt" type="datetime-local" className={field} />
-          </div>
+          <TimePicker mode="schedule" defaultDate={today} defaultTime="09:00" showLength />
           <div>
             <label htmlFor="fee" className="block text-xs font-semibold text-muted">Service fee <span className="font-normal">(optional)</span></label>
             <div className="mt-1 flex items-center rounded-lg border border-line pl-3 focus-within:border-brand">
