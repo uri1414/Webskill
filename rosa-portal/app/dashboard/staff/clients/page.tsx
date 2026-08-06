@@ -89,7 +89,7 @@ export default async function StaffClients() {
                   <div className="flex items-center gap-2">
                     <p className="truncate font-semibold text-ink">{name}</p>
                     {c.client_type === "business" && (
-                      <span className="flex-none rounded-full bg-brand-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-600">Business</span>
+                      <span className="flex-none rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">🏢 Business</span>
                     )}
                   </div>
                   {c.email && <p className="truncate text-xs text-muted">{c.email}</p>}

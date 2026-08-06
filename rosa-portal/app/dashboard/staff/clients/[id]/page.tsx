@@ -89,7 +89,8 @@ export default async function ClientProfile({ params }: { params: { id: string }
       <Link href="/dashboard/staff/clients" className="text-sm text-brand-600">← All clients</Link>
       <div className="mt-2 flex flex-wrap items-center gap-3">
         <h1 className="font-display text-2xl font-bold text-ink">{name}</h1>
-        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${isBusiness ? "bg-brand-soft text-brand-600" : "bg-surface-soft text-muted"}`}>
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${isBusiness ? "bg-brand text-white shadow-brand" : "bg-accent text-accent-ink"}`}>
+          <span aria-hidden>{isBusiness ? "🏢" : "👤"}</span>
           {isBusiness ? "Business" : "Individual"}
         </span>
         <Link href={`/dashboard/staff/appointments/new?client=${params.id}`} className="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-brand transition hover:bg-brand-600">
