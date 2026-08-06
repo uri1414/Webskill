@@ -1,39 +1,36 @@
-// Client home — a visual, progress-driven overview. Each request shows where it
-// is: an amber bar while the team reviews it, turning green once it's confirmed.
-// A confirmed card "pops" open with the appointment's time, what's owed, and the
-// what-to-bring checklist. Read-only; RLS scopes every query to this client.
+// Client home — a visual, progress-driven overview. Active requests show an
+// amber progress bar while the team reviews them; confirmed upcoming ones turn
+// green and pop open with the appointment's time, what's owed, and the
+// what-to-bring checklist. Everything done/closed drops into a collapsible,
+// clearable "Past requests" section so the home stays clean. RLS scopes every
+// query to this client.
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireContext } from "@/lib/authz";
 import { formatMoney } from "@/lib/payments";
 import { prepFor } from "@/lib/prep";
 import { PrepChecklist } from "@/components/PrepChecklist";
+import { RequestHistory, type HistoryItem } from "@/components/RequestHistory";
 
-// Where a request is in its journey, from its status. "resolved" = converted to
-// a confirmed appointment.
-type Tone = "amber" | "green" | "grey";
-function stageOf(status: string): { label: string; note: string; tone: Tone; pct: number; index: number; closed: boolean } {
-  switch (status) {
-    case "new":
-    case "routed":
-      return { label: "Received", note: "We've got your request.", tone: "amber", pct: 34, index: 0, closed: false };
-    case "in_progress":
-    case "waiting_on_client":
-      return { label: "In review", note: "Our team is looking at it.", tone: "amber", pct: 67, index: 1, closed: false };
-    case "resolved":
-      return { label: "Confirmed", note: "Your appointment is set.", tone: "green", pct: 100, index: 2, closed: false };
-    default:
-      return { label: "Closed", note: "This request is closed.", tone: "grey", pct: 100, index: 2, closed: true };
-  }
-}
-const BAR: Record<Tone, string> = { amber: "bg-amber-400", green: "bg-green-500", grey: "bg-line-strong" };
-const CHIP: Record<Tone, string> = { amber: "bg-amber-50 text-amber-700", green: "bg-green-50 text-green-700", grey: "bg-surface-soft text-muted" };
-const STEPS = ["Received", "In review", "Confirmed"];
+const UPCOMING_APPT = ["requested", "scheduled", "confirmed", "checked_in"];
 
 function whenLabel(iso: string | null): string {
   if (!iso) return "Time to be confirmed";
   return new Date(iso).toLocaleString(undefined, { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
+function dateShort(iso: string | null): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+// Amber stage (still being reviewed) → progress-bar card. Anything else is
+// handled separately (upcoming green card, or history).
+function amberStage(status: string): { label: string; pct: number; index: number } | null {
+  if (status === "new" || status === "routed") return { label: "Received", pct: 34, index: 0 };
+  if (status === "in_progress" || status === "waiting_on_client") return { label: "In review", pct: 67, index: 1 };
+  return null;
+}
+const STEPS = ["Received", "In review", "Confirmed"];
 
 export default async function ClientHome() {
   const ctx = await requireContext();
@@ -47,7 +44,6 @@ export default async function ClientHome() {
   const requests = reqs ?? [];
   const reqIds = requests.map((r) => r.id as string);
 
-  // Link each confirmed request to its appointment (RLS: own requests only).
   const { data: rels } = reqIds.length
     ? await supabase.from("request_relations").select("request_id, entity_id").eq("entity_type", "appointment").in("request_id", reqIds)
     : { data: [] };
@@ -70,6 +66,44 @@ export default async function ClientHome() {
     feeByAppt.set(k, cur);
   }
   const totalDue = [...feeByAppt.values()].reduce((s, f) => s + f.due, 0);
+
+  const now = Date.now();
+  type Active = { id: string; subject: string; label: string; pct: number; index: number };
+  type Upcoming = { id: string; subject: string; apptId: string | null; startsAt: string | null; due: number; paid: number; categoryKey: string };
+  const active: Active[] = [];
+  const upcoming: Upcoming[] = [];
+  const history: HistoryItem[] = [];
+
+  for (const r of requests) {
+    const id = r.id as string;
+    const subject = (r.subject as string) || "Appointment request";
+    const status = r.status as string;
+    const amber = amberStage(status);
+
+    if (amber) {
+      active.push({ id, subject, ...amber });
+      continue;
+    }
+    if (status === "resolved") {
+      const apptId = apptByReq.get(id) ?? null;
+      const appt = apptId ? apptById.get(apptId) : null;
+      const past = appt?.starts_at ? new Date(appt.starts_at).getTime() < now : false;
+      const isUpcoming = appt ? UPCOMING_APPT.includes(appt.status) && !past : !past;
+      if (isUpcoming) {
+        const fee = apptId ? feeByAppt.get(apptId) : undefined;
+        upcoming.push({ id, subject, apptId, startsAt: appt?.starts_at ?? null, due: fee?.due ?? 0, paid: fee?.paid ?? 0, categoryKey: (r.category_key as string) ?? "" });
+      } else {
+        const tone: HistoryItem["tone"] = appt?.status === "cancelled" || appt?.status === "no_show" ? "red" : "green";
+        const label = appt?.status === "completed" ? "Completed" : appt?.status === "cancelled" ? "Cancelled" : appt?.status === "no_show" ? "Missed" : "Past";
+        history.push({ id, subject, dateText: dateShort(appt?.starts_at ?? (r.created_at as string)), statusLabel: label, tone });
+      }
+      continue;
+    }
+    // closed / no_action / spam
+    history.push({ id, subject, dateText: dateShort(r.created_at as string), statusLabel: "Closed", tone: "grey" });
+  }
+
+  const hasCards = upcoming.length + active.length > 0;
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -95,80 +129,87 @@ export default async function ClientHome() {
       </div>
 
       <div className="mt-3 space-y-3">
-        {requests.length === 0 ? (
+        {!hasCards ? (
           <div className="rounded-xl border border-dashed border-line-strong bg-white px-4 py-10 text-center">
-            <p className="text-sm font-medium text-ink">No requests yet</p>
-            <p className="mt-1 text-sm text-muted">Request an appointment and track it here.</p>
+            <p className="text-sm font-medium text-ink">Nothing active right now</p>
+            <p className="mt-1 text-sm text-muted">Request an appointment and track its progress here.</p>
             <Link href="/dashboard/client/requests/new" className="mt-3 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-brand transition hover:bg-brand-600">Request an appointment</Link>
           </div>
         ) : (
-          requests.map((r) => {
-            const st = stageOf(r.status as string);
-            const confirmed = st.tone === "green";
-            const apptId = apptByReq.get(r.id as string);
-            const appt = apptId ? apptById.get(apptId) : null;
-            const fee = apptId ? feeByAppt.get(apptId) : null;
-            const prep = prepFor(r.category_key as string);
-            return (
-              <div key={r.id as string} className="overflow-hidden rounded-xl border border-line bg-white">
-                <Link href={`/dashboard/client/requests/${r.id}`} className="block px-4 pt-4 transition hover:bg-surface-soft/40">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="truncate font-semibold text-ink">{(r.subject as string) || "Appointment request"}</p>
-                    <span className={`flex-none rounded-full px-2.5 py-1 text-xs font-semibold ${CHIP[st.tone]}`}>{st.label}</span>
-                  </div>
-
-                  {/* Progress bar — amber while reviewing, green when confirmed */}
-                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-soft">
-                    <div className={`h-full rounded-full transition-all duration-500 ${BAR[st.tone]}`} style={{ width: `${st.pct}%` }} />
-                  </div>
-                  {!st.closed ? (
-                    <div className="mt-1.5 flex justify-between pb-4 text-[11px] font-semibold">
-                      {STEPS.map((label, i) => (
-                        <span key={label} className={i <= st.index ? (confirmed ? "text-green-700" : "text-amber-700") : "text-muted"}>{label}</span>
-                      ))}
+          <>
+            {/* Confirmed & upcoming — green cards that pop open the details */}
+            {upcoming.map((u) => {
+              const prep = prepFor(u.categoryKey);
+              return (
+                <div key={u.id} className="overflow-hidden rounded-xl border border-line bg-white">
+                  <Link href={`/dashboard/client/requests/${u.id}`} className="block px-4 pt-4 transition hover:bg-surface-soft/40">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="truncate font-semibold text-ink">{u.subject}</p>
+                      <span className="flex-none rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">Confirmed</span>
                     </div>
-                  ) : (
-                    <p className="mt-1.5 pb-4 text-xs text-muted">{st.note}</p>
-                  )}
-                </Link>
+                    <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-soft">
+                      <div className="h-full w-full rounded-full bg-green-500 transition-all duration-500" />
+                    </div>
+                    <div className="mt-1.5 flex justify-between pb-4 text-[11px] font-semibold text-green-700">
+                      {STEPS.map((s) => <span key={s}>{s}</span>)}
+                    </div>
+                  </Link>
 
-                {/* Confirmed → the details pop open: time, payment, what to bring */}
-                {confirmed && (
                   <div className="border-t border-green-200 bg-green-50/60 px-4 py-4">
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                       <div>
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Expected time</p>
-                        <p className="text-sm font-semibold text-ink">{whenLabel(appt?.starts_at ?? null)}</p>
+                        <p className="text-sm font-semibold text-ink">{whenLabel(u.startsAt)}</p>
                       </div>
                       <div>
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Payment</p>
-                        {fee && fee.due > 0 ? (
-                          <p className="text-sm font-semibold text-amber-700">{formatMoney(fee.due)} due</p>
-                        ) : fee && fee.paid > 0 ? (
-                          <p className="text-sm font-semibold text-green-700">Paid {formatMoney(fee.paid)}</p>
+                        {u.due > 0 ? (
+                          <p className="text-sm font-semibold text-amber-700">{formatMoney(u.due)} due</p>
+                        ) : u.paid > 0 ? (
+                          <p className="text-sm font-semibold text-green-700">Paid {formatMoney(u.paid)}</p>
                         ) : (
                           <p className="text-sm text-muted">To be confirmed</p>
                         )}
                       </div>
-                      {appt?.starts_at && (
-                        <a href={`/dashboard/appointments/${apptId}`} className="ml-auto inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+                      {u.startsAt && (
+                        <a href={`/dashboard/appointments/${u.apptId}`} className="ml-auto inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
                           <span aria-hidden>📅</span> Add to calendar
                         </a>
                       )}
                     </div>
-
                     {prep && (
                       <div className="mt-3 rounded-lg border border-green-200 bg-white p-3">
-                        <PrepChecklist id={(apptId ?? r.id) as string} bring={prep.bring} avoid={prep.avoid} note={prep.note} />
+                        <PrepChecklist id={(u.apptId ?? u.id)} bring={prep.bring} avoid={prep.avoid} note={prep.note} />
                       </div>
                     )}
                   </div>
-                )}
-              </div>
-            );
-          })
+                </div>
+              );
+            })}
+
+            {/* Being reviewed — amber progress cards */}
+            {active.map((a) => (
+              <Link key={a.id} href={`/dashboard/client/requests/${a.id}`} className="block rounded-xl border border-line bg-white px-4 py-4 transition hover:border-brand hover:shadow-card">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="truncate font-semibold text-ink">{a.subject}</p>
+                  <span className="flex-none rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">{a.label}</span>
+                </div>
+                <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-soft">
+                  <div className="h-full rounded-full bg-amber-400 transition-all duration-500" style={{ width: `${a.pct}%` }} />
+                </div>
+                <div className="mt-1.5 flex justify-between text-[11px] font-semibold">
+                  {STEPS.map((label, i) => (
+                    <span key={label} className={i <= a.index ? "text-amber-700" : "text-muted"}>{label}</span>
+                  ))}
+                </div>
+              </Link>
+            ))}
+          </>
         )}
       </div>
+
+      {/* Past / closed — tucked away, clearable */}
+      <RequestHistory items={history} />
 
       {/* Start / add a business — always via an in-person consultation first. */}
       <div className="mt-8 rounded-xl border border-line bg-surface-soft p-5">
