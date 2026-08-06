@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { SERVICES } from "@/lib/services";
 import { submitAppointmentRequestAction } from "../actions";
+import { SubmitButton } from "@/components/SubmitButton";
 
 const field =
   "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand";
@@ -124,9 +125,9 @@ export default function NewRequestPage({ searchParams }: { searchParams?: { erro
                 <button type="button" onClick={() => setConfirming(false)} className="rounded-lg border border-line-strong px-4 py-2 text-sm font-semibold text-ink transition hover:bg-surface-soft">
                   Go back
                 </button>
-                <button type="submit" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
+                <SubmitButton pendingText="Submitting…" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600">
                   I understand — submit request
-                </button>
+                </SubmitButton>
               </div>
             </div>
           </div>

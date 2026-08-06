@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { login } from "./actions";
+import { SubmitButton } from "@/components/SubmitButton";
 
 export const metadata = { title: "Sign in" };
 
@@ -41,9 +42,9 @@ export default function LoginPage({
               <label htmlFor="password" className="block text-sm font-semibold text-ink">Password</label>
               <input id="password" name="password" type="password" required autoComplete="current-password" className={field} />
             </div>
-            <button type="submit" className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-brand transition hover:bg-brand-600">
+            <SubmitButton pendingText="Signing in…" className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-brand transition hover:bg-brand-600">
               Sign in
-            </button>
+            </SubmitButton>
           </form>
 
           <p className="mt-4 text-center text-sm text-muted">
