@@ -12,6 +12,9 @@ export default function SignupPage({ searchParams }: { searchParams: { error?: s
       <div className="w-full max-w-sm rounded-2xl border border-line bg-white p-7 shadow-card">
         <h1 className="font-display text-xl font-bold text-ink">Create your account</h1>
         <p className="mt-1 text-sm text-muted">Rosa &amp; Co. CPA client portal.</p>
+        <p className="mt-3 rounded-lg bg-surface-soft px-3 py-2 text-xs text-muted">
+          Portal access is by invitation. Sign up with the <span className="font-semibold text-ink">email your accountant has on file</span> so your account links to your records.
+        </p>
 
         {searchParams.error && (
           <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{searchParams.error}</p>

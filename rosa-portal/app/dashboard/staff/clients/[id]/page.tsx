@@ -4,6 +4,7 @@
 // TYPE badge (Individual / Business) and the business↔owner link. Read-only
 // history; an edit card manages type, details, and the link.
 import Link from "next/link";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { requireCapability } from "@/lib/authz";
 import { SERVICES, serviceLabel } from "@/lib/services";
@@ -29,13 +30,17 @@ export default async function ClientProfile({ params }: { params: { id: string }
 
   const { data: client } = await supabase
     .from("clients")
-    .select("id, first_name, last_name, business_name, email, phone, status, created_at, client_type, owner_client_id")
+    .select("id, first_name, last_name, business_name, email, phone, status, created_at, client_type, owner_client_id, profile_id")
     .eq("id", params.id)
     .single();
   if (!client) return <p className="text-sm text-muted">Client not found.</p>;
 
   const isBusiness = (client.client_type as string) === "business";
   const name = displayName(client as ClientLite);
+  const hasAccess = !!client.profile_id;
+  const email = client.email as string | null;
+  const h = headers();
+  const signupUrl = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host") ?? ""}/signup`;
 
   // Linked records: a business shows its owner; an individual shows its businesses.
   const { data: owner } = client.owner_client_id
@@ -106,6 +111,27 @@ export default async function ClientProfile({ params }: { params: { id: string }
             </span>
           ))}
         </p>
+      )}
+
+      {/* Portal access (invitation-based) */}
+      {!isBusiness && (
+        <div className="mt-3 rounded-xl border border-line bg-white p-4 text-sm">
+          {hasAccess ? (
+            <p className="font-semibold text-green-700">✓ Has portal access</p>
+          ) : email ? (
+            <>
+              <p className="font-semibold text-ink">Not on the portal yet</p>
+              <p className="mt-1 text-muted">
+                Invite them: have them sign up at <span className="break-all font-semibold text-ink">{signupUrl}</span> using <span className="font-semibold text-ink">{email}</span>. Their account links to this profile automatically.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-semibold text-ink">Not on the portal yet</p>
+              <p className="mt-1 text-muted">Add an email in <span className="font-semibold">Edit client details</span> below, then invite them to sign up with it.</p>
+            </>
+          )}
+        </div>
       )}
 
       {/* Contact + summary */}
