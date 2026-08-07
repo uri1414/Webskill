@@ -16,6 +16,7 @@ const STAFF_NAV: NavItem[] = [
 const STAFF_SOON = ["Online payments", "Messaging", "Reports"];
 const CLIENT_NAV: NavItem[] = [
   { label: "Home", href: "/dashboard/client" },
+  { label: "Services", href: "/dashboard/client/services" },
   { label: "My appointments", href: "/dashboard/client/appointments" },
   { label: "New request", href: "/dashboard/client/requests/new" },
 ];
