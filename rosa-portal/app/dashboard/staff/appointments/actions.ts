@@ -73,7 +73,9 @@ export async function createAppointmentAction(formData: FormData): Promise<void>
 export async function rescheduleAppointmentAction(formData: FormData): Promise<void> {
   const appointmentId = String(formData.get("appointmentId") ?? "");
   const startsAt = String(formData.get("startsAt") ?? "").trim();
-  const endsAt = String(formData.get("endsAt") ?? "").trim() || undefined;
+  const lengthMin = Number(String(formData.get("lengthMin") ?? "")) || 0;
+  // Derive the end time from the chosen length; fall back to an explicit endsAt.
+  const endsAt = (startsAt && lengthMin) ? addMinutesWallClock(startsAt, lengthMin) : (String(formData.get("endsAt") ?? "").trim() || undefined);
   if (!startsAt) return; // the form marks it required; nothing to do without a time
 
   const run = guardedAction(
