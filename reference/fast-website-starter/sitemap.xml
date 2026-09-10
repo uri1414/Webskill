@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Add a <url> block per page. Set <lastmod> from your build/publish date.
+     For a single-page site, one entry is enough. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{DOMAIN}}/</loc>
+    <lastmod>{{YYYY-MM-DD}}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

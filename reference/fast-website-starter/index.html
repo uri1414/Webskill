@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================================
+     FAST WEBSITE STARTER  —  local service business landing page
+     Pre-optimized for Core Web Vitals + SEO. Find-and-replace every {{TOKEN}}.
+     Global tokens to replace:
+       {{BUSINESS}}      e.g. Albany Pro Cleaning
+       {{DOMAIN}}        e.g. https://albanyprocleaning.com   (no trailing slash)
+       {{CITY}}          e.g. Albany
+       {{REGION}}        e.g. OR / Oregon
+       {{PHONE_DISPLAY}} e.g. (541) 730-2894
+       {{PHONE_E164}}    e.g. +15417302894
+       {{EMAIL}}         e.g. info@albanyprocleaning.com
+       {{GA_ID}}         e.g. G-XXXXXXXXXX   (or delete the analytics block)
+       {{LAT}} {{LNG}}   geo coordinates
+     Images: export AVIF + WebP at the widths referenced below (see README).
+============================================================================ -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- PRIMARY META -->
+  <title>{{PRIMARY_KEYWORD}} in {{CITY}}, {{REGION}} | {{BUSINESS}}</title>
+  <meta name="description" content="{{140-160 char description, keyword-led, written to earn the click. Licensed, insured, locally owned. Get a free quote.}}">
+  <link rel="canonical" href="{{DOMAIN}}/">
+
+  <!-- OPEN GRAPH / TWITTER  (build a 1200x630 share image) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{BUSINESS}}">
+  <meta property="og:title" content="{{PRIMARY_KEYWORD}} in {{CITY}}, {{REGION}} | {{BUSINESS}}">
+  <meta property="og:description" content="{{Short share description}}">
+  <meta property="og:url" content="{{DOMAIN}}/">
+  <meta property="og:image" content="{{DOMAIN}}/assets/img/share-banner.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{DOMAIN}}/assets/img/share-banner.jpg">
+
+  <!-- LOCAL GEO SIGNALS -->
+  <meta name="geo.region" content="US-{{REGION}}">
+  <meta name="geo.placename" content="{{CITY}}, {{REGION}}">
+  <meta name="geo.position" content="{{LAT}};{{LNG}}">
+  <meta name="ICBM" content="{{LAT}}, {{LNG}}">
+  <meta name="theme-color" content="#1e3a5f">
+
+  <!-- FAVICONS  (ship favicon.ico + 16/32/180; no giant PNG) -->
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+
+  <!-- FONTS — non-blocking: fetched as low-priority "print", flipped to "all" on
+       load. display=swap paints fallback instantly. (Even better: self-host.) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;600;700&display=swap">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;600;700&display=swap"></noscript>
+
+  <!-- PRELOAD THE LCP HERO so it downloads immediately (right width per device) -->
+  <link rel="preload" as="image" type="image/avif" href="/assets/img/hero-640.avif"
+        imagesrcset="/assets/img/hero-640.avif 640w, /assets/img/hero-960.avif 960w, /assets/img/hero-1280.avif 1280w"
+        imagesizes="100vw" fetchpriority="high">
+
+  <!-- CRITICAL CSS — inlined so first paint never waits on a stylesheet request.
+       For a small site this whole sheet is fine to inline. Rebrand via the tokens. -->
+  <style>
+    :root{
+      --navy:#1e3a5f; --navy-2:#2d4d75; --accent:#b0563c; --accent-dark:#9a4a32;
+      --ink:#16202e; --muted:#54627a; --cream:#f7f5f2; --sand:#e9dcc6; --line:#dde3ec;
+      --serif:"Source Serif 4",Georgia,serif; --sans:"Inter",system-ui,-apple-system,sans-serif;
+      --container:1120px; --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;margin:0;text-wrap:balance}
+    a{color:var(--accent)}
+    img,picture{display:block;max-width:100%}
+    .wrap{max-width:var(--container);margin-inline:auto;padding-inline:22px}
+    .skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:#fff;padding:12px 20px;z-index:100}
+    .skip:focus{left:12px;top:12px}
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;padding:15px 26px;border-radius:var(--radius);border:1.5px solid transparent;cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s,color .2s}
+    .btn--primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .btn--primary:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+    .btn--ghost{background:transparent;color:var(--cream);border-color:rgba(247,245,242,.6)}
+    .btn--ghost:hover{background:rgba(247,245,242,.08);border-color:var(--cream)}
+    /* Nav */
+    .nav{background:var(--navy);position:relative;z-index:10}
+    .nav__in{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:76px}
+    .brand{font-family:var(--serif);font-weight:700;font-size:22px;color:var(--cream);text-decoration:none;letter-spacing:.03em}
+    .nav__links{display:flex;gap:28px;align-items:center}
+    .nav__links a{color:#b7d2e6;text-decoration:none;font-size:14px;font-weight:600}
+    .nav__links a:hover{color:var(--cream)}
+    .nav__toggle{display:none;background:none;border:0;cursor:pointer;padding:10px}
+    .nav__toggle span{display:block;width:24px;height:2px;background:var(--cream);margin:5px 0}
+    /* Hero */
+    .hero{position:relative;background:var(--navy);color:var(--cream);overflow:hidden}
+    .hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+    .hero__in{position:relative;padding:96px 0}
+    .hero h1{font-size:clamp(34px,6vw,58px);max-width:14ch}
+    .hero p{font-size:18px;max-width:52ch;margin:20px 0 0;color:#e7edf5}
+    .hero__cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+    .eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#b7d2e6;margin:0 0 14px}
+    /* Trust bar */
+    .trust{background:var(--navy-2);color:var(--cream)}
+    .trust__in{display:flex;flex-wrap:wrap;gap:10px 32px;justify-content:center;padding:16px 0;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+    /* Sections */
+    section{padding:72px 0}
+    .sec-head{text-align:center;max-width:60ch;margin:0 auto 48px}
+    .sec-head h2{font-size:clamp(26px,3.4vw,38px)}
+    .sec-head p{color:var(--muted);margin:14px 0 0}
+    /* Cards */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:box-shadow .2s,transform .2s}
+    .card:hover{box-shadow:0 12px 30px -18px #16202e40;transform:translateY(-2px)}
+    .card__img{aspect-ratio:4/3;width:100%;object-fit:cover}
+    .card__b{padding:20px}
+    .card__b h3{font-size:19px;margin-bottom:8px}
+    .card__b p{color:var(--muted);font-size:14.5px;margin:0}
+    /* FAQ */
+    .faq{max-width:760px;margin-inline:auto}
+    .faq details{border-bottom:1px solid var(--line);padding:6px 0}
+    .faq summary{cursor:pointer;font-weight:600;padding:16px 0;list-style:none;font-size:17px}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq p{color:var(--muted);padding:0 0 16px}
+    /* Form */
+    .contact{background:var(--cream)}
+    .form{display:grid;gap:16px;max-width:620px}
+    .form label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+    .form input,.form select,.form textarea{font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;background:#fff}
+    .form .hp{position:absolute;left:-9999px}
+    .form__status{font-size:14px}
+    /* Footer */
+    .foot{background:var(--navy);color:var(--cream);padding:56px 0 28px}
+    .foot a{color:#b7d2e6;text-decoration:none;display:block;margin:6px 0;font-size:14px}
+    .foot__grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px}
+    .foot__bottom{border-top:1px solid rgba(183,210,230,.2);margin-top:32px;padding-top:20px;font-size:13px;color:#b7d2e6}
+    /* Mobile CTA bar */
+    .mbar{display:none}
+    @media(max-width:860px){
+      .nav__links{display:none;position:absolute;top:76px;left:0;right:0;background:var(--navy);flex-direction:column;padding:16px 22px;gap:16px}
+      .nav__links.open{display:flex}
+      .nav__toggle{display:block}
+      .foot__grid{grid-template-columns:1fr}
+      .mbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50}
+      .mbar a{flex:1;text-align:center;padding:15px;font-weight:700;font-size:14px;text-decoration:none}
+      .mbar .call{background:var(--navy);color:#fff}
+      .mbar .quote{background:var(--accent);color:#fff}
+      body{padding-bottom:54px}
+    }
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+
+  <!-- ANALYTICS — deferred until first interaction/idle so it never blocks paint.
+       Delete this whole block if you don't use GA. -->
+  <script>
+    window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());gtag('config','{{GA_ID}}');
+    (function(){var done=false;function load(){if(done)return;done=true;
+      var s=document.createElement('script');s.async=true;
+      s.src='https://www.googletagmanager.com/gtag/js?id={{GA_ID}}';document.head.appendChild(s);}
+      ['scroll','mousemove','touchstart','click','keydown'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
+      setTimeout(load,3000);})();
+  </script>
+
+  <!-- STRUCTURED DATA — fill in real values; delete FAQ entries you don't use.
+       Do NOT add Review/aggregateRating until you have real reviews. -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"Organization","@id":"{{DOMAIN}}/#org","name":"{{BUSINESS}}",
+        "url":"{{DOMAIN}}/","logo":"{{DOMAIN}}/assets/img/logo.png",
+        "telephone":"{{PHONE_E164}}","email":"{{EMAIL}}"
+      },
+      {
+        "@type":"WebSite","@id":"{{DOMAIN}}/#site","name":"{{BUSINESS}}",
+        "url":"{{DOMAIN}}/","publisher":{"@id":"{{DOMAIN}}/#org"},"inLanguage":"en-US"
+      },
+      {
+        "@type":"LocalBusiness","@id":"{{DOMAIN}}/#biz","name":"{{BUSINESS}}",
+        "url":"{{DOMAIN}}/","telephone":"{{PHONE_E164}}","email":"{{EMAIL}}",
+        "image":"{{DOMAIN}}/assets/img/share-banner.jpg","priceRange":"$$",
+        "address":{"@type":"PostalAddress","addressLocality":"{{CITY}}","addressRegion":"{{REGION}}","addressCountry":"US"},
+        "geo":{"@type":"GeoCoordinates","latitude":{{LAT}},"longitude":{{LNG}}},
+        "areaServed":{"@type":"City","name":"{{CITY}}, {{REGION}}"},
+        "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"08:00","closes":"18:00"}]
+      },
+      {
+        "@type":"FAQPage","@id":"{{DOMAIN}}/#faq",
+        "mainEntity":[
+          {"@type":"Question","name":"{{FAQ 1 question}}","acceptedAnswer":{"@type":"Answer","text":"{{FAQ 1 answer}}"}},
+          {"@type":"Question","name":"{{FAQ 2 question}}","acceptedAnswer":{"@type":"Answer","text":"{{FAQ 2 answer}}"}}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="wrap nav__in">
+      <a class="brand" href="/">{{BUSINESS}}</a>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="menu" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav__links" id="menu" aria-label="Main">
+        <a href="#services">Services</a>
+        <a href="#why">Why Us</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn--primary" href="#contact" style="padding:11px 18px">Free Quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero">
+      <picture>
+        <source type="image/avif" srcset="/assets/img/hero-640.avif 640w, /assets/img/hero-960.avif 960w, /assets/img/hero-1280.avif 1280w" sizes="100vw">
+        <source type="image/webp" srcset="/assets/img/hero-640.webp 640w, /assets/img/hero-960.webp 960w, /assets/img/hero-1280.webp 1280w" sizes="100vw">
+        <img class="hero__img" src="/assets/img/hero.jpg" alt="{{Describe the hero photo}}" width="1920" height="1080" fetchpriority="high" decoding="async">
+      </picture>
+      <div class="wrap hero__in">
+        <p class="eyebrow">{{Professional Cleaning Services}}</p>
+        <h1>{{Big benefit-led headline}}</h1>
+        <p>{{One or two sentences on what you do, where, and why you're trusted.}}</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#contact">Get a Free Quote</a>
+          <a class="btn btn--ghost" href="#services">Our Services</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST BAR -->
+    <div class="trust"><div class="wrap trust__in">
+      <span>Licensed &amp; Insured</span><span>Locally Owned in {{CITY}}</span><span>Satisfaction Guaranteed</span>
+    </div></div>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="wrap">
+        <div class="sec-head"><h2>{{What we do}}</h2><p>{{One line intro to services.}}</p></div>
+        <div class="grid">
+          <!-- Repeat this card per service. Swap the <picture> per image. -->
+          <a class="card" href="#contact">
+            <picture>
+              <source type="image/avif" srcset="/assets/img/service-1-440.avif 440w, /assets/img/service-1-880.avif 880w" sizes="(min-width:700px) 33vw, 100vw">
+              <source type="image/webp" srcset="/assets/img/service-1-440.webp 440w, /assets/img/service-1-880.webp 880w" sizes="(min-width:700px) 33vw, 100vw">
+              <img class="card__img" src="/assets/img/service-1.jpg" alt="{{Service 1 photo}}" width="880" height="660" loading="lazy" decoding="async">
+            </picture>
+            <div class="card__b"><h3>{{Service 1}}</h3><p>{{One-line description.}}</p></div>
+          </a>
+          <a class="card" href="#contact">
+            <picture>
+              <source type="image/avif" srcset="/assets/img/service-2-440.avif 440w, /assets/img/service-2-880.avif 880w" sizes="(min-width:700px) 33vw, 100vw">
+              <source type="image/webp" srcset="/assets/img/service-2-440.webp 440w, /assets/img/service-2-880.webp 880w" sizes="(min-width:700px) 33vw, 100vw">
+              <img class="card__img" src="/assets/img/service-2.jpg" alt="{{Service 2 photo}}" width="880" height="660" loading="lazy" decoding="async">
+            </picture>
+            <div class="card__b"><h3>{{Service 2}}</h3><p>{{One-line description.}}</p></div>
+          </a>
+          <a class="card" href="#contact">
+            <picture>
+              <source type="image/avif" srcset="/assets/img/service-3-440.avif 440w, /assets/img/service-3-880.avif 880w" sizes="(min-width:700px) 33vw, 100vw">
+              <source type="image/webp" srcset="/assets/img/service-3-440.webp 440w, /assets/img/service-3-880.webp 880w" sizes="(min-width:700px) 33vw, 100vw">
+              <img class="card__img" src="/assets/img/service-3.jpg" alt="{{Service 3 photo}}" width="880" height="660" loading="lazy" decoding="async">
+            </picture>
+            <div class="card__b"><h3>{{Service 3}}</h3><p>{{One-line description.}}</p></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY US -->
+    <section id="why" style="background:#fff">
+      <div class="wrap">
+        <div class="sec-head"><h2>Why {{CITY}} chooses us</h2></div>
+        <div class="grid">
+          <div><h3 style="font-size:18px">{{Reason 1}}</h3><p style="color:var(--muted)">{{Detail.}}</p></div>
+          <div><h3 style="font-size:18px">{{Reason 2}}</h3><p style="color:var(--muted)">{{Detail.}}</p></div>
+          <div><h3 style="font-size:18px">{{Reason 3}}</h3><p style="color:var(--muted)">{{Detail.}}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ  (must match the FAQ schema above exactly) -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="sec-head"><h2>Frequently asked questions</h2></div>
+        <div class="faq">
+          <details><summary>{{FAQ 1 question}}</summary><p>{{FAQ 1 answer}}</p></details>
+          <details><summary>{{FAQ 2 question}}</summary><p>{{FAQ 2 answer}}</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT  (Netlify Forms — set up notifications in the Netlify dashboard) -->
+    <section id="contact" class="contact">
+      <div class="wrap">
+        <div class="sec-head"><h2>Get your free quote</h2><p>{{Tell us about your space and we'll respond within one business day.}}</p></div>
+        <form class="form" name="quote" method="post" action="/" data-netlify="true" data-netlify-honeypot="company" style="margin-inline:auto">
+          <input type="hidden" name="form-name" value="quote">
+          <label>Name*<input name="name" type="text" required autocomplete="name"></label>
+          <label>Phone*<input name="phone" type="tel" required autocomplete="tel"></label>
+          <label>Email*<input name="email" type="email" required autocomplete="email"></label>
+          <label>How can we help?<textarea name="message" rows="4"></textarea></label>
+          <input class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn btn--primary" type="submit" style="justify-self:start">Request My Free Quote</button>
+          <p class="form__status" id="status" role="status" hidden></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap foot__grid">
+      <div>
+        <a class="brand" href="/" style="font-size:20px">{{BUSINESS}}</a>
+        <p style="color:#b7d2e6;font-size:14px;max-width:40ch">{{One-line tagline and service area.}}</p>
+      </div>
+      <div><strong style="display:block;margin-bottom:8px">Company</strong>
+        <a href="#services">Services</a><a href="#why">Why Us</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+      </div>
+      <div><strong style="display:block;margin-bottom:8px">Get in touch</strong>
+        <a href="tel:{{PHONE_E164}}">{{PHONE_DISPLAY}}</a>
+        <a href="mailto:{{EMAIL}}">{{EMAIL}}</a>
+        <span style="color:#b7d2e6;font-size:14px">{{CITY}}, {{REGION}}</span>
+      </div>
+    </div>
+    <div class="wrap foot__bottom">&copy; <span id="yr"></span> {{BUSINESS}}. Licensed &amp; insured &middot; {{CITY}}, {{REGION}}.</div>
+  </footer>
+
+  <!-- MOBILE CTA BAR -->
+  <div class="mbar">
+    <a class="call" href="tel:{{PHONE_E164}}">Call {{PHONE_DISPLAY}}</a>
+    <a class="quote" href="#contact">Free Quote</a>
+  </div>
+
+  <!-- BEHAVIOUR — tiny, deferred. Nav toggle, FAQ single-open, Netlify form submit. -->
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    var t=document.querySelector('.nav__toggle'),m=document.getElementById('menu');
+    if(t&&m)t.addEventListener('click',function(){var o=t.getAttribute('aria-expanded')==='true';t.setAttribute('aria-expanded',String(!o));m.classList.toggle('open',!o);});
+    var faqs=document.querySelectorAll('.faq details');
+    faqs.forEach(function(d){d.addEventListener('toggle',function(){if(d.open)faqs.forEach(function(o){if(o!==d)o.open=false;});});});
+    var f=document.querySelector('form[name="quote"]'),s=document.getElementById('status');
+    if(f)f.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(f.company.value)return; // honeypot
+      var body=new URLSearchParams();new FormData(f).forEach(function(v,k){body.append(k,v);});
+      s.hidden=false;s.textContent='Sending…';
+      fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
+        .then(function(r){if(!r.ok)throw 0;f.reset();s.textContent='Thank you — we’ll be in touch within one business day.';})
+        .catch(function(){s.textContent='Something went wrong. Please call {{PHONE_DISPLAY}}.';});
+    });
+  </script>
+</body>
+</html>

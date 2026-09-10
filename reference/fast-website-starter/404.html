@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Not Found | {{BUSINESS}}</title>
+  <meta name="robots" content="noindex, follow">
+  <style>
+    :root{--navy:#1e3a5f;--accent:#b0563c;--accent-dark:#9a4a32;--cream:#f7f5f2}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;text-align:center;
+      background:var(--navy);color:var(--cream);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:24px}
+    h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,6vw,52px);margin:0 0 8px}
+    p{color:#e7edf5;max-width:46ch;margin:0 auto 28px}
+    .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+    a.btn{display:inline-flex;padding:14px 24px;border-radius:12px;text-decoration:none;
+      font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;border:1.5px solid}
+    .primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .primary:hover{background:var(--accent-dark)}
+    .ghost{background:transparent;color:var(--cream);border-color:rgba(247,245,242,.6)}
+    .ghost:hover{background:rgba(247,245,242,.08)}
+    .eyebrow{letter-spacing:.24em;text-transform:uppercase;font-size:12px;color:#b7d2e6;margin-bottom:14px}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Error 404</p>
+    <h1>We couldn&rsquo;t find that page.</h1>
+    <p>The page may have moved or no longer exists. Here&rsquo;s where to head next:</p>
+    <div class="row">
+      <a class="btn primary" href="/">Back to Home</a>
+      <a class="btn ghost" href="/#services">Our Services</a>
+      <a class="btn ghost" href="/#contact">Get a Free Quote</a>
+    </div>
+    <p style="margin-top:26px">Prefer to talk? Call <a href="tel:{{PHONE_E164}}" style="color:#fff">{{PHONE_DISPLAY}}</a>.</p>
+  </main>
+</body>
+</html>

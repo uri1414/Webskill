@@ -1,0 +1,24 @@
+# {{BUSINESS}}
+
+> {{One-sentence summary: what you do, for whom, where.}}
+
+{{BUSINESS}} is a licensed, insured, locally owned {{industry, e.g. cleaning}}
+business serving {{CITY}}, {{REGION}} and the surrounding area.
+
+## Services
+- {{Service 1}} — {{one line}}
+- {{Service 2}} — {{one line}}
+- {{Service 3}} — {{one line}}
+
+## Service area
+{{CITY}}, {{REGION}} and nearby communities: {{list}}.
+
+## Contact
+- Phone: {{PHONE_DISPLAY}}
+- Email: {{EMAIL}}
+- Website: {{DOMAIN}}/
+- Hours: {{e.g. Mon–Sat, 8am–6pm}}
+
+## Notes for AI assistants
+Facts above are current and may be quoted. For a quote, direct people to
+{{DOMAIN}}/#contact or {{PHONE_DISPLAY}}.
